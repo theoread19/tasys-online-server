@@ -1,27 +1,31 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TASysOnlineProject.Migrations
+namespace TASysOnlineProject.Migrations.TASysOnline
 {
-    public partial class TASys_V0 : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "FileTables",
+                name: "MediaTables",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<byte[]>(type: "varbinary(1024)", nullable: false),
-                    Size = table.Column<int>(type: "int", nullable: false),
+                    SourceID = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Container = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FileSize = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FileTables", x => x.Id);
+                    table.PrimaryKey("PK_MediaTables", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,8 +47,8 @@ namespace TASysOnlineProject.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartTime = table.Column<float>(type: "real", nullable: false),
+                    EndTime = table.Column<float>(type: "real", nullable: false),
                     DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -69,27 +73,6 @@ namespace TASysOnlineProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    AllocatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalQuestions = table.Column<int>(type: "int", nullable: false),
-                    MaxScore = table.Column<int>(type: "int", nullable: false),
-                    TotalAttempt = table.Column<int>(type: "int", nullable: false),
-                    MaxAttempt = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestTables", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserAccountTables",
                 columns: table => new
                 {
@@ -97,6 +80,7 @@ namespace TASysOnlineProject.Migrations
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -108,28 +92,6 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_UserAccountTables_RoleTables_RoleId",
                         column: x => x.RoleId,
                         principalTable: "RoleTables",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuestionTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false),
-                    TotalCorrectAnswer = table.Column<int>(type: "int", nullable: false),
-                    TestId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionTables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_QuestionTables_TestTables_TestId",
-                        column: x => x.TestId,
-                        principalTable: "TestTables",
                         principalColumn: "Id");
                 });
 
@@ -172,7 +134,8 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_CartTables_UserAccountTables_UserAccountId",
                         column: x => x.UserAccountId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,7 +154,8 @@ namespace TASysOnlineProject.Migrations
                     RatingCount = table.Column<int>(type: "int", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SubjectId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    InstructorId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    InstructorId = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    ScheduleId = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -199,15 +163,23 @@ namespace TASysOnlineProject.Migrations
                 {
                     table.PrimaryKey("PK_CourseTables", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_CourseTables_ScheduleTables_ScheduleId",
+                        column: x => x.ScheduleId,
+                        principalTable: "ScheduleTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_CourseTables_SubjectTables_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "SubjectTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseTables_UserAccountTables_InstructorId",
                         column: x => x.InstructorId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -230,12 +202,14 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_MessageTables_UserAccountTables_RecipientId",
                         column: x => x.RecipientId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_MessageTables_UserAccountTables_SenderId",
                         column: x => x.SenderId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,73 +230,6 @@ namespace TASysOnlineProject.Migrations
                     table.ForeignKey(
                         name: "FK_NotificationTables_UserAccountTables_UserAccountId",
                         column: x => x.UserAccountId,
-                        principalTable: "UserAccountTables",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PostTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: false),
-                    UserAccountId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostTables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PostTables_UserAccountTables_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalTable: "UserAccountTables",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ScheduleTableUserAccountTable",
-                columns: table => new
-                {
-                    SchedulesId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    UserAccountsId = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScheduleTableUserAccountTable", x => new { x.SchedulesId, x.UserAccountsId });
-                    table.ForeignKey(
-                        name: "FK_ScheduleTableUserAccountTable_ScheduleTables_SchedulesId",
-                        column: x => x.SchedulesId,
-                        principalTable: "ScheduleTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ScheduleTableUserAccountTable_UserAccountTables_UserAccountsId",
-                        column: x => x.UserAccountsId,
-                        principalTable: "UserAccountTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StreamSessionTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MaxPaticipants = table.Column<int>(type: "int", nullable: false),
-                    CreatorId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StreamSessionTables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StreamSessionTables_UserAccountTables_CreatorId",
-                        column: x => x.CreatorId,
                         principalTable: "UserAccountTables",
                         principalColumn: "Id");
                 });
@@ -349,27 +256,6 @@ namespace TASysOnlineProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestResultTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false),
-                    UserAccountTableId = table.Column<string>(type: "nvarchar(100)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestResultTables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestResultTables_UserAccountTables_UserAccountTableId",
-                        column: x => x.UserAccountTableId,
-                        principalTable: "UserAccountTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserInfoTables",
                 columns: table => new
                 {
@@ -377,6 +263,7 @@ namespace TASysOnlineProject.Migrations
                     FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Bio = table.Column<string>(type: "text", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -393,27 +280,6 @@ namespace TASysOnlineProject.Migrations
                         principalTable: "UserAccountTables",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AnswerTables",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: true),
-                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    QuestionId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnswerTables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AnswerTables_QuestionTables_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "QuestionTables",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -486,30 +352,6 @@ namespace TASysOnlineProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseTableScheduleTable",
-                columns: table => new
-                {
-                    CoursesId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    SchedulesId = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseTableScheduleTable", x => new { x.CoursesId, x.SchedulesId });
-                    table.ForeignKey(
-                        name: "FK_CourseTableScheduleTable_CourseTables_CoursesId",
-                        column: x => x.CoursesId,
-                        principalTable: "CourseTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CourseTableScheduleTable_ScheduleTables_SchedulesId",
-                        column: x => x.SchedulesId,
-                        principalTable: "ScheduleTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CourseTableUserAccountTable",
                 columns: table => new
                 {
@@ -550,7 +392,8 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_CurriCulumTables_CourseTables_CourseId",
                         column: x => x.CourseId,
                         principalTable: "CourseTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -560,7 +403,7 @@ namespace TASysOnlineProject.Migrations
                     Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Rate = table.Column<float>(type: "real", nullable: false),
-                    Duration = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -572,7 +415,8 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_DiscountTables_CourseTables_CourseId",
                         column: x => x.CourseId,
                         principalTable: "CourseTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -584,7 +428,7 @@ namespace TASysOnlineProject.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     BackText = table.Column<string>(type: "text", nullable: false),
                     FrontText = table.Column<string>(type: "text", nullable: false),
-                    CouresId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -592,10 +436,98 @@ namespace TASysOnlineProject.Migrations
                 {
                     table.PrimaryKey("PK_LessonTables", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LessonTables_CourseTables_CouresId",
-                        column: x => x.CouresId,
+                        name: "FK_LessonTables_CourseTables_CourseId",
+                        column: x => x.CourseId,
                         principalTable: "CourseTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostTables",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    UserAccountId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostTables", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostTables_CourseTables_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "CourseTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostTables_UserAccountTables_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccountTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StreamSessionTables",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MaxParticipants = table.Column<int>(type: "int", nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StreamSessionTables", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StreamSessionTables_CourseTables_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "CourseTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StreamSessionTables_UserAccountTables_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "UserAccountTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestTables",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    AllocatedTime = table.Column<int>(type: "int", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalQuestions = table.Column<int>(type: "int", nullable: false),
+                    MaxScore = table.Column<int>(type: "int", nullable: false),
+                    TotalAttempt = table.Column<int>(type: "int", nullable: false),
+                    MaxAttempt = table.Column<int>(type: "int", nullable: false),
+                    CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestTables", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestTables_CourseTables_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "CourseTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -616,12 +548,14 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_UserRankingTables_CourseTables_CourseId",
                         column: x => x.CourseId,
                         principalTable: "CourseTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserRankingTables_UserAccountTables_UserId",
                         column: x => x.UserId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -642,12 +576,14 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_CommentTables_PostTables_PostId",
                         column: x => x.PostId,
                         principalTable: "PostTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CommentTables_UserAccountTables_UserAccountId",
                         column: x => x.UserAccountId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -667,106 +603,94 @@ namespace TASysOnlineProject.Migrations
                         name: "FK_PostLikeTables_PostTables_PostId",
                         column: x => x.PostId,
                         principalTable: "PostTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PostLikeTables_UserAccountTables_UserAccountId",
                         column: x => x.UserAccountId,
                         principalTable: "UserAccountTables",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StreamSessionTableUserAccountTable",
+                name: "QuestionTables",
                 columns: table => new
                 {
-                    ParticipantsId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    StreamSessionsAttendedId = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    Score = table.Column<float>(type: "real", nullable: false),
+                    TotalCorrectAnswer = table.Column<int>(type: "int", nullable: false),
+                    TestId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StreamSessionTableUserAccountTable", x => new { x.ParticipantsId, x.StreamSessionsAttendedId });
+                    table.PrimaryKey("PK_QuestionTables", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StreamSessionTableUserAccountTable_StreamSessionTables_StreamSessionsAttendedId",
-                        column: x => x.StreamSessionsAttendedId,
-                        principalTable: "StreamSessionTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StreamSessionTableUserAccountTable_UserAccountTables_ParticipantsId",
-                        column: x => x.ParticipantsId,
-                        principalTable: "UserAccountTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TestResultTableTestTable",
-                columns: table => new
-                {
-                    TestResultsId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    TestsId = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestResultTableTestTable", x => new { x.TestResultsId, x.TestsId });
-                    table.ForeignKey(
-                        name: "FK_TestResultTableTestTable_TestResultTables_TestResultsId",
-                        column: x => x.TestResultsId,
-                        principalTable: "TestResultTables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TestResultTableTestTable_TestTables_TestsId",
-                        column: x => x.TestsId,
+                        name: "FK_QuestionTables_TestTables_TestId",
+                        column: x => x.TestId,
                         principalTable: "TestTables",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MediaTables",
+                name: "TestResultTables",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Subtitle = table.Column<string>(type: "text", nullable: true),
-                    Url = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UserInfoId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    AnswerId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    FileId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    CourseId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    PostId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Score = table.Column<float>(type: "real", nullable: false),
+                    TestId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    UserAccountId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    UserAccountTableId = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaTables", x => x.Id);
+                    table.PrimaryKey("PK_TestResultTables", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MediaTables_AnswerTables_AnswerId",
-                        column: x => x.AnswerId,
-                        principalTable: "AnswerTables",
-                        principalColumn: "Id");
+                        name: "FK_TestResultTables_TestTables_TestId",
+                        column: x => x.TestId,
+                        principalTable: "TestTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MediaTables_CourseTables_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "CourseTables",
-                        principalColumn: "Id");
+                        name: "FK_TestResultTables_UserAccountTables_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccountTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MediaTables_FileTables_FileId",
-                        column: x => x.FileId,
-                        principalTable: "FileTables",
-                        principalColumn: "Id");
+                        name: "FK_TestResultTables_UserAccountTables_UserAccountTableId",
+                        column: x => x.UserAccountTableId,
+                        principalTable: "UserAccountTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AnswerTables",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: true),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
+                    QuestionId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnswerTables", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MediaTables_PostTables_PostId",
-                        column: x => x.PostId,
-                        principalTable: "PostTables",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MediaTables_UserInfoTables_UserInfoId",
-                        column: x => x.UserInfoId,
-                        principalTable: "UserInfoTables",
-                        principalColumn: "Id");
+                        name: "FK_AnswerTables_QuestionTables_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "QuestionTables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -816,14 +740,14 @@ namespace TASysOnlineProject.Migrations
                 column: "InstructorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CourseTables_ScheduleId",
+                table: "CourseTables",
+                column: "ScheduleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CourseTables_SubjectId",
                 table: "CourseTables",
                 column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseTableScheduleTable_SchedulesId",
-                table: "CourseTableScheduleTable",
-                column: "SchedulesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseTableUserAccountTable_LearnerAccountsId",
@@ -842,37 +766,9 @@ namespace TASysOnlineProject.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_LessonTables_CouresId",
+                name: "IX_LessonTables_CourseId",
                 table: "LessonTables",
-                column: "CouresId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaTables_AnswerId",
-                table: "MediaTables",
-                column: "AnswerId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaTables_CourseId",
-                table: "MediaTables",
                 column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaTables_FileId",
-                table: "MediaTables",
-                column: "FileId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaTables_PostId",
-                table: "MediaTables",
-                column: "PostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaTables_UserInfoId",
-                table: "MediaTables",
-                column: "UserInfoId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageTables_RecipientId",
@@ -900,6 +796,11 @@ namespace TASysOnlineProject.Migrations
                 column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PostTables_CourseId",
+                table: "PostTables",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostTables_UserAccountId",
                 table: "PostTables",
                 column: "UserAccountId");
@@ -910,9 +811,9 @@ namespace TASysOnlineProject.Migrations
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScheduleTableUserAccountTable_UserAccountsId",
-                table: "ScheduleTableUserAccountTable",
-                column: "UserAccountsId");
+                name: "IX_StreamSessionTables_CourseId",
+                table: "StreamSessionTables",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreamSessionTables_CreatorId",
@@ -920,13 +821,18 @@ namespace TASysOnlineProject.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreamSessionTableUserAccountTable_StreamSessionsAttendedId",
-                table: "StreamSessionTableUserAccountTable",
-                column: "StreamSessionsAttendedId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TechnicalReportTables_UserAccountId",
                 table: "TechnicalReportTables",
+                column: "UserAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestResultTables_TestId",
+                table: "TestResultTables",
+                column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestResultTables_UserAccountId",
+                table: "TestResultTables",
                 column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
@@ -935,9 +841,9 @@ namespace TASysOnlineProject.Migrations
                 column: "UserAccountTableId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestResultTableTestTable_TestsId",
-                table: "TestResultTableTestTable",
-                column: "TestsId");
+                name: "IX_TestTables_CourseId",
+                table: "TestTables",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAccountTables_RoleId",
@@ -964,6 +870,9 @@ namespace TASysOnlineProject.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AnswerTables");
+
+            migrationBuilder.DropTable(
                 name: "BillTableCourseTable");
 
             migrationBuilder.DropTable(
@@ -974,9 +883,6 @@ namespace TASysOnlineProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "CourseSuggestionTables");
-
-            migrationBuilder.DropTable(
-                name: "CourseTableScheduleTable");
 
             migrationBuilder.DropTable(
                 name: "CourseTableUserAccountTable");
@@ -1003,19 +909,22 @@ namespace TASysOnlineProject.Migrations
                 name: "PostLikeTables");
 
             migrationBuilder.DropTable(
-                name: "ScheduleTableUserAccountTable");
-
-            migrationBuilder.DropTable(
-                name: "StreamSessionTableUserAccountTable");
+                name: "StreamSessionTables");
 
             migrationBuilder.DropTable(
                 name: "TechnicalReportTables");
 
             migrationBuilder.DropTable(
-                name: "TestResultTableTestTable");
+                name: "TestResultTables");
+
+            migrationBuilder.DropTable(
+                name: "UserInfoTables");
 
             migrationBuilder.DropTable(
                 name: "UserRankingTables");
+
+            migrationBuilder.DropTable(
+                name: "QuestionTables");
 
             migrationBuilder.DropTable(
                 name: "BillTables");
@@ -1024,40 +933,22 @@ namespace TASysOnlineProject.Migrations
                 name: "CartTables");
 
             migrationBuilder.DropTable(
-                name: "AnswerTables");
-
-            migrationBuilder.DropTable(
-                name: "FileTables");
-
-            migrationBuilder.DropTable(
-                name: "UserInfoTables");
-
-            migrationBuilder.DropTable(
                 name: "PostTables");
 
             migrationBuilder.DropTable(
-                name: "ScheduleTables");
-
-            migrationBuilder.DropTable(
-                name: "StreamSessionTables");
-
-            migrationBuilder.DropTable(
-                name: "TestResultTables");
+                name: "TestTables");
 
             migrationBuilder.DropTable(
                 name: "CourseTables");
 
             migrationBuilder.DropTable(
-                name: "QuestionTables");
+                name: "ScheduleTables");
 
             migrationBuilder.DropTable(
                 name: "SubjectTables");
 
             migrationBuilder.DropTable(
                 name: "UserAccountTables");
-
-            migrationBuilder.DropTable(
-                name: "TestTables");
 
             migrationBuilder.DropTable(
                 name: "RoleTables");

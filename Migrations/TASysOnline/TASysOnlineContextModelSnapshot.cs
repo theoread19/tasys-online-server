@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TASysOnlineProject.Context;
 
-namespace TASysOnlineProject.Migrations
+namespace TASysOnlineProject.Migrations.TASysOnline
 {
     [DbContext(typeof(TASysOnlineContext))]
-    [Migration("20210914145859_TASys_V16")]
-    partial class TASys_V16
+    partial class TASysOnlineContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,21 +49,6 @@ namespace TASysOnlineProject.Migrations
                     b.ToTable("CartTableCourseTable");
                 });
 
-            modelBuilder.Entity("CourseTableScheduleTable", b =>
-                {
-                    b.Property<string>("CoursesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SchedulesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("CoursesId", "SchedulesId");
-
-                    b.HasIndex("SchedulesId");
-
-                    b.ToTable("CourseTableScheduleTable");
-                });
-
             modelBuilder.Entity("CourseTableUserAccountTable", b =>
                 {
                     b.Property<string>("CoursesOfLearnerId")
@@ -79,36 +62,6 @@ namespace TASysOnlineProject.Migrations
                     b.HasIndex("LearnerAccountsId");
 
                     b.ToTable("CourseTableUserAccountTable");
-                });
-
-            modelBuilder.Entity("ScheduleTableUserAccountTable", b =>
-                {
-                    b.Property<string>("SchedulesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserAccountsId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("SchedulesId", "UserAccountsId");
-
-                    b.HasIndex("UserAccountsId");
-
-                    b.ToTable("ScheduleTableUserAccountTable");
-                });
-
-            modelBuilder.Entity("StreamSessionTableUserAccountTable", b =>
-                {
-                    b.Property<string>("ParticipantsId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("StreamSessionsAttendedId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ParticipantsId", "StreamSessionsAttendedId");
-
-                    b.HasIndex("StreamSessionsAttendedId");
-
-                    b.ToTable("StreamSessionTableUserAccountTable");
                 });
 
             modelBuilder.Entity("TASysOnlineProject.Table.AnswerTable", b =>
@@ -313,6 +266,9 @@ namespace TASysOnlineProject.Migrations
                     b.Property<int>("RatingCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("ScheduleId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("SubjectId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
@@ -324,6 +280,8 @@ namespace TASysOnlineProject.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
+
+                    b.HasIndex("ScheduleId");
 
                     b.HasIndex("SubjectId");
 
@@ -455,6 +413,11 @@ namespace TASysOnlineProject.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<decimal>("FileSize")
                         .HasColumnType("numeric(20,0)");
 
@@ -465,11 +428,6 @@ namespace TASysOnlineProject.Migrations
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SourceID")
                         .HasColumnType("nvarchar(100)");
@@ -608,6 +566,10 @@ namespace TASysOnlineProject.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("CourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -623,6 +585,8 @@ namespace TASysOnlineProject.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserAccountId");
 
@@ -646,8 +610,8 @@ namespace TASysOnlineProject.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
+                    b.Property<float>("Score")
+                        .HasColumnType("real");
 
                     b.Property<string>("TestId")
                         .IsRequired()
@@ -699,14 +663,14 @@ namespace TASysOnlineProject.Migrations
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<float>("EndTime")
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<float>("StartTime")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -719,6 +683,10 @@ namespace TASysOnlineProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(100)")
                         .HasAnnotation("Relational:GeneratedValueSql", "newid()");
+
+                    b.Property<string>("CourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -740,6 +708,8 @@ namespace TASysOnlineProject.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("CreatorId");
 
@@ -815,13 +785,25 @@ namespace TASysOnlineProject.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
+                    b.Property<float>("Score")
+                        .HasColumnType("real");
+
+                    b.Property<string>("TestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UserAccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserAccountTableId")
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserAccountId");
 
                     b.HasIndex("UserAccountTableId");
 
@@ -1008,21 +990,6 @@ namespace TASysOnlineProject.Migrations
                     b.ToTable("UserRankingTables");
                 });
 
-            modelBuilder.Entity("TestResultTableTestTable", b =>
-                {
-                    b.Property<string>("TestResultsId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("TestsId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("TestResultsId", "TestsId");
-
-                    b.HasIndex("TestsId");
-
-                    b.ToTable("TestResultTableTestTable");
-                });
-
             modelBuilder.Entity("BillTableCourseTable", b =>
                 {
                     b.HasOne("TASysOnlineProject.Table.BillTable", null)
@@ -1053,21 +1020,6 @@ namespace TASysOnlineProject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CourseTableScheduleTable", b =>
-                {
-                    b.HasOne("TASysOnlineProject.Table.CourseTable", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASysOnlineProject.Table.ScheduleTable", null)
-                        .WithMany()
-                        .HasForeignKey("SchedulesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CourseTableUserAccountTable", b =>
                 {
                     b.HasOne("TASysOnlineProject.Table.CourseTable", null)
@@ -1079,36 +1031,6 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", null)
                         .WithMany()
                         .HasForeignKey("LearnerAccountsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ScheduleTableUserAccountTable", b =>
-                {
-                    b.HasOne("TASysOnlineProject.Table.ScheduleTable", null)
-                        .WithMany()
-                        .HasForeignKey("SchedulesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASysOnlineProject.Table.UserAccountTable", null)
-                        .WithMany()
-                        .HasForeignKey("UserAccountsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StreamSessionTableUserAccountTable", b =>
-                {
-                    b.HasOne("TASysOnlineProject.Table.UserAccountTable", null)
-                        .WithMany()
-                        .HasForeignKey("ParticipantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASysOnlineProject.Table.StreamSessionTable", null)
-                        .WithMany()
-                        .HasForeignKey("StreamSessionsAttendedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1140,7 +1062,7 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
                         .WithOne("Cart")
                         .HasForeignKey("TASysOnlineProject.Table.CartTable", "UserAccountId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("UserAccount");
@@ -1151,13 +1073,12 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.PostTable", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
                         .WithMany("Comments")
                         .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -1180,8 +1101,11 @@ namespace TASysOnlineProject.Migrations
                 {
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "InstructorAccount")
                         .WithMany("CoursesOfInstrucor")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("InstructorId");
+
+                    b.HasOne("TASysOnlineProject.Table.ScheduleTable", "Schedule")
+                        .WithMany("Courses")
+                        .HasForeignKey("ScheduleId");
 
                     b.HasOne("TASysOnlineProject.Table.SubjectTable", "Subject")
                         .WithMany("Courses")
@@ -1191,6 +1115,8 @@ namespace TASysOnlineProject.Migrations
 
                     b.Navigation("InstructorAccount");
 
+                    b.Navigation("Schedule");
+
                     b.Navigation("Subject");
                 });
 
@@ -1199,7 +1125,7 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.CourseTable", "Course")
                         .WithMany("CurriCulums")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -1232,7 +1158,6 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "Recipient")
                         .WithMany("ReceivedMessage")
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "Sender")
@@ -1262,13 +1187,12 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.PostTable", "Post")
                         .WithMany("PostLikes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
                         .WithMany("PostLikes")
                         .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -1278,11 +1202,18 @@ namespace TASysOnlineProject.Migrations
 
             modelBuilder.Entity("TASysOnlineProject.Table.PostTable", b =>
                 {
+                    b.HasOne("TASysOnlineProject.Table.CourseTable", "CourseTable")
+                        .WithMany("PostTables")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
                         .WithMany("Posts")
                         .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CourseTable");
 
                     b.Navigation("UserAccount");
                 });
@@ -1300,11 +1231,18 @@ namespace TASysOnlineProject.Migrations
 
             modelBuilder.Entity("TASysOnlineProject.Table.StreamSessionTable", b =>
                 {
+                    b.HasOne("TASysOnlineProject.Table.CourseTable", "CourseTable")
+                        .WithMany("StreamSessionTables")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "Creator")
                         .WithMany("StreamSessionsCreated")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("CourseTable");
 
                     b.Navigation("Creator");
                 });
@@ -1322,9 +1260,24 @@ namespace TASysOnlineProject.Migrations
 
             modelBuilder.Entity("TASysOnlineProject.Table.TestResultTable", b =>
                 {
+                    b.HasOne("TASysOnlineProject.Table.TestTable", "Test")
+                        .WithMany("TestResults")
+                        .HasForeignKey("TestId")
+                        .IsRequired();
+
+                    b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
+                        .WithMany("TestResultTables")
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", null)
                         .WithMany("TestResults")
                         .HasForeignKey("UserAccountTableId");
+
+                    b.Navigation("Test");
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("TASysOnlineProject.Table.TestTable", b =>
@@ -1365,33 +1318,17 @@ namespace TASysOnlineProject.Migrations
                     b.HasOne("TASysOnlineProject.Table.CourseTable", "Course")
                         .WithMany("UserRankings")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TASysOnlineProject.Table.UserAccountTable", "UserAccount")
                         .WithMany("UserRankings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
 
                     b.Navigation("UserAccount");
-                });
-
-            modelBuilder.Entity("TestResultTableTestTable", b =>
-                {
-                    b.HasOne("TASysOnlineProject.Table.TestResultTable", null)
-                        .WithMany()
-                        .HasForeignKey("TestResultsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASysOnlineProject.Table.TestTable", null)
-                        .WithMany()
-                        .HasForeignKey("TestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TASysOnlineProject.Table.CourseTable", b =>
@@ -1403,6 +1340,10 @@ namespace TASysOnlineProject.Migrations
                     b.Navigation("Discount");
 
                     b.Navigation("LessonTables");
+
+                    b.Navigation("PostTables");
+
+                    b.Navigation("StreamSessionTables");
 
                     b.Navigation("Tests");
 
@@ -1426,6 +1367,11 @@ namespace TASysOnlineProject.Migrations
                     b.Navigation("UserAccounts");
                 });
 
+            modelBuilder.Entity("TASysOnlineProject.Table.ScheduleTable", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
             modelBuilder.Entity("TASysOnlineProject.Table.SubjectTable", b =>
                 {
                     b.Navigation("Courses");
@@ -1434,6 +1380,8 @@ namespace TASysOnlineProject.Migrations
             modelBuilder.Entity("TASysOnlineProject.Table.TestTable", b =>
                 {
                     b.Navigation("Questions");
+
+                    b.Navigation("TestResults");
                 });
 
             modelBuilder.Entity("TASysOnlineProject.Table.UserAccountTable", b =>
@@ -1461,6 +1409,8 @@ namespace TASysOnlineProject.Migrations
                     b.Navigation("TechnicalReports");
 
                     b.Navigation("TestResults");
+
+                    b.Navigation("TestResultTables");
 
                     b.Navigation("UserInfo");
 

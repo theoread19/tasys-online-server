@@ -21,8 +21,8 @@ namespace TASysOnlineProject.Context
                                                .AddJsonFile("appsettings.json")
                                                .Build();
 
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("AzureConnection"));
-                //optionsBuilder.UseSqlServer(configuration.GetConnectionString("LocalConnection"));
+                //optionsBuilder.UseSqlServer(configuration.GetConnectionString("AzureConnection"));
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("LocalConnection"));
                 //optionsBuilder.UseMySQL(configuration.GetConnectionString("MySqlConnection"));
             }
         }

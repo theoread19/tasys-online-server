@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TASysOnlineProject.Migrations.AppConfig
+namespace TASysOnlineProject.Migrations
 {
-    public partial class AppConfig_V0 : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

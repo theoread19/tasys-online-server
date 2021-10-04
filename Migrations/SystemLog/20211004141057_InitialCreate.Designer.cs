@@ -10,8 +10,8 @@ using TASysOnlineProject.Context;
 namespace TASysOnlineProject.Migrations.SystemLog
 {
     [DbContext(typeof(SystemLogContext))]
-    [Migration("20210828064246_SystemLog_V0")]
-    partial class SystemLog_V0
+    [Migration("20211004141057_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

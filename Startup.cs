@@ -54,8 +54,8 @@ namespace TASysOnlineProject
 
             services.AddAutoMapper(typeof(AutoMapModule).Assembly);
 
-            //services.AddDbContext<UserAccountDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdenityConnection")));
-            services.AddDbContext<UserAccountDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
+            services.AddDbContext<UserAccountDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+            //services.AddDbContext<UserAccountDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             //Identity
             services.AddIdentity<IdentityUserAccount, IdentityRole>()

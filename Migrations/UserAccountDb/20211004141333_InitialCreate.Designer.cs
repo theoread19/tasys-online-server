@@ -10,8 +10,8 @@ using TASysOnlineProject.Context;
 namespace TASysOnlineProject.Migrations.UserAccountDb
 {
     [DbContext(typeof(UserAccountDbContext))]
-    [Migration("20210828063927_identity_V0")]
-    partial class identity_V0
+    [Migration("20211004141333_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
