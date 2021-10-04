@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TASysOnlineProject.Data;
+using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Data.Responses;
+
+namespace TASysOnlineProject.Service.TASysOnline
+{
+    public interface ICartService
+    {
+        public Task<IEnumerable<CartResponse>> GetAllCartAsync();
+
+        public Task<PageResponse<List<CartResponse>>> GetAllCartPagingAsync(Pagination paginationFilter, string route);
+
+        public Task<Response> CreateCartAsync(CartRequest cartRequest);
+
+        public Task<CartResponse> FindByNameAsync(string name);
+
+        public Task<CartResponse> GetCartById(Guid id);
+
+        public Task<int> CountAsync();
+
+        public Task<Response> UpdateCart(CartRequest cartRequest);
+
+        public Task<Response> DeleteCart(Guid[] cartId);
+
+        public Task<FilterResponse<List<CartResponse>>> FilterCartBy(Filter filterRequest, string route);
+
+        public Task<SearchResponse<List<CartResponse>>> SearchCartBy(Search searchRequest, string route);
+
+        public Task<Response> DeleteAllCart();
+    }
+}
