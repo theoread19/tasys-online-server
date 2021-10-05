@@ -43,5 +43,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<Response> BlockUserAccount(Guid userId);
 
         public Task<UserAccountResponse> GetUserAccountEagerLoadCourse(Guid userId);
+
+        public Task GenerateData();
     }
 }

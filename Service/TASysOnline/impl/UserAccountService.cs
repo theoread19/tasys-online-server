@@ -366,5 +366,38 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             return new UserAccountResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!"};
         }
+
+        public async Task GenerateData()
+        {
+            var datas = new List<UserAccountRequest> {
+                new UserAccountRequest { Id = Guid.NewGuid(), DisplayName = "ADMIN", Password = "admin", Username = "admin", RoleId = new Guid(Roles.AdminId)},
+                new UserAccountRequest { Id = Guid.NewGuid(), DisplayName = "INSTRUCTOR", Password = "instructor", Username = "instructor", RoleId = new Guid(Roles.InstructorId)},
+                new UserAccountRequest { Id = Guid.NewGuid(), DisplayName = "LEARNER", Password = "leaner", Username = "leaner", RoleId = new Guid(Roles.LearnerId)}
+            };
+
+            var tables = this._mapper.Map<List<UserAccountRequest>, List<UserAccountTable>>(datas);
+
+            foreach (var table in tables)
+            {
+                table.Password = BC.HashPassword(table.Password);
+                table.CreatedDate = DateTime.UtcNow;
+
+                var userTable = await this._userAccountRepository.InsertAsync(table);
+
+                await this._userAccountRepository.SaveAsync();
+
+                var role = await this._roleService.FindByIdAsync(table.RoleId);
+
+                var identity = this._mapper.Map<IdentityUserAccount>(table);
+
+                await this._identityService.CreateIdentityUserAccountAsync(identity, role.Name);
+
+                // Create userinfo
+                await this._userInfoService.CreateUserInfoAsync(new UserInfoRequest().Create(userTable.Id));
+
+                // Create cart
+                await this._cartService.CreateCartAsync(new CartRequest().Create(userTable.Id));
+            }
+        }
     }
 }

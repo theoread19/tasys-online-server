@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Repository.TASysOnline;
@@ -76,6 +77,26 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
 
             return respones;
+        }
+
+        public async Task GenerateData()
+        {
+            var datas = new List<RoleTable> {
+                new RoleTable{ Id = new Guid(Roles.AdminId), Name = Roles.Admin},
+                new RoleTable{ Id = new Guid(Roles.InstructorId), Name = Roles.Instructor},
+                new RoleTable{ Id = new Guid(Roles.LearnerId), Name = Roles.Learner}
+            };
+
+            foreach (var data in datas)
+            {
+                await this._roleRepository.InsertAsync(data);
+                await this._roleManager.CreateAsync(new IdentityRole
+                {
+                    Name = data.Name
+                });
+            }
+
+            await this._roleRepository.SaveAsync();
         }
     }
 }

@@ -3,3 +3,6 @@ appsettings.Development.json
 /obj
 /bin
 /.vs
+/.dll
+/.cache
+/.pdb

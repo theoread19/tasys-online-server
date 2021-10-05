@@ -128,5 +128,13 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._userAccountService.BlockUserAccount(userId);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpPost]
+        [Route("Generate-data")]
+        public async Task<IActionResult> Generate()
+        {
+            await this._userAccountService.GenerateData();
+            return Ok();
+        }
     }
 }

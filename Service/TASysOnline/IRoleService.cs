@@ -14,5 +14,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<IEnumerable<RoleResponse>> GetAllRoleAsync();
 
         public Task<RoleResponse> FindByIdAsync(Guid Id);
+
+        public Task GenerateData();
     }
 }
