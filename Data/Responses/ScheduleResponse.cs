@@ -7,15 +7,17 @@ namespace TASysOnlineProject.Data.Responses
 {
     public class ScheduleResponse : Response
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         ///     Property for start time of schedule
         /// </summary>
-        public float StartTime { get; set; }
+        public string StartTime { get; set; }
 
         /// <summary>
         ///     Property for end time of schedule
         /// </summary>
-        public float EndTime { get; set; }
+        public string EndTime { get; set; }
 
         /// <summary>
         ///     Property for date of week of schedule

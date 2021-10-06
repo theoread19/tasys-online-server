@@ -9,12 +9,15 @@ namespace TASysOnlineProject.Service.TASysOnline
 {
     public interface IScheduleService
     {
-        /*        public Task<Response> CreateSchedule(ScheduleRequest scheduleRequest);
 
-                public Task<IEnumerable<ScheduleResponse>> GetScheduleByDayOfWeek(DayOfWeek day, Guid userId);
+        public Task<ScheduleResponse> GetScheduleById(Guid id);
 
-                public Task<IEnumerable<ScheduleResponse>> GetSchedule(Guid userId);*/
+        public Task<IEnumerable<ScheduleResponse>> GetScheduleByDayOfWeek(DayOfWeek day, Guid userId);
+
+        public Task<IEnumerable<ScheduleResponse>> GetSchedule();
 
         public Task<IEnumerable<ScheduleResponse>> GetValidScheduleForUserId(Guid userId);
+
+        public Task GenerateData();
     }
 }

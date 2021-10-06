@@ -13,12 +13,12 @@ namespace TASysOnlineProject.Table
         /// <summary>
         ///     Property for start time of schedule
         /// </summary>
-        public float StartTime { get; set; }
+        public string StartTime { get; set; }
 
         /// <summary>
         ///     Property for end time of schedule
         /// </summary>
-        public float EndTime { get; set; }
+        public string EndTime { get; set; }
 
         /// <summary>
         ///     Property for date of week of schedule
@@ -27,8 +27,8 @@ namespace TASysOnlineProject.Table
 
         /// <summary>
         ///     List for course table
-        ///     many to one
+        ///     many to many
         /// </summary>
-        public List<CourseTable>? Courses { get; set; }
+        public ICollection<CourseTable>? Courses { get; set; }
     }
 }

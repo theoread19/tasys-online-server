@@ -17,51 +17,51 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             this._context = new TASysOnlineContext();
         }
 
- /*       public async Task<List<ScheduleTable>> FindScheduleByUserId(Guid userId)
-        {
-            try
-            {
-                var tables = await this._context.ScheduleTables
-                                            .Where(w => w.UserAccountId == userId)
-                                            .ToListAsync();
-                return tables;
-            }
-            catch
-            {
-                return new List<ScheduleTable>();
-            }
-        }
+        /*       public async Task<List<ScheduleTable>> FindScheduleByUserId(Guid userId)
+               {
+                   try
+                   {
+                       var tables = await this._context.ScheduleTables
+                                                   .Where(w => w.UserAccountId == userId)
+                                                   .ToListAsync();
+                       return tables;
+                   }
+                   catch
+                   {
+                       return new List<ScheduleTable>();
+                   }
+               }
 
-        public async Task<List<ScheduleTable>> FindScheduleByUserIdAndCourseId(Guid userId, Guid courseId)
-        {
-            try
-            {
-                var tables = await this._context.ScheduleTables.Where(w => w.CourseId == courseId)
-                                            .Where(w => w.UserAccountId == userId)
-                                            .ToListAsync();
+               public async Task<List<ScheduleTable>> FindScheduleByUserIdAndCourseId(Guid userId, Guid courseId)
+               {
+                   try
+                   {
+                       var tables = await this._context.ScheduleTables.Where(w => w.CourseId == courseId)
+                                                   .Where(w => w.UserAccountId == userId)
+                                                   .ToListAsync();
 
-                return tables;
-            }
-            catch
-            {
-                return new List<ScheduleTable>();
-            }
-        }
+                       return tables;
+                   }
+                   catch
+                   {
+                       return new List<ScheduleTable>();
+                   }
+               }
 
-        public async Task<List<ScheduleTable>> FindSchedulesByDayofWeekAndUserId(DayOfWeek dateOfWeek, Guid userId)
-        {
-            try
-            {
-                var tables = await this._context.ScheduleTables.Where(w => w.DayOfWeek == ((int)dateOfWeek))
-                                            .Where(w => w.UserAccountId == userId)
-                                            .ToListAsync();
+               public async Task<List<ScheduleTable>> FindSchedulesByDayofWeekAndUserId(DayOfWeek dateOfWeek, Guid userId)
+               {
+                   try
+                   {
+                       var tables = await this._context.ScheduleTables.Where(w => w.DayOfWeek == ((int)dateOfWeek))
+                                                   .Where(w => w.UserAccountId == userId)
+                                                   .ToListAsync();
 
-                return tables;
-            }
-            catch
-            {
-                return new List<ScheduleTable>();
-            }
-        }*/
+                       return tables;
+                   }
+                   catch
+                   {
+                       return new List<ScheduleTable>();
+                   }
+               }*/
     }
 }

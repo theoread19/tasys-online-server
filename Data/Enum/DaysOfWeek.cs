@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TASysOnlineProject.Data.Enum
 {
-    public enum DayOfWeek
+    public enum DaysOfWeek
     {
         Monday = 2,
         Tuesday = 3,

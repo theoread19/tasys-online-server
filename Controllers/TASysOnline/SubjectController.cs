@@ -76,5 +76,13 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpPost]
+        [Route("generate-data")]
+        public async Task<IActionResult> Generate()
+        {
+            await this._subjectService.GenerateData();
+            return Ok();
+        }
     }
 }

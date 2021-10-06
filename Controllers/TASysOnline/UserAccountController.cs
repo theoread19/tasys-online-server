@@ -130,7 +130,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Route("Generate-data")]
+        [Route("generate-data")]
         public async Task<IActionResult> Generate()
         {
             await this._userAccountService.GenerateData();

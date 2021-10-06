@@ -83,5 +83,7 @@ namespace TASysOnlineProject.Data.Requests
         /// </summary>
         [Required(ErrorMessage = "Duration is require")]
         public Guid InstructorId { get; set; }
+
+        public List<Guid> ScheduleIds { get; set; }
     }
 }

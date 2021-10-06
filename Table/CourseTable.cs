@@ -65,6 +65,7 @@ namespace TASysOnlineProject.Table
             this.LearnerAccounts = new HashSet<UserAccountTable>();
             this.Carts = new HashSet<CartTable>();
             this.BillTables = new HashSet<BillTable>();
+            this.Schedules = new HashSet<ScheduleTable>();
         }
 
         /// <summary>
@@ -96,15 +97,10 @@ namespace TASysOnlineProject.Table
         public UserAccountTable? InstructorAccount { get; set; }
 
         /// <summary>
-        ///     Property for schedule id
-        /// </summary>
-        public Guid? ScheduleId { get; set; }
-
-        /// <summary>
         ///     Property of schedule table
-        ///     one to many
+        ///     many to many
         /// </summary>
-        public virtual ScheduleTable? Schedule { get; set; }
+        public ICollection<ScheduleTable> Schedules { get; set; }
 
         /// <summary>
         ///     List for lesson table

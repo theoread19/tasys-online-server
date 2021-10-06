@@ -20,8 +20,8 @@ namespace TASysOnlineProject.Modules
             CreateMap<UserInfoRequest, UserInfoTable>();
             CreateMap<UserInfoTable, UserInfoResponse>();
             CreateMap<CourseRequest, CourseTable>();
-            CreateMap<CourseTable, CourseResponse>()
-                .ForMember(container => container.ScheduleResponse, op => op.MapFrom(res => res.Schedule));
+            CreateMap<CourseTable, CourseResponse>();
+                //.ForMember(container => container.ScheduleResponse, op => op.MapFrom(res => res.Schedule));
             CreateMap<SubjectRequest, SubjectTable>();
             CreateMap<SubjectTable, SubjectResponse>();
             CreateMap<UserAccountTable, IdentityUserAccount>()

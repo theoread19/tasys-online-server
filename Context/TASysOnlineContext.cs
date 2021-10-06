@@ -199,10 +199,8 @@ namespace TASysOnlineProject.Context
                     .HasForeignKey(fk => fk.InstructorId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                e.HasOne(o => o.Schedule)
-                    .WithMany(m => m.Courses)
-                    .HasForeignKey(fk => fk.ScheduleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                e.HasMany(m => m.Schedules)
+                    .WithMany(m => m.Courses);
 
                 e.HasMany(m => m.LearnerAccounts)
                     .WithMany(m => m.CoursesOfLearner);

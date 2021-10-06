@@ -25,12 +25,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        public CourseService(ICourseRepository courseRepository, IUriService uriService, IMapper mapper, IUserAccountService userAccountService)
+        private readonly IScheduleRepository _scheduleRepository;
+
+        public CourseService(ICourseRepository courseRepository, 
+                            IUriService uriService, 
+                            IMapper mapper, 
+                            IUserAccountService userAccountService,
+                            IScheduleRepository scheduleRepository)
         {
             this._courseRepository = courseRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._userAccountService = userAccountService;
+            this._scheduleRepository = scheduleRepository;
         }
 
         public async Task AddLeanersAsync(Guid leanerId, Guid courseId)
@@ -58,10 +65,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is Exist!" };
             }
 
+            var scheduleIds = courseRequest.ScheduleIds.ToList();
+
             var table = this._mapper.Map<CourseTable>(courseRequest);
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
             await this._courseRepository.InsertAsync(table);
+
+            foreach (var scheduleId in scheduleIds)
+            {
+                var scheduleTable = await this._scheduleRepository.FindByIdAsync(scheduleId);
+                table.Schedules.Add(scheduleTable);
+            }
+
             await this._courseRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Course was created!" };

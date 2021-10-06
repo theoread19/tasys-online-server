@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TASysOnlineProject.Context;
 
 namespace TASysOnlineProject.Migrations.TASysOnline
 {
     [DbContext(typeof(TASysOnlineContext))]
-    partial class TASysOnlineContextModelSnapshot : ModelSnapshot
+    [Migration("20211005135513_V1")]
+    partial class V1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,21 +49,6 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                     b.HasIndex("CoursesId");
 
                     b.ToTable("CartTableCourseTable");
-                });
-
-            modelBuilder.Entity("CourseTableScheduleTable", b =>
-                {
-                    b.Property<string>("CoursesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SchedulesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("CoursesId", "SchedulesId");
-
-                    b.HasIndex("SchedulesId");
-
-                    b.ToTable("CourseTableScheduleTable");
                 });
 
             modelBuilder.Entity("CourseTableUserAccountTable", b =>
@@ -281,6 +268,9 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                     b.Property<int>("RatingCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("ScheduleId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("SubjectId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
@@ -292,6 +282,8 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
+
+                    b.HasIndex("ScheduleId");
 
                     b.HasIndex("SubjectId");
 
@@ -1032,21 +1024,6 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CourseTableScheduleTable", b =>
-                {
-                    b.HasOne("TASysOnlineProject.Table.CourseTable", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASysOnlineProject.Table.ScheduleTable", null)
-                        .WithMany()
-                        .HasForeignKey("SchedulesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CourseTableUserAccountTable", b =>
                 {
                     b.HasOne("TASysOnlineProject.Table.CourseTable", null)
@@ -1130,6 +1107,10 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                         .WithMany("CoursesOfInstrucor")
                         .HasForeignKey("InstructorId");
 
+                    b.HasOne("TASysOnlineProject.Table.ScheduleTable", "Schedule")
+                        .WithMany("Courses")
+                        .HasForeignKey("ScheduleId");
+
                     b.HasOne("TASysOnlineProject.Table.SubjectTable", "Subject")
                         .WithMany("Courses")
                         .HasForeignKey("SubjectId")
@@ -1137,6 +1118,8 @@ namespace TASysOnlineProject.Migrations.TASysOnline
                         .IsRequired();
 
                     b.Navigation("InstructorAccount");
+
+                    b.Navigation("Schedule");
 
                     b.Navigation("Subject");
                 });
@@ -1386,6 +1369,11 @@ namespace TASysOnlineProject.Migrations.TASysOnline
             modelBuilder.Entity("TASysOnlineProject.Table.RoleTable", b =>
                 {
                     b.Navigation("UserAccounts");
+                });
+
+            modelBuilder.Entity("TASysOnlineProject.Table.ScheduleTable", b =>
+                {
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("TASysOnlineProject.Table.SubjectTable", b =>
