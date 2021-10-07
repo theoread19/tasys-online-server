@@ -297,12 +297,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var data = await this._userAccountRepository.GetAllAsync();
 
-            
-            var filterData = FilterUtils.Filter<UserAccountTable>(new Filter(filterSearchRequest.PageNumber, filterSearchRequest.PageSize, filterSearchRequest.SortBy!, filterSearchRequest.Order!, filterSearchRequest.FilterValue!, filterSearchRequest.FilterProperty!), data);
+            var filterSearchData = FilterSearchUtil.FilterSearch<UserAccountTable>(filterSearchRequest, data);
 
-            var searchData = SearchUtils.Search<UserAccountTable>(new Search(filterSearchRequest.PageNumber, filterSearchRequest.PageSize, filterSearchRequest.SortBy!, filterSearchRequest.Order!, filterSearchRequest.SearchValue!, filterSearchRequest.SearchProperty!), filterData);
-
-            var totalData = searchData.Count;
+            var totalData = filterSearchData.Count;
 
             if (totalData == 0)
             {
@@ -314,7 +311,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var pageData = this._mapper.Map<List<UserAccountTable>, List<UserAccountResponse>>(searchData);
+            var pageData = this._mapper.Map<List<UserAccountTable>, List<UserAccountResponse>>(filterSearchData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<UserAccountResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;

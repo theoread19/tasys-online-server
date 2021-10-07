@@ -15,6 +15,9 @@ namespace TASysOnlineProject.Utils
         {
             try
             {
+                var sortBy = filter.SortBy;
+                var propertySort = typeof(T).GetProperty(sortBy!);
+
                 var filterBy = filter.Property;
                 var propertyfilter = typeof(T).GetProperty(filterBy!);
 
@@ -22,7 +25,16 @@ namespace TASysOnlineProject.Utils
                     .Where(s => propertyfilter!.GetValue(s, null)!.ToString()! == filter.Value)
                     .ToList();
 
-                return filterData;
+                var sortData = filter.Order!.Equals("asc") ?
+                    filterData.OrderBy(x => propertySort!.GetValue(x, null))
+                    : filterData.OrderByDescending(x => propertySort!.GetValue(x, null));
+
+                var pagedData = sortData
+                    .Skip((filter.PageNumber - 1) * filter.PageSize)
+                    .Take(filter.PageSize)
+                    .ToList();
+
+                return pagedData;
             }
             catch
             {

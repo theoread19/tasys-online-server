@@ -9,5 +9,9 @@ namespace TASysOnlineProject.Repository.TASysOnline
     public interface ICourseRepository : IRepository<CourseTable>
     {
         public Task<CourseTable> FindByNameAsync(string name);
+
+        public Task<List<CourseTable>> GetCourseTablesEagerLoadScheduleAsync();
+
+        public Task<CourseTable> FindByIdAsyncEagerLoad(Guid id);
     }
 }

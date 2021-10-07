@@ -74,6 +74,6 @@ namespace TASysOnlineProject.Data.Responses
         /// </summary>
         public Guid? InstructorId { get; set; }
 
-        public ScheduleResponse? ScheduleResponse { get; set; }
+        public List<ScheduleResponse>? ScheduleResponses { get; set; }
     }
 }

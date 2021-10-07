@@ -25,19 +25,23 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
+        private readonly ISubjectService _subjectService;
+
         private readonly IScheduleRepository _scheduleRepository;
 
         public CourseService(ICourseRepository courseRepository, 
                             IUriService uriService, 
                             IMapper mapper, 
                             IUserAccountService userAccountService,
-                            IScheduleRepository scheduleRepository)
+                            IScheduleRepository scheduleRepository,
+                            ISubjectService subjectService)
         {
             this._courseRepository = courseRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._userAccountService = userAccountService;
             this._scheduleRepository = scheduleRepository;
+            this._subjectService = subjectService;
         }
 
         public async Task AddLeanersAsync(Guid leanerId, Guid courseId)
@@ -127,9 +131,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.FilterByAsync(validFilter);
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
 
-            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(tables);
+            var filterDatas = FilterUtils.Filter(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(filterDatas);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CourseResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -181,9 +187,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
 
-            if (tables == null)
+            var PagingDatas = PagedUtil.Pagination<CourseTable>(validFilter, tables);
+
+            if (PagingDatas == null)
             {
                 var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, totalData, this._uriService, route);
                 reponse.StatusCode = StatusCodes.Status500InternalServerError;
@@ -191,7 +199,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return reponse;
             }
 
-            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(tables);
+            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(PagingDatas);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CourseResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -201,7 +209,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<CourseResponse> GetCourseById(Guid id)
         {
-            var table = await this._courseRepository.FindByIdAsync(id);
+            var table = await this._courseRepository.FindByIdAsyncEagerLoad(id);
             var response = this._mapper.Map<CourseResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find course successfully";
@@ -225,9 +233,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.SearchByAsync(validFilter);
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
 
-            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(tables);
+            var SearchData = SearchUtils.Search<CourseTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(SearchData);
             var pagedReponse = PaginationHelper.CreatePagedReponse<CourseResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
@@ -255,6 +265,34 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._courseRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update course successfully!" };
+        }
+
+        public async Task GenerateData()
+        {
+            var instructor = await this._userAccountService.FindByNameAsync("instructor");
+            var schedules = await this._scheduleRepository.GetAllAsync();
+            var subject = await this._subjectService.GetAllSubjectAsync();
+            var subjectId = subject.FirstOrDefault().Id;
+            var scheduleId = schedules.Where(w => w.DayOfWeek == 2).Select(s => s.Id).FirstOrDefault();
+            CourseRequest data = new CourseRequest 
+            {
+                AvailableSlot = 5,
+                Cost = 8,
+                Description = "Generate",
+                Duration = 45,
+                Id = Guid.NewGuid(),
+                RatingCount = 0,
+                MaxSlot = 40,
+                Name = "Generate",
+                Summary = "Summary",
+                InstructorId = instructor.Id,
+                Rating = 0,
+                Feedback = "string",
+                SubjectId = subjectId,
+                ScheduleIds = new List<Guid> { scheduleId }
+            };
+
+            await this.CreateCourseAsync(data);
         }
     }
 }
