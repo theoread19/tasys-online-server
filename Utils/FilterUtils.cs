@@ -18,6 +18,11 @@ namespace TASysOnlineProject.Utils
                 var sortBy = filter.SortBy;
                 var propertySort = typeof(T).GetProperty(sortBy!);
 
+                if (propertySort == null)
+                {
+                    propertySort = typeof(T).GetProperty("CreatedDate");
+                }
+
                 var filterBy = filter.Property;
                 var propertyfilter = typeof(T).GetProperty(filterBy!);
 

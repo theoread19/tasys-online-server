@@ -36,7 +36,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
-        [Authorize(Roles = Roles.All)]
+//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllCoursePaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -55,7 +55,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        [Authorize(Roles = Roles.All)]
+//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
@@ -65,7 +65,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
-        [Authorize(Roles = Roles.All)]
+//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterCourse([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;

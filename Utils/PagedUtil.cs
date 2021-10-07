@@ -15,6 +15,11 @@ namespace TASysOnlineProject.Utils
                 var sortBy = pagination.SortBy;
                 var propertySort = typeof(T).GetProperty(sortBy!);
 
+                if (propertySort == null)
+                {
+                    propertySort = typeof(T).GetProperty("CreatedDate");
+                }
+
                 var sortData = pagination.Order!.Equals("asc") ?
                 data.OrderBy(x => propertySort!.GetValue(x, null))
                 : data.OrderByDescending(x => propertySort!.GetValue(x, null));
