@@ -22,12 +22,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
+        private ICourseService _courseService;
 
-        public TestService(ITestRepository TestRepository, IUriService uriService, IMapper mapper)
+        public TestService(ITestRepository TestRepository, IUriService uriService, IMapper mapper, ICourseService courseService)
         {
             this._testRepository = TestRepository;
             this._uriService = uriService;
             this._mapper = mapper;
+            this._courseService = courseService;
         }
 
         public async Task<int> CountAsync()
@@ -255,6 +257,26 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
+        }
+
+        public async Task GenerateData()
+        {
+            var course = await this._courseService.FindByNameAsync("Generate");
+
+            var data = new TestRequest
+            {
+                AllocatedTime = 120,
+                Deadline = DateTime.UtcNow.AddDays(30),
+                Description = "Generate",
+                MaxAttempt = 2,
+                MaxScore = 1,
+                TotalAttempt = 0,
+                TotalQuestions = 1,
+                CourseId = course.Id,
+                Name = "Generate"
+            };
+
+            await this.CreateTestAsync(data);
         }
     }
 }

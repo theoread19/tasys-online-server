@@ -101,5 +101,13 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._CurriCulumService.DeleteAllCurriCulum();
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpPost]
+        [Route("generate-data")]
+        public async Task<IActionResult> Generate()
+        {
+            await this._CurriCulumService.GenerateData();
+            return Ok();
+        }
     }
 }

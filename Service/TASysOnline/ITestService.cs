@@ -33,5 +33,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<Response> DeleteAllTest();
 
         public Task<FilterSearchResponse<List<TestResponse>>> FilterSearchTestBy(FilterSearch filterSearchRequest, string route);
+
+        public Task GenerateData();
     }
 }

@@ -31,5 +31,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<SearchResponse<List<CurriCulumResponse>>> SearchCurriCulumBy(Search searchRequest, string route);
 
         public Task<Response> DeleteAllCurriCulum();
+
+        public Task GenerateData();
     }
 }
