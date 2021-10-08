@@ -18,12 +18,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IScheduleRepository _scheduleRepository;
 
+        private readonly ICourseService _courseService;
+
+        private readonly IUserAccountService _userAccountService;
+
         private readonly IMapper _mapper;
 
-        public ScheduleService(IScheduleRepository scheduleRepository, IMapper mapper)
+        public ScheduleService(IScheduleRepository scheduleRepository, IMapper mapper, ICourseService courseService, IUserAccountService userAccountService)
         {
             this._scheduleRepository = scheduleRepository;
             this._mapper = mapper;
+            this._courseService = courseService;
+            this._userAccountService = userAccountService;
         }
 
         public async Task GenerateData()
@@ -137,9 +143,21 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return response;
         }
 
-        public async Task<IEnumerable<ScheduleResponse>> GetValidScheduleForUserId(Guid userId)
+        public async Task<IEnumerable<ScheduleResponse>> GetAllScheduleByUserId(Guid userId)
         {
-            throw new NotImplementedException();
+            var user = await this._userAccountService.GetUserAccountEagerLoadCourse(userId);
+            if (user.StatusCode != 200)
+            {
+                return new List<ScheduleResponse>();
+            }
+
+            var coursesOfUser = user.CourseResponses.ToList();
+            List<ScheduleResponse> schedulesOfUser = new List<ScheduleResponse>();
+            foreach (var course in coursesOfUser)
+            {
+                schedulesOfUser.AddRange(course.ScheduleResponses.ToList());
+            }
+            return schedulesOfUser;
         }
     }
 }

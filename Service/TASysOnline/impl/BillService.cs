@@ -16,7 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 {
     public class BillService : IBillService
     {
-        private IBillRepository _BillRepository;
+        private IBillRepository _billRepository;
 
         private IUriService _uriService;
 
@@ -24,17 +24,24 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly ICourseService _courseService;
 
-        public BillService(IBillRepository BillRepository, IUriService uriService, IMapper mapper, ICourseService courseService)
+        private readonly ICartService _cartService;
+
+        public BillService(IBillRepository BillRepository, 
+                            IUriService uriService, 
+                            IMapper mapper, 
+                            ICourseService courseService,
+                            ICartService cartService)
         {
-            this._BillRepository = BillRepository;
+            this._billRepository = BillRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._courseService = courseService;
+            this._cartService = cartService;
         }
 
         public async Task<int> CountAsync()
         {
-            return await this._BillRepository.CountAsync();
+            return await this._billRepository.CountAsync();
         }
 
         public async Task<Response> CreateBillAsync(BillRequest BillRequest)
@@ -44,22 +51,24 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
-            var bill = await this._BillRepository.InsertAsync(table);
+            var bill = await this._billRepository.InsertAsync(table);
             foreach(var courseRequest in BillRequest.CourseRequests)
             {
                 bill.CourseTables.Add(this._mapper.Map<CourseTable>(courseRequest));
                 await this._courseService.AddLeanersAsync(BillRequest.UserAccountId, courseRequest.Id);
             }
             
-            await this._BillRepository.SaveAsync();
+            await this._billRepository.SaveAsync();
+
+            await this._cartService.RemoveAllCourseFromCart(BillRequest.UserAccountId);
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Bill was created!" };
         }
 
         public async Task<Response> DeleteAllBill()
         {
-            await this._BillRepository.DeleteAllAsyn();
-            await this._BillRepository.SaveAsync();
+            await this._billRepository.DeleteAllAsyn();
+            await this._billRepository.SaveAsync();
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
@@ -71,10 +80,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             for (var i = 0; i < BillId.Length; i++)
             {
-                await this._BillRepository.DeleteAsync(BillId[i]);
+                await this._billRepository.DeleteAsync(BillId[i]);
             }
 
-            await this._BillRepository.SaveAsync();
+            await this._billRepository.SaveAsync();
 
             return new Response
             {
@@ -87,7 +96,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
 
-            var totalData = await this._BillRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._billRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
 
             if (totalData == 0)
             {
@@ -100,7 +109,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._BillRepository.FilterByAsync(validFilter);
+            var tables = await this._billRepository.FilterByAsync(validFilter);
 
             var pageData = this._mapper.Map<List<BillTable>, List<BillResponse>>(tables);
 
@@ -133,7 +142,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<IEnumerable<BillResponse>> GetAllBillAsync()
         {
-            var tables = await this._BillRepository.GetAllAsync();
+            var tables = await this._billRepository.GetAllAsync();
 
             var responses = this._mapper.Map<List<BillTable>, List<BillResponse>>(tables);
 
@@ -143,7 +152,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<PageResponse<List<BillResponse>>> GetAllBillPagingAsync(Pagination paginationFilter, string route)
         {
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._BillRepository.CountAsync();
+            var totalData = await this._billRepository.CountAsync();
 
             if (totalData == 0)
             {
@@ -155,7 +164,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._BillRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._billRepository.GetAllPadingAsync(validFilter);
 
             if (tables == null)
             {
@@ -175,7 +184,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<BillResponse> GetBillById(Guid id)
         {
-            var table = await this._BillRepository.FindByIdAsync(id);
+            var table = await this._billRepository.FindByIdAsync(id);
             var response = this._mapper.Map<BillResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Bill successfully";
@@ -186,7 +195,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
-            var totalData = await this._BillRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._billRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
 
             if (totalData == 0)
             {
@@ -199,7 +208,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._BillRepository.SearchByAsync(validFilter);
+            var tables = await this._billRepository.SearchByAsync(validFilter);
 
             var pageData = this._mapper.Map<List<BillTable>, List<BillResponse>>(tables);
             var pagedReponse = PaginationHelper.CreatePagedReponse<BillResponse>(pageData, validFilter, totalData, this._uriService, route);

@@ -16,7 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<IEnumerable<ScheduleResponse>> GetSchedule();
 
-        public Task<IEnumerable<ScheduleResponse>> GetValidScheduleForUserId(Guid userId);
+        public Task<IEnumerable<ScheduleResponse>> GetAllScheduleByUserId(Guid userId);
 
         public Task GenerateData();
     }

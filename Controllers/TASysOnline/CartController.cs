@@ -101,5 +101,32 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._CartService.DeleteAllCart();
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpPut]
+        [Route("{userId}/add-to-cart")]
+        [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
+        public async Task<IActionResult> AddCourseToCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
+        {
+            var response = await this._CartService.AddCourseToCart(userId, courseRequest.Id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut]
+        [Route("{userId}/reomve-from-cart")]
+        [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
+        public async Task<IActionResult> RemoveCourseFromCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
+        {
+            var response = await this._CartService.RemoveCourseFromCart(userId, courseRequest.Id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete]
+        [Route("{userId}/reomve-all-from-cart")]
+        [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
+        public async Task<IActionResult> RemoveAllCourseFromCart([FromQuery] Guid userId)
+        {
+            var response = await this._CartService.RemoveAllCourseFromCart(userId);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

@@ -19,7 +19,14 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
 
         public async Task<CourseTable> FindByIdAsyncEagerLoad(Guid id)
         {
-            return await this._context.CourseTables.Where(w => w.Id == id).Include(i => i.Schedules).FirstOrDefaultAsync();
+            try
+            {
+                return await this._context.CourseTables.Where(w => w.Id == id).Include(i => i.Schedules).FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<CourseTable> FindByNameAsync(string name)

@@ -51,7 +51,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var user = this._mapper.Map<UserAccountTable>(await this._userAccountService.FindByIdAsync(leanerId));
             courseTable.LearnerAccounts.Add(user);
 
-//            await this._courseRepository.UpdateAsync(courseTable);
             await this._courseRepository.SaveAsync();
         }
 

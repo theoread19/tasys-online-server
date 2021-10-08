@@ -31,5 +31,11 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<SearchResponse<List<CartResponse>>> SearchCartBy(Search searchRequest, string route);
 
         public Task<Response> DeleteAllCart();
+
+        public Task<Response> AddCourseToCart(Guid userId, Guid courseId);
+
+        public Task<Response> RemoveCourseFromCart(Guid userId, Guid courseId);
+
+        public Task<Response> RemoveAllCourseFromCart(Guid userId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,19 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public CartRepository() : base(new TASysOnlineContext())
         {
             this._context = new TASysOnlineContext();
+        }
+
+        public async Task<CartTable> GetCartByUserIdAsync(Guid userId)
+        {
+            try
+            {
+                var table = await this._context.CartTables.Where(w => w.UserAccountId == userId).Include(i => i.Courses).FirstOrDefaultAsync();
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

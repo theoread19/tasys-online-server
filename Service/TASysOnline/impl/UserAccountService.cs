@@ -33,7 +33,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IIdentityService _identityService;
 
-        private readonly ICartService _cartService;
+        private readonly ICartRepository _cartRepository;
 
         public UserAccountService(IUserAccountRepository userAccountRepository, 
                                     IRoleService roleService, 
@@ -41,7 +41,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                                     IMapper mapper, 
                                     IUserInfoService userInfoService, 
                                     IIdentityService identityService,
-                                    ICartService cartService)
+                                    ICartRepository cartRepository)
         {
             this._identityService = identityService;
             this._roleService = roleService;
@@ -49,7 +49,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._uriService = uriService;
             this._mapper = mapper;
             this._userInfoService = userInfoService;
-            this._cartService = cartService;
+            this._cartRepository = cartRepository;
         }
 
         public async Task<Response> CreateUserAsync(UserAccountRequest userAccountRequest)
@@ -74,7 +74,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._userInfoService.CreateUserInfoAsync(new UserInfoRequest().Create(userTable.Id));
 
             // Create cart
-            await this._cartService.CreateCartAsync(new CartRequest().Create(userTable.Id));
+            await this._cartRepository.InsertAsync(new CartTable {Id = Guid.NewGuid(), TotalCourse = 0, UserAccountId = userTable.Id });
+            await this._cartRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "User was created!" };
         }
@@ -393,7 +394,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 await this._userInfoService.CreateUserInfoAsync(new UserInfoRequest().Create(userTable.Id));
 
                 // Create cart
-                await this._cartService.CreateCartAsync(new CartRequest().Create(userTable.Id));
+                await this._cartRepository.InsertAsync(new CartTable { Id = Guid.NewGuid(), TotalCourse = 0, UserAccountId = userTable.Id });
+                await this._cartRepository.SaveAsync();
             }
         }
     }
