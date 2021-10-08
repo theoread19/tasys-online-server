@@ -46,7 +46,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
+//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetCourseById(Guid id)
         {
             var response = await this._courseService.GetCourseById(id);
