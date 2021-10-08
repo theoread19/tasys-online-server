@@ -18,17 +18,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IScheduleRepository _scheduleRepository;
 
-        private readonly ICourseService _courseService;
-
         private readonly IUserAccountService _userAccountService;
 
         private readonly IMapper _mapper;
 
-        public ScheduleService(IScheduleRepository scheduleRepository, IMapper mapper, ICourseService courseService, IUserAccountService userAccountService)
+        public ScheduleService(IScheduleRepository scheduleRepository, IMapper mapper, IUserAccountService userAccountService)
         {
             this._scheduleRepository = scheduleRepository;
             this._mapper = mapper;
-            this._courseService = courseService;
             this._userAccountService = userAccountService;
         }
 
