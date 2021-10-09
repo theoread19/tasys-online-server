@@ -33,7 +33,5 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<FilterSearchResponse<List<LessonResponse>>> FilterSearchLessonBy(FilterSearch filterSearchRequest, string route);
 
         public Task<Response> DeleteAllLesson();
-
-        public Task GenerateData();
     }
 }

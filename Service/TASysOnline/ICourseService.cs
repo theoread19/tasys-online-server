@@ -22,6 +22,8 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<int> CountAsync();
 
+        public Task<int> CountLeanerOfCourse(Guid courseId);
+
         public Task<Response> UpdateCourse(CourseRequest courseRequest);
 
         public Task<Response> DeleteCourse(Guid[] courseId);

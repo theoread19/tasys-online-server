@@ -20,16 +20,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IUriService _uriService;
 
-        private ICourseService _courseService;
-
         private IMapper _mapper;
 
-        public LessonService(ILessonRepository LessonRepository, IUriService uriService, IMapper mapper, ICourseService courseService)
+        public LessonService(ILessonRepository LessonRepository, IUriService uriService, IMapper mapper)
         {
             this._LessonRepository = LessonRepository;
             this._uriService = uriService;
             this._mapper = mapper;
-            this._courseService = courseService;
         }
 
         public async Task<int> CountAsync()
@@ -158,15 +155,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                         response.ResponseMessage = "Lesson is Found!";
                         return response;*/
             throw new NotImplementedException();
-        }
-
-        public async Task GenerateData()
-        {
-            var course = await this._courseService.FindByNameAsync("Generate");
-
-            var data = new LessonRequest { BackText = "back", Description = "Generate", FrontText = "front", Name = "Generate", CourseId = course.Id };
-
-            await this.CreateLessonAsync(data);
         }
 
         public async Task<IEnumerable<LessonResponse>> GetAllLessonAsync()

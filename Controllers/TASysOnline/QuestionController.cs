@@ -119,13 +119,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var responses = await this._QuestionService.FilterSearchQuestionBy(filterSearch, route);
             return StatusCode(StatusCodes.Status200OK, responses);
         }
-
-        [HttpPost]
-        [Route("generate-data")]
-        public async Task<IActionResult> Generate()
-        {
-            await this._QuestionService.GenerateData();
-            return Ok();
-        }
     }
 }

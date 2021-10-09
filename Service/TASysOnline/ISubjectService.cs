@@ -23,7 +23,5 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<Response> UpdateSubject(SubjectRequest subjectRequest);
 
         public Task<Response> DeleteSubject(Guid[] subjectId);
-
-        public Task GenerateData();
     }
 }

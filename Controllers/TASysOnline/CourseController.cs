@@ -108,13 +108,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._courseService.DeleteAllCourse();
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpPost]
-        [Route("generate-data")]
-        public async Task<IActionResult> Generate()
-        {
-            await this._courseService.GenerateData();
-            return Ok();
-        }
     }
 }

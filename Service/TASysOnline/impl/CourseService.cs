@@ -293,5 +293,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             await this.CreateCourseAsync(data);
         }
+
+        public async Task<int> CountLeanerOfCourse(Guid courseId)
+        {
+            return await this._courseRepository.CountLeanerOfCourse(courseId);
+        }
     }
 }

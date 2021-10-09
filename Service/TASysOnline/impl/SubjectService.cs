@@ -178,22 +178,5 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 ResponseMessage = "Delete Subject Successfully!"
             };
         }
-
-        public async Task GenerateData()
-        {
-            var datas = new List<SubjectTable> { 
-                new SubjectTable { Id = Guid.NewGuid(), Name = "Math"},
-                new SubjectTable { Id = Guid.NewGuid(), Name = "English"},
-                new SubjectTable { Id = Guid.NewGuid(), Name = "Progaming"},
-                new SubjectTable { Id = Guid.NewGuid(), Name = "Physics"},
-                new SubjectTable { Id = Guid.NewGuid(), Name = "Chemistry"},
-            };
-            foreach (var data in datas)
-            {
-                await this._subjectRepository.InsertAsync(data);
-            }
-
-            await this._subjectRepository.SaveAsync();
-        }
     }
 }

@@ -22,17 +22,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        private ITestService _testService;
-
         private readonly IAnswerService _answerService;
 
-        public QuestionService(IQuestionRepository QuestionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService, ITestService testService)
+        public QuestionService(IQuestionRepository QuestionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService)
         {
             this._QuestionRepository = QuestionRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._answerService = answerService;
-            this._testService = testService;
         }
 
         public async Task<int> CountAsync()
@@ -250,27 +247,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task GenerateData()
-        {
-            var tests = await this._testService.GetAllTestAsync();
-            var testId = tests.FirstOrDefault().Id;
-
-            var data = new QuestionRequest
-            {
-                Content = "1 + 1 = ?",
-                Score = 1,
-                TotalCorrectAnswer = 1,
-                TestId = testId,
-                AnswerRequests = new List<AnswerRequest>
-                {
-                    new AnswerRequest { Content = "10", IsCorrect = false},
-                    new AnswerRequest { Content = "2", IsCorrect = true}
-                }
-            };
-
-            await this.CreateQuestionAsync(data);
         }
     }
 }

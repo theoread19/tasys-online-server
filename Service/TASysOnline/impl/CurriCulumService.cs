@@ -22,14 +22,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        private ICourseService _courseService;
-
-        public CurriCulumService(ICurriCulumRepository CurriCulumRepository, IUriService uriService, IMapper mapper, ICourseService courseService)
+        public CurriCulumService(ICurriCulumRepository CurriCulumRepository, IUriService uriService, IMapper mapper)
         {
             this._CurriCulumRepository = CurriCulumRepository;
             this._uriService = uriService;
             this._mapper = mapper;
-            this._courseService = courseService;
         }
 
         public async Task<int> CountAsync()
@@ -123,23 +120,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                         response.ResponseMessage = "CurriCulum is Found!";
                         return response;*/
             throw new NotImplementedException();
-        }
-
-        public async Task GenerateData()
-        {
-            var course = await this._courseService.FindByNameAsync("Generate");
-            var datas = new List<CurriCulumRequest>
-            {
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 1"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 2"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 3"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 4"},
-            };
-
-            foreach (var data in datas)
-            {
-                await this.CreateCurriCulumAsync(data);
-            }
         }
 
         public async Task<IEnumerable<CurriCulumResponse>> GetAllCurriCulumAsync()

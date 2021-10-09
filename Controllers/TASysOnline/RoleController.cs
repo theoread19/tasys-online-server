@@ -56,13 +56,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._roleService.CreateAsync(roleRequest);
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpPost]
-        [Route("generate-data")]
-        public async Task<IActionResult> CreateRole()
-        {
-            await this._roleService.GenerateData();
-            return Ok();
-        }
     }
 }

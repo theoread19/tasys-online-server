@@ -18,8 +18,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<IEnumerable<ScheduleResponse>> GetAllScheduleByUserId(Guid userId);
 
-        public Task GenerateData();
-
         public Task<Response> CreateScheduleAsync(ScheduleRequest scheduleRequest);
 
         public Task<Response> UpdateScheduleAsync(ScheduleRequest scheduleRequest);

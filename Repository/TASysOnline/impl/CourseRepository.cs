@@ -17,6 +17,20 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             this._context = new TASysOnlineContext();
         }
 
+        public async Task<int> CountLeanerOfCourse(Guid courseId)
+        {
+            try
+            {
+                var table = await this._context.CourseTables.Where(w => w.Id == courseId).Include(i => i.LearnerAccounts).FirstOrDefaultAsync();
+                var count = table.LearnerAccounts.Count();
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public async Task<CourseTable> FindByIdAsyncEagerLoad(Guid id)
         {
             try

@@ -38,7 +38,7 @@ namespace TASysOnlineProject.Data.Responses
         ///     Property for user account table is creator
         ///     one to many
         /// </summary>
-        public UserAccountTable? Creator { get; set; }
+        public UserAccountResponse? Creator { get; set; }
 
         /// <summary>
         ///     Property for course id
@@ -49,6 +49,6 @@ namespace TASysOnlineProject.Data.Responses
         ///     Property for course table
         ///     one to many
         /// </summary>
-        public CourseTable? CourseTable { get; set; }
+        public CourseResponse? CourseTable { get; set; }
     }
 }

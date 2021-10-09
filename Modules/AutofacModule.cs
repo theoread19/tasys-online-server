@@ -64,6 +64,7 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<BillService>().As<IBillService>().InstancePerLifetimeScope();
             builder.RegisterType<TestResultService>().As<ITestResultService>().InstancePerLifetimeScope();
             builder.RegisterType<StatisticService>().As<IStatisticService>().InstancePerLifetimeScope();
+            builder.RegisterType<GenerateService>().As<IGenerateService>().InstancePerLifetimeScope();
         }
     }
 }

@@ -33,7 +33,5 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<IEnumerable<QuestionResponse>> FindQuestionByTestId(Guid testId);
 
         public Task<FilterSearchResponse<List<QuestionResponse>>> FilterSearchQuestionBy(FilterSearch filterSearchRequest, string route);
-
-        public Task GenerateData();
     }
 }
