@@ -14,33 +14,24 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
         public static Dictionary<string, List<LessonResponse>> Lessons = new Dictionary<string, List<LessonResponse>>();
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
+        public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
 
         private readonly IStreamSessionService _streamSessionService;
 
         private readonly ILessonService _lessonService;
 
-        private readonly ITestService _testService;
-
         private readonly IQuestionService _questionService;
-
-        private readonly IAnswerService _answerService;
 
         private readonly ITestResultService _testResultService;
 
-        public Guid _instrutorId;
-
         public StreamHub(IStreamSessionService streamSessionService, 
                         ILessonService lessonService, 
-                        ITestService testService,
                         IQuestionService questionService,
-                        IAnswerService answerService,
                         ITestResultService testResultService)
         {
             this._streamSessionService = streamSessionService;
             this._lessonService = lessonService;
-            this._testService = testService;
             this._questionService = questionService;
-            this._answerService = answerService;
             this._testResultService = testResultService;
         }
 
@@ -62,7 +53,7 @@ namespace TASysOnlineProject.Config.HubConfig
                 ConnectedClients.Add(roomName, new List<UserAccountAuthRequest>());
                 Lessons.Add(roomName, new List<LessonResponse>());
                 TestResults.Add(roomName, new List<TestResultResponse>());
-                this._instrutorId = userAccountAuthRequest.Id;
+                Creator.Add(roomName, userAccountAuthRequest);
             }
 
             var user = ConnectedClients[roomName].Where(w => w.Id.Equals(userAccountAuthRequest.Id)).FirstOrDefault();
@@ -145,7 +136,7 @@ namespace TASysOnlineProject.Config.HubConfig
         {
             if (!ConnectedClients.ContainsKey(roomName))
             {
-                EmitLog("Room " + roomName + " is not found!", roomName);
+                EmitLog("Room " + roomName + " is not found!", roomName).Wait();
             }
 
             var lesson = Lessons[roomName].Where(w => w.Id.Equals(lessonId)).FirstOrDefault();
@@ -173,7 +164,27 @@ namespace TASysOnlineProject.Config.HubConfig
 
             TestResults[roomName].Add(testResult);
 
-            await Clients.Groups(roomName).SendAsync("lesson", TestResults[roomName].ToList());
+            await Clients.Groups(roomName).SendAsync("test", TestResults[roomName].ToList());
+        }
+
+        public async Task ShowAnswerChoice(string roomName, bool isShowAnswerChoice)
+        {
+            if (!ConnectedClients.ContainsKey(roomName))
+            {
+                await EmitLog("Room " + roomName + " is not found!", roomName);
+            }
+
+            await Clients.Group(roomName).SendAsync("isShowAnswerChoice", isShowAnswerChoice);
+        }
+
+        public async Task ShowCorrectAnswer(string roomName, bool isShowCorrectAnswer)
+        {
+            if (!ConnectedClients.ContainsKey(roomName))
+            {
+                await EmitLog("Room " + roomName + " is not found!", roomName);
+            }
+
+            await Clients.Group(roomName).SendAsync("isShowCorrectAnswer", isShowCorrectAnswer);
         }
 
         private Task EmitJoinRoom(string roomName)
