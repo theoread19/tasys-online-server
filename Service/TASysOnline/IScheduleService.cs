@@ -12,12 +12,18 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<ScheduleResponse> GetScheduleById(Guid id);
 
-        public Task<IEnumerable<ScheduleResponse>> GetScheduleByDayOfWeek(DayOfWeek day, Guid userId);
+//        public Task<IEnumerable<ScheduleResponse>> GetScheduleByDayOfWeek(DayOfWeek day, Guid userId);
 
         public Task<IEnumerable<ScheduleResponse>> GetSchedule();
 
         public Task<IEnumerable<ScheduleResponse>> GetAllScheduleByUserId(Guid userId);
 
         public Task GenerateData();
+
+        public Task<Response> CreateScheduleAsync(ScheduleRequest scheduleRequest);
+
+        public Task<Response> UpdateScheduleAsync(ScheduleRequest scheduleRequest);
+
+        public Task<Response> DeleteScheduleAsync(Guid[] ids);
     }
 }
