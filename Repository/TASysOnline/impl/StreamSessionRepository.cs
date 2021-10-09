@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,15 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public StreamSessionRepository() : base(new TASysOnlineContext())
         {
             this._context = new TASysOnlineContext();
+        }
+
+        public async Task<List<StreamSessionTable>> GetAllStreamSessionEagerLoadAsync()
+        {
+            var tables = await this._context.StreamSessionTables
+                                        .Include(i => i.CourseTable)
+                                        .Include(i => i.Creator)
+                                        .ToListAsync();
+            return tables;
         }
     }
 }

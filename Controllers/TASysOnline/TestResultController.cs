@@ -68,7 +68,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CalculateTestResult([FromBody] DoTestRequest doTestRequest)
         {
             var response = await this._TestResultService.CalculateTestResult(doTestRequest);

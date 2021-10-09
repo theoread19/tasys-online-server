@@ -28,5 +28,10 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for creator id
         /// </summary>
         public Guid CreatorId { get; set; }
+
+        /// <summary>
+        ///     Property for course id
+        /// </summary>
+        public Guid CourseId { get; set; }
     }
 }

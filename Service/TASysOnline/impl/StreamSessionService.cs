@@ -92,9 +92,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._StreamSessionRepository.FilterByAsync(validFilter);
+            var tables = await this._StreamSessionRepository.GetAllStreamSessionEagerLoadAsync();
 
-            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(tables);
+            var filterData = FilterUtils.Filter<StreamSessionTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(filterData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -147,9 +149,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._StreamSessionRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._StreamSessionRepository.GetAllStreamSessionEagerLoadAsync();
 
-            if (tables == null)
+            var pagedData = PagedUtil.Pagination<StreamSessionTable>(validFilter, tables);
+
+            if (pagedData == null)
             {
                 var reponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(null, validFilter, totalData, this._uriService, route);
                 reponse.StatusCode = StatusCodes.Status500InternalServerError;
@@ -157,7 +161,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return reponse;
             }
 
-            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(tables);
+            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(pagedData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -191,9 +195,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._StreamSessionRepository.SearchByAsync(validFilter);
+            var tables = await this._StreamSessionRepository.GetAllStreamSessionEagerLoadAsync();
 
-            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(tables);
+            var searchData = SearchUtils.Search<StreamSessionTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(searchData);
             var pagedReponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TASysOnlineProject.Table;
 
 namespace TASysOnlineProject.Data.Responses
 {
@@ -32,5 +33,22 @@ namespace TASysOnlineProject.Data.Responses
         ///     Property for creator id
         /// </summary>
         public Guid CreatorId { get; set; }
+
+        /// <summary>
+        ///     Property for user account table is creator
+        ///     one to many
+        /// </summary>
+        public UserAccountTable? Creator { get; set; }
+
+        /// <summary>
+        ///     Property for course id
+        /// </summary>
+        public Guid CourseId { get; set; }
+
+        /// <summary>
+        ///     Property for course table
+        ///     one to many
+        /// </summary>
+        public CourseTable? CourseTable { get; set; }
     }
 }
