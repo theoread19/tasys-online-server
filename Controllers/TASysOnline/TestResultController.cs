@@ -92,13 +92,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._TestResultService.DeleteAllTestResult();
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpPost]
-        [Route("do-test")]
-        public async Task<IActionResult> DoTest(DoTestRequest doTestRequest)
-        {
-            var response = await this._TestResultService.CalculateTestResult(doTestRequest);
-            return StatusCode(StatusCodes.Status200OK, response);
-        }
     }
 }
