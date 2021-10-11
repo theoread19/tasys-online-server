@@ -10,7 +10,7 @@ using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Config.HubConfig
 {
-    public class ClassroomHub : Microsoft.AspNet.SignalR.Hub
+    public class ClassroomHub : Microsoft.AspNetCore.SignalR.Hub
     {
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
 
@@ -76,7 +76,7 @@ namespace TASysOnlineProject.Config.HubConfig
                 }
             }
 
-            return Groups.Remove(Context.ConnectionId, className);
+            return Groups.RemoveFromGroupAsync(Context.ConnectionId, className);
         }
 
         public async Task RemoveClass(string className)
@@ -114,7 +114,7 @@ namespace TASysOnlineProject.Config.HubConfig
 
         public void aTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            var context = GlobalHost.ConnectionManager.GetHubContext<ClassroomHub>();
+            //var context = GlobalHost.ConnectionManager.GetHubContext<ClassroomHub>();
 
             var now = DateTime.UtcNow;
             var streams = this._streamSessionService.GetComingStreamSessionAsync(now).Result;
@@ -133,7 +133,7 @@ namespace TASysOnlineProject.Config.HubConfig
 
         private Task EmitJoinClass(string className)
         {
-            return Groups.Add(Context.ConnectionId, className);
+            return Groups.AddToGroupAsync(Context.ConnectionId, className);
         }
 
         private Task EmitCreated(string className)
