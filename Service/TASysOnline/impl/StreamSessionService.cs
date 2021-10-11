@@ -169,6 +169,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
+        public async Task<IEnumerable<StreamSessionResponse>> GetComingStreamSessionAsync(DateTime now)
+        {
+            var tables = await this._StreamSessionRepository.GetComingStreamSessionEagerLoadAsync(now);
+
+            var responses = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(tables);
+
+            return responses;
+        }
+
         public async Task<StreamSessionResponse> GetStreamSessionById(Guid id)
         {
             var table = await this._StreamSessionRepository.FindByIdAsync(id);

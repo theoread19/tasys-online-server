@@ -9,5 +9,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
     public interface IStreamSessionRepository : IRepository<StreamSessionTable>
     {
         public Task<List<StreamSessionTable>> GetAllStreamSessionEagerLoadAsync();
+
+        public Task<List<StreamSessionTable>> GetComingStreamSessionEagerLoadAsync(DateTime now);
     }
 }

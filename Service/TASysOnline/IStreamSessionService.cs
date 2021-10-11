@@ -31,5 +31,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<SearchResponse<List<StreamSessionResponse>>> SearchStreamSessionBy(Search searchRequest, string route);
 
         public Task<Response> DeleteAllStreamSession();
+
+        public Task<IEnumerable<StreamSessionResponse>> GetComingStreamSessionAsync(DateTime now);
     }
 }

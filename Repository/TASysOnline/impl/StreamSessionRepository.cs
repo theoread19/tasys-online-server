@@ -24,5 +24,15 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
                                         .ToListAsync();
             return tables;
         }
+
+        public async Task<List<StreamSessionTable>> GetComingStreamSessionEagerLoadAsync(DateTime now)
+        {
+            var tables = await this._context.StreamSessionTables
+                                        .Where(w => w.StartTime >= now)
+                                        .Include(i => i.CourseTable)
+                                        .Include(i => i.Creator)
+                                        .ToListAsync();
+            return tables;
+        }
     }
 }
