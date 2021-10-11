@@ -18,12 +18,19 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
 
         public async Task<TestTable> FindTestByIdEagerAsync(Guid id)
         {
-            var table = await this._context.TestTables
-                            .Where(w => w.Id == id)
-                            .Include(i => i.Questions)
-                            .ThenInclude(t => t.Answers)
-                            .FirstOrDefaultAsync();
-            return table;
+            try
+            {
+                var table = await this._context.TestTables
+                .Where(w => w.Id == id)
+                .Include(i => i.Questions)
+                .ThenInclude(t => t.Answers)
+                .FirstOrDefaultAsync();
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

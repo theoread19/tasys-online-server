@@ -39,6 +39,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var test = await this._testService.GetTestById(doTestRequest.TestId);
 
+            if (test == null)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
+            }
+
             var totalAttempt = await this._testResultRepository.CountTestResultByUserIdAndTestId(doTestRequest.UserId, doTestRequest.TestId);
 
             if (totalAttempt >= test.MaxAttempt)
