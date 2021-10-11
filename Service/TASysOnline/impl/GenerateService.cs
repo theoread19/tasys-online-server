@@ -300,7 +300,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 AllocatedTime = 120,
                 Deadline = DateTime.UtcNow.AddDays(30),
                 Description = "Generate",
-                MaxAttempt = 2,
+                MaxAttempt = 1000,
                 MaxScore = 1,
                 TotalAttempt = 0,
                 TotalQuestions = 1,
