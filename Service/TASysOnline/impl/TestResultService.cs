@@ -43,7 +43,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
             }
-
             var totalAttempt = await this._testResultRepository.CountTestResultByUserIdAndTestId(doTestRequest.UserId, doTestRequest.TestId);
 
             if (totalAttempt >= test.MaxAttempt)
@@ -65,7 +64,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 var countIncorrectAnswer = vaildAnswer.Count() - countCorrectAnswer;
                 var pointOfQuestion = ((float)countCorrectAnswer /questions[i].TotalCorrectAnswer) * questions[i].Score;
 
-                toltalScorce += pointOfQuestion - ((float)countCorrectAnswer/questions[i].Score);
+                toltalScorce += pointOfQuestion;
             }
 
             var table = await this._testResultRepository.InsertAsync(
@@ -76,6 +75,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                     CreatedDate = DateTime.UtcNow,
                     UserAccountId = doTestRequest.UserId
                 });
+
+            await this._testResultRepository.SaveAsync();
 
             var response = this._mapper.Map<TestResultResponse>(table);
             response.ResponseMessage = "Test result was stored!";

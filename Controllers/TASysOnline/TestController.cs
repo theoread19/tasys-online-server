@@ -64,7 +64,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var route = Request.Path.Value;
             var responses = await this._TestService.FilterTestBy(filterRequest, route);
-            return StatusCode(StatusCodes.Status200OK, responses);
+            return StatusCode(responses.StatusCode, responses);
         }
 
         [HttpPost]
@@ -109,7 +109,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var route = Request.Path.Value;
             var responses = await this._TestService.FilterSearchTestBy(filterSearch, route);
-            return StatusCode(StatusCodes.Status200OK, responses);
+            return StatusCode(responses.StatusCode, responses);
         }
     }
 }
