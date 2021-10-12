@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,22 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             this._context = new TASysOnlineContext();
         }
 
+        public async Task<List<PostTable>> GetAllPostEagerLoadAsync()
+        {
+            try
+            {
+                var tables = await this._context.PostTables
+                                                .Include(i => i.PostLikes)
+                                                    .ThenInclude(ti => ti.UserAccount)
+                                                .Include(i => i.UserAccount)
+                                                .ToListAsync();
+
+                return tables;
+            }
+            catch
+            {
+                return new List<PostTable>();
+            }
+        }
     }
 }

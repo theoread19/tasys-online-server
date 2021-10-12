@@ -32,6 +32,7 @@ namespace TASysOnlineProject.Modules
             CreateMap<DiscountTable, DiscountResponse>();
             CreateMap<PostRequest, PostTable>();
             CreateMap<PostTable, PostResponse>()
+                .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount))
                 .ForMember(m => m.postLikeResponses, op => op.MapFrom(res => res.PostLikes));
             CreateMap<LessonRequest, LessonTable>();
             CreateMap<LessonTable, LessonResponse>();
@@ -72,6 +73,8 @@ namespace TASysOnlineProject.Modules
             CreateMap<ScheduleRequest, ScheduleTable>();
             CreateMap<ScheduleTable, ScheduleResponse>();
             CreateMap<PostLikeRequest, PostLikeTable>();
+            CreateMap<PostLikeTable, PostLikeResponse>()
+                .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));
         }
     }
 }

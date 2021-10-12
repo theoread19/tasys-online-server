@@ -8,5 +8,6 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface IPostRepository : IRepository<PostTable>
     {
+        public Task<List<PostTable>> GetAllPostEagerLoadAsync();
     }
 }
