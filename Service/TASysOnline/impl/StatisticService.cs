@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Responses;
+using TASysOnlineProject.Data.Responses.StatisticResponses;
 
 namespace TASysOnlineProject.Service.TASysOnline.impl
 {
@@ -15,25 +16,61 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly ICourseService _courseService;
 
-        public StatisticService(IUserAccountService userAccountService, ICourseService courseService)
+        private readonly IStreamSessionService _streamSessionService;
+
+        public StatisticService(IUserAccountService userAccountService, ICourseService courseService, IStreamSessionService streamSessionService)
         {
             this._courseService = courseService;
             this._userAccountService = userAccountService;
+            this._streamSessionService = streamSessionService;
         }
 
-        public async Task<StatisticResponse> GetStatistics()
+        public async Task<CourseStatisticResponse> GetCourseStatistic()
         {
-            var countLearner = await this._userAccountService.CountByRoleIdAsync(new Guid(Roles.LearnerId));
-            var countInstructor = await this._userAccountService.CountByRoleIdAsync(new Guid(Roles.InstructorId));
             var countCourse = await this._courseService.CountAsync();
 
-            var response = new StatisticResponse { CountCourse = countCourse, 
-                                                CountInstructor = countInstructor, 
-                                                CountLeaner = countLearner };
+            return new CourseStatisticResponse
+            {
+                StatusCode = StatusCodes.Status200OK,
+                ResponseMessage = "Fectching data statistic successfully!",
+                Count = countCourse
+            };
+        }
 
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Fetching all datas for statistic susscessfully!";
-            return response;
+        public async Task<InstructorStatisticResponse> GetInstructorStatistic()
+        {
+            var countInstructor = await this._userAccountService.CountByRoleIdAsync(new Guid(Roles.InstructorId));
+
+            return new InstructorStatisticResponse
+            {
+                StatusCode = StatusCodes.Status200OK,
+                ResponseMessage = "Fectching data statistic successfully!",
+                Count = countInstructor
+            };
+        }
+
+        public async Task<LearnerStatisticResponse> GetLearnerStatisticResponse()
+        {
+            var countLearner = await this._userAccountService.CountByRoleIdAsync(new Guid(Roles.LearnerId));
+
+            return new LearnerStatisticResponse
+            {
+                StatusCode = StatusCodes.Status200OK,
+                ResponseMessage = "Fectching data statistic successfully!",
+                Count = countLearner
+            };
+        }
+
+        public async Task<StreamSessionStatisticResponse> GetStreamSessionStatistic()
+        {
+            var countStreamSession = await this._streamSessionService.CountAsync();
+
+            return new StreamSessionStatisticResponse
+            {
+                StatusCode = StatusCodes.Status200OK,
+                ResponseMessage = "Fectching data statistic successfully!",
+                Count = countStreamSession
+            };
         }
     }
 }

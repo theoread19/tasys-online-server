@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Repository.TASysOnline;
 using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Config.HubConfig
@@ -16,9 +17,15 @@ namespace TASysOnlineProject.Config.HubConfig
 
         private readonly IStreamSessionService _streamSessionService;
 
-        public ClassroomHub(IStreamSessionService streamSessionService)
+        private readonly IPostLikeRepository _postLikeRepository;
+
+        private readonly IPostService _postService;
+
+        public ClassroomHub(IStreamSessionService streamSessionService, IPostLikeRepository postLikeRepository, IPostService postService)
         {
             this._streamSessionService = streamSessionService;
+            this._postLikeRepository = postLikeRepository;
+            this._postService = postService;
         }
 
         public Task CreateOrJoinClass(string className, UserAccountAuthRequest userAccountAuthRequest)
@@ -95,10 +102,28 @@ namespace TASysOnlineProject.Config.HubConfig
 
         public async Task CreatePost(string className, PostRequest post)
         {
-            await EmitLog("Send post in room", className);
+            await EmitLog("notify create post in room", className);
 
             await Clients.Group(className).SendAsync("post", post);
 
+        }
+
+        public async Task LikePost(string className, PostLikeRequest postLikeRequest)
+        {
+            await EmitLog("Like post", className);
+
+            var postLike = await this._postLikeRepository.FindPostLikeByPostIdAndUserId(postLikeRequest.PostId, postLikeRequest.UserAccountId);
+
+            await Clients.User(postLike.UserAccountId.ToString()).SendAsync("post", postLike);
+        }
+
+        public async Task CommentPost(string className, CommentRequest commentRequest)
+        {
+            await EmitLog("Comment post", className);
+
+            var post = this._postService.GetPostById(commentRequest.PostId);
+
+            await Clients.User(commentRequest.UserAccountId.ToString()).SendAsync("post", post, commentRequest);
         }
 
         public void Application_Start(object sender, EventArgs e)
@@ -129,7 +154,6 @@ namespace TASysOnlineProject.Config.HubConfig
             }
             //context.Clients.All.addMessage("This message broadcasted on " + DateTime.Now);
         }
-
 
         private Task EmitJoinClass(string className)
         {

@@ -21,12 +21,37 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             this._statisticService = statisticService;
         }
 
+
         [HttpGet]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> GetStatisticAsync()
+        [Route("course-statistic")]
+        public async Task<IActionResult> CourseStatistic()
         {
-            var response = await this._statisticService.GetStatistics();
-            return StatusCode(StatusCodes.Status200OK, response);
+            var response = await this._statisticService.GetCourseStatistic();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("instructor-statistic")]
+        public async Task<IActionResult> InstructorStatistic()
+        {
+            var response = await this._statisticService.GetInstructorStatistic();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("learner-statistic")]
+        public async Task<IActionResult> LearnerStatistic()
+        {
+            var response = await this._statisticService.GetLearnerStatisticResponse();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet]
+        [Route("streamsession-statistic")]
+        public async Task<IActionResult> StreamSessionStatistic()
+        {
+            var response = await this._statisticService.GetStreamSessionStatistic();
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
