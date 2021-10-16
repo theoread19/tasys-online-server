@@ -16,20 +16,16 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
         public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
 
-        private readonly IStreamSessionService _streamSessionService;
-
         private readonly ILessonService _lessonService;
 
         private readonly IQuestionService _questionService;
 
         private readonly ITestResultService _testResultService;
 
-        public StreamHub(IStreamSessionService streamSessionService, 
-                        ILessonService lessonService, 
+        public StreamHub(ILessonService lessonService, 
                         IQuestionService questionService,
                         ITestResultService testResultService)
         {
-            this._streamSessionService = streamSessionService;
             this._lessonService = lessonService;
             this._questionService = questionService;
             this._testResultService = testResultService;
