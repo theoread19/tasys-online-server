@@ -54,6 +54,7 @@ namespace TASysOnlineProject.Modules
             CreateMap<QuestionRequest, QuestionTable>();
             CreateMap<QuestionTable, QuestionResponse>()
                 .ForMember(container => container.AnswerResponses, op => op.MapFrom(res => res.Answers));
+            CreateMap<QuestionRequest, QuestionResponse>();
             CreateMap<AnswerRequest, AnswerTable>();
             CreateMap<AnswerTable, AnswerResponse>();
             CreateMap<CloudBlobContainer, ContainerResponse>()

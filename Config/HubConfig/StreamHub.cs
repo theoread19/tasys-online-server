@@ -164,6 +164,8 @@ namespace TASysOnlineProject.Config.HubConfig
 
             TestResults[roomName].Add(testResult);
 
+            var user = ConnectedClients[roomName].Where(w => w.Id.Equals(doTestRequest.UserId)).FirstOrDefault();
+
             await Clients.Groups(roomName).SendAsync("test", TestResults[roomName].ToList());
         }
 

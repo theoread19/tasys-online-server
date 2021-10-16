@@ -21,9 +21,8 @@ namespace TASysOnlineProject.Data.Responses
         /// </summary>
         public Guid TestId { get; set; }
 
-        /// <summary>
-        ///     Property for user account id
-        /// </summary>
-        public Guid UserAccountId { get; set; }
+        public List<QuestionResponse>? QuestionResponses { get; set; }
+
+        public UserAccountResponse? UserAccountResponse { get; set; }
     }
 }

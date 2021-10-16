@@ -24,19 +24,29 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IUriService _uriService;
 
+        private readonly IUserAccountService _userAccountService;
+
         private IMapper _mapper;
 
-        public TestResultService(ITestService testService, ITestResultRepository testResultRepository, IQuestionService questionService, IUriService uriService, IMapper mapper)
+        public TestResultService(ITestService testService, ITestResultRepository testResultRepository, IQuestionService questionService, IUriService uriService, IMapper mapper, IUserAccountService userAccountService)
         {
             this._testResultRepository = testResultRepository;
             this._testService = testService;
             this._questionService = questionService;
             this._mapper = mapper;
             this._uriService = uriService;
+            this._userAccountService = userAccountService;
         }
 
         public async Task<TestResultResponse> CalculateTestResult(DoTestRequest doTestRequest)
         {
+            var user = await this._userAccountService.FindByIdAsync(doTestRequest.UserId);
+
+            if (user == null)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             var test = await this._testService.GetTestById(doTestRequest.TestId);
 
             if (test == null)
@@ -79,6 +89,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._testResultRepository.SaveAsync();
 
             var response = this._mapper.Map<TestResultResponse>(table);
+            response.QuestionResponses = this._mapper.Map<List<QuestionRequest>, List<QuestionResponse>>(doTestRequest.QuestionRequest!);
+            response.UserAccountResponse = user;
             response.ResponseMessage = "Test result was stored!";
             response.StatusCode = StatusCodes.Status201Created;
             return response;
