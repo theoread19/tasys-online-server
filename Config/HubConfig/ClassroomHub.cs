@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.SignalR;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Config.HubConfig
 {
-    public class ClassroomHub : Microsoft.AspNetCore.SignalR.Hub
+    public class ClassroomHub : Hub
     {
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
 

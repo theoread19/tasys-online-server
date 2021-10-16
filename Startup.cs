@@ -14,9 +14,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TASysOnlineProject.Context;
@@ -25,6 +22,8 @@ using TASysOnlineProject.Modules;
 using TASysOnlineProject.Service.Paging;
 using TASysOnlineProject.Service.Paging.impl;
 using TASysOnlineProject.Table.Identity;
+using Microsoft.AspNetCore.SignalR;
+using TASysOnlineProject.Data.Provider;
 
 namespace TASysOnlineProject
 {
@@ -151,6 +150,7 @@ namespace TASysOnlineProject
 
             // add signalR
             services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, UserAccountProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
