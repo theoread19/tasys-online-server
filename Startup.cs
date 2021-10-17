@@ -148,9 +148,11 @@ namespace TASysOnlineProject
                 .AllowCredentials());
             });
 
+
+            services.AddSingleton<IUserIdProvider, UserAccountProvider>();
             // add signalR
             services.AddSignalR();
-            services.AddSingleton<IUserIdProvider, UserAccountProvider>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

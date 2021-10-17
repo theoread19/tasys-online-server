@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Data.Provider
 {

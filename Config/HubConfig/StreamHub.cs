@@ -31,6 +31,12 @@ namespace TASysOnlineProject.Config.HubConfig
             this._testResultService = testResultService;
         }
 
+
+        public string GetConnectionId()
+        {
+            return Context.ConnectionId;
+        }
+
         public Task SendMessage(object message, string roomName, UserAccountAuthRequest userAccountAuthRequest)
         {
             EmitLog("Client " + Context.ConnectionId + " said: " + message, roomName);
@@ -198,7 +204,8 @@ namespace TASysOnlineProject.Config.HubConfig
                                             UserAccountAuthRequest receiveUserEntry, 
                                             string message)
         {
-            await Clients.Group(roomName).SendAsync("privateMessage", sendUserEntry, receiveUserEntry, message);
+            var time = DateTime.UtcNow.ToLocalTime().ToString();
+            await Clients.Group(roomName).SendAsync("privateMessage", sendUserEntry, receiveUserEntry, message, time);
         }
 
         private Task EmitJoinRoom(string roomName)
