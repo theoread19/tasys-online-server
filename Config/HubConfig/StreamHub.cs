@@ -187,7 +187,7 @@ namespace TASysOnlineProject.Config.HubConfig
 
         public async Task InviteForPresenting(string roomName, UserAccountAuthRequest userEntry, bool isPresenting)
         {
-            string Presenting = isPresenting ? "is presenting" : "was stop presentation";
+            string Presenting = isPresenting ? "is presenting" : "stopped the presentation";
             await EmitLog("Room " + roomName + ", User: " + userEntry.DisplayName + " " + Presenting, roomName);
 
             await Clients.Group(roomName).SendAsync("presenting", userEntry, isPresenting);
