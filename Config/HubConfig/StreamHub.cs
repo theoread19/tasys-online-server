@@ -185,6 +185,22 @@ namespace TASysOnlineProject.Config.HubConfig
             await Clients.Group(roomName).SendAsync("isShowCorrectAnswer", isShowCorrectAnswer);
         }
 
+        public async Task InviteForPresenting(string roomName, UserAccountAuthRequest userEntry, bool isPresenting)
+        {
+            string Presenting = isPresenting ? "is presenting" : "was stop presentation";
+            await EmitLog("Room " + roomName + ", User: " + userEntry.DisplayName + " " + Presenting, roomName);
+
+            await Clients.Group(roomName).SendAsync("presenting", userEntry, isPresenting);
+        }
+
+        public async Task SendPrivateMessage(string roomName, 
+                                            UserAccountAuthRequest sendUserEntry, 
+                                            UserAccountAuthRequest receiveUserEntry, 
+                                            string message)
+        {
+            await Clients.Group(roomName).SendAsync("privateMessage", sendUserEntry, receiveUserEntry, message);
+        }
+
         private Task EmitJoinRoom(string roomName)
         {
             return Groups.AddToGroupAsync(Context.ConnectionId, roomName);
