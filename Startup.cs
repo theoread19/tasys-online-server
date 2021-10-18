@@ -148,8 +148,6 @@ namespace TASysOnlineProject
                 .AllowCredentials());
             });
 
-
-            services.AddSingleton<IUserIdProvider, UserAccountProvider>();
             // add signalR
             services.AddSignalR();
            
