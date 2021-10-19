@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
@@ -78,9 +79,22 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> UpdateUserInfo([FromBody] UserInfoRequest UserInfoRequest)
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UserInfoRequest userInfoRequest)
         {
-            var response = await this._userInfoService.UpdateUserInfo(UserInfoRequest);
+            var user = HttpContext.User;
+
+            var role = user.FindFirst(ClaimTypes.Role).Value;
+
+            if(role != Roles.Admin)
+            {
+                var userId = new Guid(user.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (userId != userInfoRequest.UserAccountId)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+                }
+            }
+
+            var response = await this._userInfoService.UpdateUserInfo(userInfoRequest);
 
             return StatusCode(response.StatusCode, response);
         }

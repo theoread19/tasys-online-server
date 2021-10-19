@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Requests;
@@ -16,10 +17,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 {
     public class UserInfoService : IUserInfoService
     {
-        private IUserInfoRepository _userInfoRepository;
-        private IMapper _mapper;
+        private readonly IUserInfoRepository _userInfoRepository;
+        private readonly IMapper _mapper;
+        private readonly IUriService _uriService;
 
-        private IUriService _uriService;
         public UserInfoService(IUserInfoRepository userInfoRepository, IUriService uriService, IMapper mapper)
         {
             this._userInfoRepository = userInfoRepository;
@@ -134,6 +135,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<UserInfoResponse> GetUserInfoById(Guid id)
         {
             var table = await this._userInfoRepository.FindUserInfoByUserAccountId(id);
+
+            if(table == null)
+            {
+                return new UserInfoResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User info not found!" };
+            }
+
             var response = this._mapper.Map<UserInfoResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find user info successfully";
@@ -170,7 +177,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdateUserInfo(UserInfoRequest userInfoRequest)
         {
             var table = await this._userInfoRepository.FindByIdAsync(userInfoRequest.Id);
-            //if user ko so huu => forbident
+
+            if (table == null)
+            {
+                return new UserInfoResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User info not found!" };
+            }
 
             table.Address = userInfoRequest.Address;
             table.DateOfBirth = userInfoRequest.DateOfBirth;

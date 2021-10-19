@@ -18,7 +18,14 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
 
         public async Task<UserInfoTable> FindUserInfoByUserAccountId(Guid id)
         {
-            return await this._context.UserInfoTables.Where(w => w.UserAccountId == id).FirstOrDefaultAsync();
+            try
+            {
+                return await this._context.UserInfoTables.Where(w => w.UserAccountId == id).FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
