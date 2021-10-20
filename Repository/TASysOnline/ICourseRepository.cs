@@ -10,7 +10,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
     {
         public Task<CourseTable> FindByNameAsync(string name);
 
-        public Task<List<CourseTable>> GetCourseTablesEagerLoadScheduleAsync();
+        public Task<List<CourseTable>> GetCourseTablesEagerLoadAsync();
 
         public Task<CourseTable> FindByIdAsyncEagerLoad(Guid id);
 

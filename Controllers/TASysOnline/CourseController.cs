@@ -108,5 +108,14 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._courseService.DeleteAllCourse();
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet]
+        [Route("filter-search")]
+        public async Task<IActionResult> FilterSearchCourse([FromQuery] FilterSearch filterSearchRequest)
+        {
+            var route = Request.Path.Value;
+            var responses = await this._courseService.FilterSearchCourseBy(filterSearchRequest, route);
+            return StatusCode(StatusCodes.Status200OK, responses);
+        }
     }
 }

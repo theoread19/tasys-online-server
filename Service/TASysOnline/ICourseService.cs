@@ -32,6 +32,8 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<SearchResponse<List<CourseResponse>>> SearchCourseBy(Search searchRequest, string route);
 
+        public Task<FilterSearchResponse<List<CourseResponse>>> FilterSearchCourseBy(FilterSearch filterSearchRequest, string route);
+
         public Task<Response> DeleteAllCourse();
 
         public Task AddLeanersAsync(Guid leanerId, Guid courseId);

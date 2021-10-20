@@ -30,7 +30,14 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
 
         public async Task<UserAccountTable> FindByUsernameAsync(string username)
         {
-            return await this._context.UserAccountTables.Where(w => w.Username!.Equals(username)).FirstOrDefaultAsync();
+            try
+            {
+                return await this._context.UserAccountTables.Where(w => w.Username!.Equals(username)).FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<UserAccountTable> GetUserAccountEagerLoadCourse(Guid userId)

@@ -130,7 +130,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadAsync();
 
             var filterDatas = FilterUtils.Filter(validFilter, tables);
 
@@ -186,7 +186,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadAsync();
 
             var PagingDatas = PagedUtil.Pagination<CourseTable>(validFilter, tables);
 
@@ -232,7 +232,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._courseRepository.GetCourseTablesEagerLoadScheduleAsync();
+            var tables = await this._courseRepository.GetCourseTablesEagerLoadAsync();
 
             var SearchData = SearchUtils.Search<CourseTable>(validFilter, tables);
 
@@ -297,6 +297,34 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<int> CountLeanerOfCourse(Guid courseId)
         {
             return await this._courseRepository.CountLeanerOfCourse(courseId);
+        }
+
+        public async Task<FilterSearchResponse<List<CourseResponse>>> FilterSearchCourseBy(FilterSearch filterSearchRequest, string route)
+        {
+            var validFilter = new FilterSearch(filterSearchRequest.PageNumber, filterSearchRequest.PageSize, filterSearchRequest.SortBy!, filterSearchRequest.Order!, filterSearchRequest.FilterValue!, filterSearchRequest.FilterProperty!, filterSearchRequest.SearchValue!, filterSearchRequest.SearchProperty!);
+
+            var data = await this._courseRepository.GetCourseTablesEagerLoadAsync();
+
+            var filterSearchData = FilterSearchUtil.FilterSearch<CourseTable>(filterSearchRequest, data);
+
+            var totalData = filterSearchData.Count;
+
+            if (totalData == 0)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, totalData, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status404NotFound;
+                reponse.ResponseMessage = "Not Found!";
+                return reponse;
+            }
+
+            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
+
+            var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(filterSearchData);
+
+            var pagedReponse = PaginationHelper.CreatePagedReponse<CourseResponse>(pageData, validFilter, totalData, this._uriService, route);
+            pagedReponse.StatusCode = StatusCodes.Status200OK;
+            pagedReponse.ResponseMessage = "Fectching data successfully!";
+            return pagedReponse;
         }
     }
 }

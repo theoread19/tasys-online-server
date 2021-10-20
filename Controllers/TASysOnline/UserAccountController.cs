@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
@@ -89,6 +90,11 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateUserAccount([FromBody] UserAccountRequest userAccountRequest)
         {
+
+            var user = HttpContext.User;
+
+            var role = user.FindFirst(ClaimTypes.Role).Value;
+
             var response = await this._userAccountService.UpdateUserAccount(userAccountRequest);
 
             return StatusCode(response.StatusCode, response);

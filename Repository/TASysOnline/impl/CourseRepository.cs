@@ -48,9 +48,12 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             return await this._context.CourseTables.Where(w => w.Name!.Equals(name)).FirstOrDefaultAsync();
         }
 
-        public async Task<List<CourseTable>> GetCourseTablesEagerLoadScheduleAsync()
+        public async Task<List<CourseTable>> GetCourseTablesEagerLoadAsync()
         {
-            return await this._context.CourseTables.Include(i => i.Schedules).ToListAsync();
+            return await this._context.CourseTables
+                                        .Include(i => i.Schedules)
+                                        .Include(i => i.InstructorAccount)
+                                        .ToListAsync();
         }
     }
 }

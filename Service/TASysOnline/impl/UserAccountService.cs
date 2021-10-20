@@ -21,17 +21,17 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     public class UserAccountService : IUserAccountService
     {
 
-        private IUserAccountRepository _userAccountRepository;
+        private readonly IUserAccountRepository _userAccountRepository;
 
         private readonly IUserInfoService _userInfoService;
 
-        private IRoleService _roleService;
+        private readonly IRoleService _roleService;
 
-        private IUriService _uriService;
+        private readonly IUriService _uriService;
 
         private readonly IMapper _mapper;
 
-        private IIdentityService _identityService;
+        private readonly IIdentityService _identityService;
 
         private readonly ICartRepository _cartRepository;
 
@@ -107,11 +107,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (table == null)
             {
-                return null;
+                return new UserAccountResponse {StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
             }
 
             var reponse = this._mapper.Map<UserAccountResponse>(table);
-            reponse.ResponseMessage = "UserAccount is found!";
+            reponse.ResponseMessage = "Fetching user successfully!";
             reponse.StatusCode = StatusCodes.Status200OK;
             return reponse;
         }
@@ -123,7 +123,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest)
         {
-
+            //can chinh lai theo role
             var table = await this._userAccountRepository.FindByIdAsync(userAccountRequest.Id);
 
             table.DisplayName = userAccountRequest.DisplayName;
