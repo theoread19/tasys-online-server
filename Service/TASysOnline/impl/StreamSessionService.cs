@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Requests;
@@ -73,6 +72,34 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 StatusCode = StatusCodes.Status200OK,
                 ResponseMessage = "Delete StreamSession successfully!"
             };
+        }
+
+        public async Task<FilterSearchResponse<List<StreamSessionResponse>>> FilterSearchStreamSessionBy(FilterSearch filterSearchRequest, string route)
+        {
+            var validFilter = new FilterSearch(filterSearchRequest.PageNumber, filterSearchRequest.PageSize, filterSearchRequest.SortBy!, filterSearchRequest.Order!, filterSearchRequest.FilterValue!, filterSearchRequest.FilterProperty!, filterSearchRequest.SearchValue!, filterSearchRequest.SearchProperty!);
+
+            var data = await this._StreamSessionRepository.GetAllStreamSessionEagerLoadAsync();
+
+            var filterSearchData = FilterSearchUtil.FilterSearch<StreamSessionTable>(filterSearchRequest, data);
+
+            var totalData = filterSearchData.Count;
+
+            if (totalData == 0)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(null, validFilter, totalData, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status404NotFound;
+                reponse.ResponseMessage = "Not Found!";
+                return reponse;
+            }
+
+            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
+
+            var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(filterSearchData);
+
+            var pagedReponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(pageData, validFilter, totalData, this._uriService, route);
+            pagedReponse.StatusCode = StatusCodes.Status200OK;
+            pagedReponse.ResponseMessage = "Fectching data successfully!";
+            return pagedReponse;
         }
 
         public async Task<FilterResponse<List<StreamSessionResponse>>> FilterStreamSessionBy(Filter filterRequest, string route)

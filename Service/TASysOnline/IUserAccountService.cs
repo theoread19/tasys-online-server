@@ -26,7 +26,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<UserAccountResponse> FindByIdAsync(Guid id);
 
-        public Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest);
+        public Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo);
 
         public Task<Response> DeleteUserAccount(Guid[] userAccountId);
 

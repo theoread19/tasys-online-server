@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Service.TASysOnline;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,6 +21,18 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     public class UserAccountController : ControllerBase
     {
         public IUserAccountService _userAccountService;
+
+        private AccountAuthorInfo GetAccountAuthorInfo()
+        {
+            var user = HttpContext.User;
+
+            return new AccountAuthorInfo
+            {
+                Id = new Guid(user.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Role = user.FindFirst(ClaimTypes.Role).Value,
+                Username = user.FindFirst(ClaimTypes.Name).Value
+            };
+        }
 
         public UserAccountController(IUserAccountService subjectService)
         {
@@ -90,12 +103,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateUserAccount([FromBody] UserAccountRequest userAccountRequest)
         {
-
-            var user = HttpContext.User;
-
-            var role = user.FindFirst(ClaimTypes.Role).Value;
-
-            var response = await this._userAccountService.UpdateUserAccount(userAccountRequest);
+            var response = await this._userAccountService.UpdateUserAccount(userAccountRequest, this.GetAccountAuthorInfo());
 
             return StatusCode(response.StatusCode, response);
         }

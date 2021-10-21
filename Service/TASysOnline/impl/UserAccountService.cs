@@ -121,13 +121,25 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return await this._userAccountRepository.CountAsync();
         }
 
-        public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest)
+        public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo)
         {
-            //can chinh lai theo role
             var table = await this._userAccountRepository.FindByIdAsync(userAccountRequest.Id);
 
+            if (table == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            if (accountAuthorInfo.Role == Roles.Admin)
+            {
+                table.RoleId = userAccountRequest.RoleId;
+            } 
+            else if (accountAuthorInfo.Id != userAccountRequest.Id) 
+            {
+                return new Response { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
+            };
+
             table.DisplayName = userAccountRequest.DisplayName;
-            table.RoleId = userAccountRequest.RoleId;
             table.ModifiedDate = DateTime.UtcNow;
             await this._userAccountRepository.UpdateAsync(table);
             await this._userAccountRepository.SaveAsync();
