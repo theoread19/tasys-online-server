@@ -112,7 +112,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Route("{userId}/reomve-from-cart")]
+        [Route("{userId}/remove-from-cart")]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
         public async Task<IActionResult> RemoveCourseFromCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
         {
@@ -121,7 +121,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
-        [Route("{userId}/reomve-all-from-cart")]
+        [Route("{userId}/remove-all-from-cart")]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
         public async Task<IActionResult> RemoveAllCourseFromCart([FromQuery] Guid userId)
         {
