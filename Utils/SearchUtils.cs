@@ -25,7 +25,8 @@ namespace TASysOnlineProject.Utils
 
                 var unSignValue = ConvertUtil.ConvertToUnSign(search.Value!);
 
-                var searchData = data.Where(w =>
+                var searchData = (search.Value == string.Empty) ? data
+                    : data.Where(w =>
                 {
                     if (ConvertUtil.ConvertToUnSign(propertyfilter!.GetValue(w, null)!.ToString()!).IndexOf(unSignValue, StringComparison.CurrentCultureIgnoreCase) >= 0)
                         return true;

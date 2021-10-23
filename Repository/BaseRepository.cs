@@ -30,6 +30,12 @@ namespace TASysOnlineProject.Repository
 
         public async Task<int> CountByAsync(string property, string value)
         {
+
+            if (value == string.Empty)
+            {
+                return this._dbSet.ToList().Count;
+            }
+
             var filterBy = property;
 
             var propertyfilter = typeof(TEntity).GetProperty(filterBy!);
@@ -88,7 +94,8 @@ namespace TASysOnlineProject.Repository
 
             var unSignValue = ConvertToUnSign(search.Value!);
 
-            var searchData = data.Where(w =>
+            var searchData = (search.Value == string.Empty) ? data 
+                : data.Where(w =>
                 {
                     if (ConvertToUnSign(propertyfilter!.GetValue(w, null)!.ToString()!).IndexOf(unSignValue, StringComparison.CurrentCultureIgnoreCase) >= 0)
                         return true;

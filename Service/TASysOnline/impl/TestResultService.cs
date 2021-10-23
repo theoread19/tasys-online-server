@@ -22,11 +22,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IQuestionService _questionService;
 
-        private IUriService _uriService;
+        private readonly IUriService _uriService;
 
         private readonly IUserAccountService _userAccountService;
 
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public TestResultService(ITestService testService, ITestResultRepository testResultRepository, IQuestionService questionService, IUriService uriService, IMapper mapper, IUserAccountService userAccountService)
         {
@@ -42,11 +42,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var user = await this._userAccountService.FindByIdAsync(doTestRequest.UserId);
 
-            if (user == null)
-            {
-                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
-            }
-
             var test = await this._testService.GetTestById(doTestRequest.TestId);
 
             if (test == null)
@@ -57,7 +52,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (totalAttempt >= test.MaxAttempt)
             {
-                return new TestResultResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Out of attempt of test" };
+                return new TestResultResponse { StatusCode = StatusCodes.Status401Unauthorized, ResponseMessage = "Out of attempt of test" };
             }
 
             var questions = (await this._questionService.FindQuestionByTestId(doTestRequest.TestId)).ToList();

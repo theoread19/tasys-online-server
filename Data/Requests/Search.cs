@@ -20,7 +20,7 @@ namespace TASysOnlineProject.Data
         public Search(int pageNumber, int pageSize, string sortBy, string order, string value, string property) : base(pageNumber, pageSize, sortBy, order)
         {
             this.Value = value != null ? this.Value = value : null;
-            this.Property = (property == null) ? this.Property = "" : this.Property = char.ToUpper(property[0]) + property.Substring(1);
+            this.Property = (property == null || property == "") ? this.Property = "" : this.Property = char.ToUpper(property[0]) + property.Substring(1);
         }
     }
 }

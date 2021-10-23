@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
@@ -71,6 +72,14 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CalculateTestResult([FromBody] DoTestRequest doTestRequest)
         {
+
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (userId != doTestRequest.UserId.ToString())
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
+
             var response = await this._TestResultService.CalculateTestResult(doTestRequest);
 
             return StatusCode(response.StatusCode, response);

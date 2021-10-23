@@ -58,7 +58,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        public async Task<IActionResult> SearchUserAccount([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._userAccountService.SearchUserAccountBy(searchRequest, route);
@@ -87,6 +87,14 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Route("{userId}/password")]
         public async Task<IActionResult> ChangeUserAccountPassword(Guid userId, [FromBody] ChangePasswordRequest changePasswordRequest)
         {
+
+            var userInfo = this.GetAccountAuthorInfo();
+
+            if (userInfo.Role != Roles.Admin && userInfo.Id != userId)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
+
             var response = await this._userAccountService.ChangeUserAccountPasswordAsync(userId, changePasswordRequest);
             return StatusCode(response.StatusCode, response);
         }
@@ -103,6 +111,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateUserAccount([FromBody] UserAccountRequest userAccountRequest)
         {
+
             var response = await this._userAccountService.UpdateUserAccount(userAccountRequest, this.GetAccountAuthorInfo());
 
             return StatusCode(response.StatusCode, response);
@@ -137,10 +146,23 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("block")]
+        [Authorize(Roles = Roles.Admin)]
         public  async Task<IActionResult> BlockUserAccount([FromBody] Guid userId)
         {
             var response = await this._userAccountService.BlockUserAccount(userId);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet]
+        [Route("courses")]
+        [Authorize(Roles = Roles.Learner)]
+        public async Task<IActionResult> GetCourseOfLeaner([FromQuery] Search searchRequest)
+        {
+            var user = this.GetAccountAuthorInfo();
+            var route = Request.Path.Value;
+            var response = await this._userAccountService.SearchCourseOfLearnerBy(searchRequest, route, user);
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }
