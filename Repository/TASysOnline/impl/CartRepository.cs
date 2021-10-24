@@ -21,7 +21,10 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         {
             try
             {
-                var table = await this._context.CartTables.Where(w => w.UserAccountId == userId).Include(i => i.Courses).FirstOrDefaultAsync();
+                var table = await this._context.CartTables.Where(w => w.UserAccountId == userId)
+                                                            .Include(i => i.Courses)
+                                                                .ThenInclude(ti => ti.Schedules)
+                                                            .FirstOrDefaultAsync();
                 return table;
             }
             catch

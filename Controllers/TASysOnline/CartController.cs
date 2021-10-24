@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
@@ -43,9 +44,16 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetCartById(Guid id)
+        public async Task<IActionResult> GetCartById(Guid userId)
         {
-            var response = await this._CartService.GetCartById(id);
+            var userAccountId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (userAccountId != userId.ToString())
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
+
+            var response = await this._CartService.GetCartByUserId(userId);
             return StatusCode(response.StatusCode, response);
         }
 

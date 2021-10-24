@@ -53,12 +53,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var scheduleIds = schedulesOfuser.Select(s => s.Id).ToList();
 
+            var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
+
+            var courseInCart = cart.Courses.ToList();
+            
+            foreach (var courseTable in courseInCart)
+            {
+                scheduleIds.AddRange(courseTable.Schedules.Select(s => s.Id));
+            }
+
             if (scheduleIdsOfCourse.Any(a => scheduleIds.Contains(a)))
             {
                 return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Can't add this course to cart!" };
             }
 
-            var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
             cart.Courses.Add(course);
             cart.TotalCourse += 1;
             await this._cartRepository.UpdateAsync(cart);
@@ -202,9 +210,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<CartResponse> GetCartById(Guid id)
+        public async Task<CartResponse> GetCartByUserId(Guid userId)
         {
-            var table = await this._cartRepository.FindByIdAsync(id);
+            var table = await this._cartRepository.GetCartByUserIdAsync(userId);
             var response = this._mapper.Map<CartResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Cart successfully";
