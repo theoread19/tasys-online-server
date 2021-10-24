@@ -43,8 +43,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetCartById(Guid userId)
+        [Route("{userId}")]
+        public async Task<IActionResult> GetCartByUserId(Guid userId)
         {
             var userAccountId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
