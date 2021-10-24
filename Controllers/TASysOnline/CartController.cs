@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Controllers.TASysOnline
@@ -18,6 +19,19 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     public class CartController : ControllerBase
     {
         private ICartService _CartService;
+
+        private AccountAuthorInfo GetAccountAuthorInfo()
+        {
+            var user = HttpContext.User;
+
+            return new AccountAuthorInfo
+            {
+                Id = new Guid(user.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Role = user.FindFirst(ClaimTypes.Role).Value,
+                Username = user.FindFirst(ClaimTypes.Name).Value
+            };
+        }
+
 
         public CartController(ICartService CartService)
         {
@@ -46,14 +60,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Route("{userId}")]
         public async Task<IActionResult> GetCartByUserId(Guid userId)
         {
-            var userAccountId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            if (userAccountId != userId.ToString())
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
-            }
-
-            var response = await this._CartService.GetCartByUserId(userId);
+            var response = await this._CartService.GetCartByUserId(userId, this.GetAccountAuthorInfo());
             return StatusCode(response.StatusCode, response);
         }
 

@@ -210,9 +210,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<CartResponse> GetCartByUserId(Guid userId)
+        public async Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo)
         {
             var table = await this._cartRepository.GetCartByUserIdAsync(userId);
+
+            if (table.UserAccountId != accountAuthorInfo.Id)
+            {
+                return new CartResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
+            }
+
             var response = this._mapper.Map<CartResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Cart successfully";
