@@ -209,7 +209,16 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<CourseResponse> GetCourseById(Guid id)
         {
             var table = await this._courseRepository.FindByIdAsyncEagerLoad(id);
+
+            if (table == null)
+            {
+                return new CourseResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
+            }
+
+
             var response = this._mapper.Map<CourseResponse>(table);
+            response.TotalLesson = table.LessonTables.Count;
+            response.TotalTest = table.Tests.Count;
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find course successfully";
             return response;

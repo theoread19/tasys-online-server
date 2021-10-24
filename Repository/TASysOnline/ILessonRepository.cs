@@ -8,5 +8,6 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface ILessonRepository : IRepository<LessonTable>
     {
+        public Task<int> CountByCourseId(Guid courseId);
     }
 }

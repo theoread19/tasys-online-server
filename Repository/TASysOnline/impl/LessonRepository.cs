@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,18 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public LessonRepository() : base(new TASysOnlineContext())
         {
             this._context = new TASysOnlineContext();
+        }
+
+        public async Task<int> CountByCourseId(Guid courseId)
+        {
+            try
+            {
+                return await this._context.LessonTables.Where(w => w.CourseId == courseId).CountAsync();
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
 }

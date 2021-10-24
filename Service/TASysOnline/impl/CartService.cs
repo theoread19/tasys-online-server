@@ -41,6 +41,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> AddCourseToCart(Guid userId, Guid courseId)
         {
+            //can bat course trong cart nua
             var course = await this._courseRepository.FindByIdAsyncEagerLoad(courseId);
             if (course == null)
             {

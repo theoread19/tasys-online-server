@@ -35,7 +35,11 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         {
             try
             {
-                return await this._context.CourseTables.Where(w => w.Id == id).Include(i => i.Schedules).FirstOrDefaultAsync();
+                return await this._context.CourseTables.Where(w => w.Id == id)
+                                                        .Include(i => i.Schedules)
+                                                        .Include(i => i.LessonTables)
+                                                        .Include(i => i.Tests)
+                                                        .FirstOrDefaultAsync();
             }
             catch
             {

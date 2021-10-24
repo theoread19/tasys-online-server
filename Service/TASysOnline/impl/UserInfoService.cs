@@ -188,6 +188,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Email = userInfoRequest.Email;
             table.FullName = userInfoRequest.FullName;
             table.Gender = userInfoRequest.Gender;
+            table.Bio = userInfoRequest.Bio;
             table.Phone = userInfoRequest.Phone;
             table.ModifiedDate = DateTime.UtcNow;
 

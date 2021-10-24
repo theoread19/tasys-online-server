@@ -34,6 +34,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return await this._LessonRepository.CountAsync();
         }
 
+        public Task<int> CountByCourseId(Guid courseId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Response> CreateLessonAsync(LessonRequest lessonRequest)
         {
 
