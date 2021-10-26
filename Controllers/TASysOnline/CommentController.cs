@@ -34,6 +34,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllCommentPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -43,6 +44,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetCommentById(Guid id)
         {
             var response = await this._CommentService.GetCommentById(id);
@@ -51,6 +53,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
@@ -60,6 +63,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterComment([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
@@ -68,7 +72,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreateComment([FromBody] CommentRequest commentRequest)
         {
             var response = await this._CommentService.CreateCommentAsync(commentRequest);
@@ -77,7 +81,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateComment([FromBody] CommentRequest commentRequest)
         {
             var response = await this._CommentService.UpdateComment(commentRequest);
@@ -87,7 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DeleteComment([FromBody] Guid[] commentId)
         {
             var response = await this._CommentService.DeleteComment(commentId);

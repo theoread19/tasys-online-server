@@ -83,7 +83,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateCart([FromBody] CartRequest CartRequest)
         {
             var response = await this._CartService.CreateCartAsync(CartRequest);
@@ -92,7 +92,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateCart([FromBody] CartRequest CartRequest)
         {
             var response = await this._CartService.UpdateCart(CartRequest);
@@ -102,7 +102,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteCart([FromBody] Guid[] CartId)
         {
             var response = await this._CartService.DeleteCart(CartId);
@@ -128,18 +128,32 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("{userId}/remove-from-cart")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> RemoveCourseFromCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
         {
+
+            var userInfo = this.GetAccountAuthorInfo();
+
+            if(userInfo.Id != userId)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
+
             var response = await this._CartService.RemoveCourseFromCart(userId, courseRequest.Id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete]
         [Route("{userId}/remove-all-from-cart")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> RemoveAllCourseFromCart([FromQuery] Guid userId)
         {
+            var userInfo = this.GetAccountAuthorInfo();
+
+            if (userInfo.Id != userId)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
             var response = await this._CartService.RemoveAllCourseFromCart(userId);
             return StatusCode(response.StatusCode, response);
         }

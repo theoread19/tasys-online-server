@@ -36,7 +36,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
-//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllCoursePaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -46,7 +45,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
-//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetCourseById(Guid id)
         {
             var response = await this._courseService.GetCourseById(id);
@@ -55,8 +53,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-//        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        public async Task<IActionResult> SearchCourse([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._courseService.SearchCourseBy(searchRequest, route);
@@ -65,7 +62,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
-//        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterCourse([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
@@ -102,7 +98,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
-        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DeleteAllCourse()
         {
             var response = await this._courseService.DeleteAllCourse();

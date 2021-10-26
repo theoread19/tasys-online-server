@@ -51,7 +51,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        public async Task<IActionResult> SearchLesson([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._LessonService.SearchLessonBy(searchRequest, route);

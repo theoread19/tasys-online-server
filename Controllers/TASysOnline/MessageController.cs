@@ -34,6 +34,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllMessagePaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -43,6 +44,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetMessageById(Guid id)
         {
             var response = await this._MessageService.GetMessageById(id);
@@ -51,6 +53,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
@@ -60,6 +63,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterMessage([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
@@ -68,7 +72,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreateMessage([FromBody] MessageRequest messageRequest)
         {
             var response = await this._MessageService.CreateMessageAsync(messageRequest);
@@ -77,7 +81,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateMessage([FromBody] MessageRequest messageRequest)
         {
             var response = await this._MessageService.UpdateMessage(messageRequest);
@@ -87,7 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DeleteMessage([FromBody] Guid[] messageId)
         {
             var response = await this._MessageService.DeleteMessage(messageId);

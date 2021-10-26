@@ -284,11 +284,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
 
-            if (cart == null)
-            {
-                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Cart not found!" };
-            }
-
             var coursesOfCart = cart.Courses.ToList();
             foreach(var course in coursesOfCart)
             {

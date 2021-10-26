@@ -41,14 +41,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             return StatusCode(pagedReponse.StatusCode, pagedReponse);
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetAnswerById(Guid id, Guid userId)
-        {
-            /*            var response = await this._AnswerService.GetAnswerById(id);
-                        return StatusCode(response.StatusCode, response);*/
-            return Ok();
-        }
 
         [HttpGet]
         [Route("search")]

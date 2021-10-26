@@ -31,7 +31,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> CreateCart([FromBody] ScheduleRequest scheduleRequest)
+        public async Task<IActionResult> CreateSchedule([FromBody] ScheduleRequest scheduleRequest)
         {
             var response = await this._scheduleService.CreateScheduleAsync(scheduleRequest);
 
@@ -39,8 +39,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
-        public async Task<IActionResult> UpdateCart([FromBody] ScheduleRequest scheduleRequest)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> UpdateSchedule([FromBody] ScheduleRequest scheduleRequest)
         {
             var response = await this._scheduleService.UpdateScheduleAsync(scheduleRequest);
 
@@ -49,8 +49,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
-        public async Task<IActionResult> DeleteCart([FromBody] Guid[] scheduleIds)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteSchedule([FromBody] Guid[] scheduleIds)
         {
             var response = await this._scheduleService.DeleteScheduleAsync(scheduleIds);
 

@@ -24,6 +24,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("course-statistic")]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> CourseStatistic()
         {
             var response = await this._statisticService.GetCourseStatistic();
@@ -32,6 +33,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("instructor-statistic")]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> InstructorStatistic()
         {
             var response = await this._statisticService.GetInstructorStatistic();
@@ -40,6 +42,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("learner-statistic")]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> LearnerStatistic()
         {
             var response = await this._statisticService.GetLearnerStatisticResponse();
@@ -48,6 +51,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("streamsession-statistic")]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> StreamSessionStatistic()
         {
             var response = await this._statisticService.GetStreamSessionStatistic();

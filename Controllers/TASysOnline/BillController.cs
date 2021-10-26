@@ -68,7 +68,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreateBill([FromBody] BillRequest BillRequest)
         {
             var response = await this._BillService.CreateBillAsync(BillRequest);
@@ -78,7 +78,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteBill([FromBody] Guid[] BillId)
         {
             var response = await this._BillService.DeleteBill(BillId);

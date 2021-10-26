@@ -60,6 +60,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateSubject([FromBody] SubjectRequest subjectRequest)
         {
             var response = await this._subjectService.UpdateSubject(subjectRequest);

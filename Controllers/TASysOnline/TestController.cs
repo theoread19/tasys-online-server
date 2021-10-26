@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Service.TASysOnline;
 
 namespace TASysOnlineProject.Controllers.TASysOnline
@@ -17,6 +19,18 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     public class TestController : ControllerBase
     {
         private ITestService _TestService;
+
+        private AccountAuthorInfo GetAccountAuthorInfo()
+        {
+            var user = HttpContext.User;
+
+            return new AccountAuthorInfo
+            {
+                Id = new Guid(user.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Role = user.FindFirst(ClaimTypes.Role).Value,
+                Username = user.FindFirst(ClaimTypes.Name).Value
+            };
+        }
 
         public TestController(ITestService TestService)
         {
@@ -34,6 +48,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllTestPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -43,6 +58,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetTestById(Guid id)
         {
             var response = await this._TestService.GetTestById(id);
@@ -51,7 +67,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        [Authorize(Roles = Roles.All)]
+        public async Task<IActionResult> SearchTest([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._TestService.SearchTestBy(searchRequest, route);
@@ -60,6 +77,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterTest([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
