@@ -46,9 +46,7 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             {
                 var table = await this._context.UserAccountTables.Where(w => w.Id == userId)
                                                 .Include(i => i.CoursesOfInstrucor)
-                                                    .ThenInclude(ti => ti.Schedules)
                                                 .Include(i => i.CoursesOfLearner)
-                                                    .ThenInclude(ti => ti.Schedules)
                                                 .FirstOrDefaultAsync();
                 return table;
             }

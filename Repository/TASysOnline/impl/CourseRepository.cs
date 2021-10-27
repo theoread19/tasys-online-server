@@ -36,7 +36,6 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             try
             {
                 return await this._context.CourseTables.Where(w => w.Id == id)
-                                                        .Include(i => i.Schedules)
                                                         .Include(i => i.LessonTables)
                                                         .Include(i => i.Tests)
                                                         .FirstOrDefaultAsync();
@@ -55,7 +54,6 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public async Task<List<CourseTable>> GetCourseTablesEagerLoadAsync()
         {
             return await this._context.CourseTables
-                                        .Include(i => i.Schedules)
                                         .Include(i => i.InstructorAccount)
                                         .ToListAsync();
         }

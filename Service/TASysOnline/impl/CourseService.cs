@@ -27,20 +27,16 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly ISubjectService _subjectService;
 
-        private readonly IScheduleRepository _scheduleRepository;
-
         public CourseService(ICourseRepository courseRepository, 
                             IUriService uriService, 
                             IMapper mapper, 
                             IUserAccountService userAccountService,
-                            IScheduleRepository scheduleRepository,
                             ISubjectService subjectService)
         {
             this._courseRepository = courseRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._userAccountService = userAccountService;
-            this._scheduleRepository = scheduleRepository;
             this._subjectService = subjectService;
         }
 
@@ -68,18 +64,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is Exist!" };
             }
 
-            var scheduleIds = courseRequest.ScheduleIds.ToList();
 
             var table = this._mapper.Map<CourseTable>(courseRequest);
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
             await this._courseRepository.InsertAsync(table);
-
-            foreach (var scheduleId in scheduleIds)
-            {
-                var scheduleTable = await this._scheduleRepository.FindByIdAsync(scheduleId);
-                table.Schedules.Add(scheduleTable);
-            }
 
             await this._courseRepository.SaveAsync();
 
@@ -278,10 +267,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task GenerateData()
         {
             var instructor = await this._userAccountService.FindByNameAsync("instructor");
-            var schedules = await this._scheduleRepository.GetAllAsync();
             var subject = await this._subjectService.GetAllSubjectAsync();
             var subjectId = subject.FirstOrDefault().Id;
-            var scheduleId = schedules.Where(w => w.DayOfWeek == 2).Select(s => s.Id).FirstOrDefault();
             CourseRequest data = new CourseRequest 
             {
                 AvailableSlot = 5,
@@ -296,8 +283,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 InstructorId = instructor.Id,
                 Rating = 0,
                 Feedback = "string",
-                SubjectId = subjectId,
-                ScheduleIds = new List<Guid> { scheduleId }
+                SubjectId = subjectId
             };
 
             await this.CreateCourseAsync(data);

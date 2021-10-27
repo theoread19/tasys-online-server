@@ -23,7 +23,6 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             {
                 var table = await this._context.CartTables.Where(w => w.UserAccountId == userId)
                                                             .Include(i => i.Courses)
-                                                                .ThenInclude(ti => ti.Schedules)
                                                             .FirstOrDefaultAsync();
                 return table;
             }

@@ -23,8 +23,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task GenerateLessonData();
 
-        public Task GenerateScheduleData();
-
         public Task GenerateStreamData();
     }
 }

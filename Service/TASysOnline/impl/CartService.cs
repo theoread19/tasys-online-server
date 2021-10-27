@@ -24,19 +24,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private ICourseRepository _courseRepository;
 
-        private readonly IScheduleService _scheduleService;
-
         public CartService(ICartRepository cartRepository, 
                             IUriService uriService, 
                             IMapper mapper, 
-                            ICourseRepository courseRepository, 
-                            IScheduleService scheduleService)
+                            ICourseRepository courseRepository)
         {
             this._cartRepository = cartRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._courseRepository = courseRepository;
-            this._scheduleService = scheduleService;
         }
 
         public async Task<Response> AddCourseToCart(Guid userId, Guid courseId)
@@ -47,25 +43,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
             }
-            var scheduleIdsOfCourse = course.Schedules.Select(s => s.Id);
-
-            var schedulesOfuser = await this._scheduleService.GetAllScheduleByUserId(userId);
-
-            var scheduleIds = schedulesOfuser.Select(s => s.Id).ToList();
 
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
-
-            var courseInCart = cart.Courses.ToList();
-            
-            foreach (var courseTable in courseInCart)
-            {
-                scheduleIds.AddRange(courseTable.Schedules.Select(s => s.Id));
-            }
-
-            if (scheduleIdsOfCourse.Any(a => scheduleIds.Contains(a)))
-            {
-                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Can't add this course to cart!" };
-            }
 
             cart.Courses.Add(course);
             cart.TotalCourse += 1;

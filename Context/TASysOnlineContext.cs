@@ -199,9 +199,6 @@ namespace TASysOnlineProject.Context
                     .HasForeignKey(fk => fk.InstructorId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                e.HasMany(m => m.Schedules)
-                    .WithMany(m => m.Courses);
-
                 e.HasMany(m => m.LearnerAccounts)
                     .WithMany(m => m.CoursesOfLearner);
 
@@ -628,29 +625,6 @@ namespace TASysOnlineProject.Context
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<ScheduleTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.StartTime)
-                    .IsRequired();
-
-                e.Property(p => p.EndTime)
-                    .IsRequired();
-
-                e.Property(p => p.DayOfWeek);
-            });
-
             modelBuilder.Entity<StreamSessionTable>(e =>
             {
                 e.HasKey(k => k.Id);
@@ -845,7 +819,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<PostLikeTable> PostLikeTables { get; private set; } = null!;
         public virtual DbSet<PostTable> PostTables { get; private set; } = null!;
         public virtual DbSet<QuestionTable> QuestionTables { get; private set; } = null!;
-        public virtual DbSet<ScheduleTable> ScheduleTables { get; private set; } = null!;
         public virtual DbSet<StreamSessionTable> StreamSessionTables { get; private set; } = null!;
         public virtual DbSet<SubjectTable> SubjectTables { get; private set; } = null!;
         public virtual DbSet<TechnicalReportTable> TechnicalReportTables { get; private set; } = null!;

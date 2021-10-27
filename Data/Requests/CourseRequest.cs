@@ -71,7 +71,5 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for user id is instructor
         /// </summary>
         public Guid InstructorId { get; set; }
-
-        public List<Guid> ScheduleIds { get; set; }
     }
 }

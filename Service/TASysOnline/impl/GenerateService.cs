@@ -24,8 +24,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IUserAccountRepository _userAccountRepository;
 
-        private readonly IScheduleRepository _scheduleRepository;
-
         private readonly ICourseService _courseService;
 
         private readonly ISubjectRepository _subjectRepository;
@@ -46,7 +44,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                                 RoleManager<IdentityRole> roleManager,
                                 IMapper mapper,
                                 IUserAccountRepository userAccountRepository,
-                                IScheduleRepository scheduleRepository,
                                 ICourseService courseService,
                                 ISubjectRepository subjectRepository,
                                 ITestService testService,
@@ -60,7 +57,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._roleManager = roleManager;
             this._mapper = mapper;
             this._userAccountRepository = userAccountRepository;
-            this._scheduleRepository = scheduleRepository;
             this._courseService = courseService;
             this._subjectRepository = subjectRepository;
             this._testService = testService;
@@ -74,10 +70,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task GenerateCourseData()
         {
             var instructor = await this._userAccountRepository.FindByUsernameAsync("instructor");
-            var schedules = await this._scheduleRepository.GetAllAsync();
             var subject = await this._subjectRepository.GetAllAsync();
             var subjectId = subject.FirstOrDefault().Id;
-            var scheduleId = schedules.Where(w => w.DayOfWeek == 2).Select(s => s.Id).FirstOrDefault();
             CourseRequest data = new CourseRequest
             {
                 AvailableSlot = 5,
@@ -92,8 +86,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 InstructorId = instructor.Id,
                 Rating = 0,
                 Feedback = "string",
-                SubjectId = subjectId,
-                ScheduleIds = new List<Guid> { scheduleId }
+                SubjectId = subjectId
             };
 
             await this._courseService.CreateCourseAsync(data);
@@ -164,96 +157,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
 
             await this._roleRepository.SaveAsync();
-        }
-
-        public async Task GenerateScheduleData()
-        {
-            var datas = new List<ScheduleTable>{
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Monday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Tuesday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Wednesday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Thursday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Friday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Saturday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "7:00 AM", EndTime = "7:50 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "7:50 AM", EndTime = "8:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "8:50 AM", EndTime = "9:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "9:50 AM", EndTime = "10:40 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "10:40 AM", EndTime = "11:0 AM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "13:30 PM", EndTime = "14:20 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "14:20 PM", EndTime = "15:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "15:20 PM", EndTime = "16:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "18:20 PM", EndTime = "19:10 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "19:10 PM", EndTime = "20:00 PM"},
-                new ScheduleTable { Id = Guid.NewGuid(), DayOfWeek = (int)DaysOfWeek.Sunday, StartTime = "20:20 PM", EndTime = "21:10 PM"},
-            };
-
-            foreach (var data in datas)
-            {
-                await this._scheduleRepository.InsertAsync(data);
-            }
-
-            await this._scheduleRepository.SaveAsync();
         }
 
         public async Task GenerateStreamData()

@@ -25,7 +25,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             await this._generateService.GenerateRoleData();
             await this._generateService.GenerateSubjectData();
-            await this._generateService.GenerateScheduleData();
             await this._generateService.GenerateUserAccountData();
             await this._generateService.GenerateCourseData();
             await this._generateService.GenerateLessonData();
@@ -57,14 +56,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         public async Task<IActionResult> GenerateSubject()
         {
             await this._generateService.GenerateSubjectData();
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("generate-schedule-data")]
-        public async Task<IActionResult> GenerateSchedule()
-        {
-            await this._generateService.GenerateScheduleData();
             return Ok();
         }
 
