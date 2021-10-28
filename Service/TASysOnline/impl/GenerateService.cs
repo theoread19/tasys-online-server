@@ -167,8 +167,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var data = new StreamSessionRequest
             {
-                StartTime = DateTime.UtcNow.AddDays(31),
-                EndTime = DateTime.UtcNow.AddDays(31).AddMinutes(50),
+                StartTime = DateTime.UtcNow.AddDays(31).ToString(),
+                EndTime = DateTime.UtcNow.AddDays(31).AddMinutes(50).ToString(),
                 CourseId = course.Id,
                 CreatorId = instructor.Id,
                 MaxParticipants = await this._courseService.CountLeanerOfCourse(course.Id)

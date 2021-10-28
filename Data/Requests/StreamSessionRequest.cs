@@ -12,12 +12,12 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property fot start time of stream session
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public string StartTime { get; set; }
 
         /// <summary>
         ///     Property for end time of stream session
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public string EndTime { get; set; }
 
         /// <summary>
         ///     Property for max paticipant of session

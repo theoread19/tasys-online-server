@@ -16,8 +16,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateCartAsync(CartRequest cartRequest);
 
-        public Task<CartResponse> FindByNameAsync(string name);
-
         public Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo);
 
         public Task<int> CountAsync();

@@ -126,27 +126,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<CartResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._CartRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new CartResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Cart not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<CartResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Cart is Found!";
-                        return response;*/
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<CartResponse>> GetAllCartAsync()
         {
             var tables = await this._cartRepository.GetAllAsync();

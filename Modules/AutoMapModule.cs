@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+using System.Globalization;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Table;
@@ -34,7 +36,9 @@ namespace TASysOnlineProject.Modules
             CreateMap<TestRequest, TestTable>();
             CreateMap<TestTable, TestResponse>()
                 .ForMember(container => container.QuestionResponses, op => op.MapFrom(res => res.Questions));
-            CreateMap<StreamSessionRequest, StreamSessionTable>();
+            CreateMap<StreamSessionRequest, StreamSessionTable>()
+                .ForMember(m => m.StartTime, op => op.MapFrom(res => DateTime.ParseExact(res.StartTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)))
+                .ForMember(m => m.EndTime, op => op.MapFrom(res => DateTime.ParseExact(res.EndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)));
             CreateMap<StreamSessionTable, StreamSessionResponse>()
                 .ForMember(m => m.CourseTable, op => op.MapFrom(res => res.CourseTable))
                 .ForMember(m => m.Creator, op => op.MapFrom(res => res.Creator));

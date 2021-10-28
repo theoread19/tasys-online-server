@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Requests;
@@ -248,9 +249,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var table = await this._StreamSessionRepository.FindByIdAsync(streamSessionRequest.Id);
 
             table.ModifiedDate = DateTime.UtcNow;
-            table.EndTime = streamSessionRequest.EndTime;
+            table.EndTime = DateTime.ParseExact(streamSessionRequest.EndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             table.MaxParticipants = streamSessionRequest.MaxParticipants;
-            table.StartTime = streamSessionRequest.StartTime;
+            table.StartTime = DateTime.ParseExact(streamSessionRequest.StartTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); ;
 
             await this._StreamSessionRepository.UpdateAsync(table);
             await this._StreamSessionRepository.SaveAsync();
