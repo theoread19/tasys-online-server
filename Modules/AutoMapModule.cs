@@ -37,15 +37,16 @@ namespace TASysOnlineProject.Modules
             CreateMap<TestTable, TestResponse>()
                 .ForMember(container => container.QuestionResponses, op => op.MapFrom(res => res.Questions));
             CreateMap<StreamSessionRequest, StreamSessionTable>()
-                .ForMember(m => m.StartTime, op => op.MapFrom(res => DateTime.ParseExact(res.StartTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)))
-                .ForMember(m => m.EndTime, op => op.MapFrom(res => DateTime.ParseExact(res.EndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)));
+                .ForMember(m => m.StartTime, op => op.MapFrom(res => DateTime.ParseExact(res.StartTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)))
+                .ForMember(m => m.EndTime, op => op.MapFrom(res => DateTime.ParseExact(res.EndTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)));
             CreateMap<StreamSessionTable, StreamSessionResponse>()
                 .ForMember(m => m.CourseTable, op => op.MapFrom(res => res.CourseTable))
                 .ForMember(m => m.Creator, op => op.MapFrom(res => res.Creator));
             CreateMap<CurriCulumRequest, CurriCulumTable>();
             CreateMap<CurriCulumTable, CurriCulumResponse>();
             CreateMap<CartRequest, CartTable>();
-            CreateMap<CartTable, CartResponse>();
+            CreateMap<CartTable, CartResponse>()
+                .ForMember(m => m.Courses, op => op.MapFrom(res => res.Courses));
             CreateMap<MessageRequest, MessageTable>();
             CreateMap<MessageTable, MessageResponse>();
             CreateMap<CommentRequest, CommentTable>();
