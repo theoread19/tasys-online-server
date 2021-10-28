@@ -140,6 +140,8 @@ namespace TASysOnlineProject.Context
 
                 e.Property(p => p.TotalCourse);
 
+                e.Property(p => p.TotalCost);
+
                 e.HasOne(o => o.UserAccount)
                     .WithOne(o => o.Cart)
                     .HasForeignKey<CartTable>(fk => fk.UserAccountId)

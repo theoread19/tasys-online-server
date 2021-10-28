@@ -47,6 +47,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
 
             cart.Courses.Add(course);
+            cart.TotalCost += course.Cost;
             cart.TotalCourse += 1;
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
@@ -232,6 +233,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
             cart.Courses.Remove(course);
             cart.TotalCourse -= 1;
+            cart.TotalCost -= course.Cost;
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 
@@ -248,6 +250,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 cart.Courses.Remove(course);
             }
             cart.TotalCourse = 0;
+            cart.TotalCost = 0;
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 

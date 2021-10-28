@@ -15,6 +15,11 @@ namespace TASysOnlineProject.Table
         /// </summary>
         public int TotalCourse { get; set; }
 
+        /// <summary>
+        ///     Property for total cost of cart
+        /// </summary>
+        public decimal TotalCost { get; set; }
+
         public CartTable()
         {
             this.Courses = new HashSet<CourseTable>();

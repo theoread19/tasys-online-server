@@ -15,6 +15,11 @@ namespace TASysOnlineProject.Data.Requests
         public int TotalCourse { get; set; }
 
         /// <summary>
+        ///     Property for total cost of cart
+        /// </summary>
+        public decimal TotalCost { get; set; }
+
+        /// <summary>
         ///     Property for user account id
         /// </summary>
         public Guid UserAccountId { get; set; }

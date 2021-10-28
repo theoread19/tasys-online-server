@@ -14,6 +14,11 @@ namespace TASysOnlineProject.Data.Responses
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        ///     Property for total cost of cart
+        /// </summary>
+        public decimal TotalCost { get; set; }
+
+        /// <summary>
         ///     Property for total scoure of cart
         /// </summary>
         public int TotalCourse { get; set; }
