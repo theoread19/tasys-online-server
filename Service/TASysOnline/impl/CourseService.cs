@@ -264,31 +264,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update course successfully!" };
         }
 
-        public async Task GenerateData()
-        {
-            var instructor = await this._userAccountService.FindByNameAsync("instructor");
-            var subject = await this._subjectService.GetAllSubjectAsync();
-            var subjectId = subject.FirstOrDefault().Id;
-            CourseRequest data = new CourseRequest 
-            {
-                AvailableSlot = 5,
-                Cost = 8,
-                Description = "Generate",
-                Duration = 45,
-                Id = Guid.NewGuid(),
-                RatingCount = 0,
-                MaxSlot = 40,
-                Name = "Generate",
-                Summary = "Summary",
-                InstructorId = instructor.Id,
-                Rating = 0,
-                Feedback = "string",
-                SubjectId = subjectId
-            };
-
-            await this.CreateCourseAsync(data);
-        }
-
         public async Task<int> CountLeanerOfCourse(Guid courseId)
         {
             return await this._courseRepository.CountLeanerOfCourse(courseId);

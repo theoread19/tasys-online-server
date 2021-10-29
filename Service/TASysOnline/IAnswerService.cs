@@ -12,15 +12,7 @@ namespace TASysOnlineProject.Service.TASysOnline
     {
         public Task<IEnumerable<AnswerResponse>> GetAllAnswerAsync();
 
-        public Task<PageResponse<List<AnswerResponse>>> GetAllAnswerPagingAsync(Pagination paginationFilter, string route);
-
         public Task<Response> CreateAnswerAsync(AnswerRequest answerRequest);
-
-        public Task<AnswerResponse> FindByNameAsync(string name);
-
-        public Task<AnswerResponse> GetAnswerById(Guid id, Guid userId);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateAnswer(AnswerRequest answerRequest);
 
@@ -30,7 +22,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<SearchResponse<List<AnswerResponse>>> SearchAnswerBy(Search searchRequest, string route);
 
-        public Task<IEnumerable<AnswerResponse>> FindByQuestionId(Guid questionId);
         public Task<Response> DeleteAllAnswer();
     }
 }

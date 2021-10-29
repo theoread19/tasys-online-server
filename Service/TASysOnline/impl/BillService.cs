@@ -39,11 +39,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._cartService = cartService;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._billRepository.CountAsync();
-        }
-
         public async Task<Response> CreateBillAsync(BillRequest BillRequest)
         {
 
@@ -117,27 +112,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task<BillResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._BillRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new BillResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Bill not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<BillResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Bill is Found!";
-                        return response;*/
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<BillResponse>> GetAllBillAsync()

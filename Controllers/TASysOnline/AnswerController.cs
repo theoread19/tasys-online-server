@@ -33,16 +33,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("paging")]
-        public async Task<IActionResult> GetAllAnswerPaging([FromQuery] Pagination paginationFilter)
-        {
-            var route = Request.Path.Value;
-            var pagedReponse = await this._AnswerService.GetAllAnswerPagingAsync(paginationFilter, route);
-            return StatusCode(pagedReponse.StatusCode, pagedReponse);
-        }
-
-
-        [HttpGet]
         [Route("search")]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {

@@ -55,11 +55,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Add course to cart successfully!" };
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._cartRepository.CountAsync();
-        }
-
         public async Task<Response> CreateCartAsync(CartRequest CartRequest)
         {
 

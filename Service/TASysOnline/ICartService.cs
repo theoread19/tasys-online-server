@@ -18,8 +18,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo);
 
-        public Task<int> CountAsync();
-
         public Task<Response> UpdateCart(CartRequest cartRequest);
 
         public Task<Response> DeleteCart(Guid[] cartId);

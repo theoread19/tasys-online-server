@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateBillAsync(BillRequest billRequest);
 
-        public Task<BillResponse> FindByNameAsync(string name);
-
         public Task<BillResponse> GetBillById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> DeleteBill(Guid[] billId);
 

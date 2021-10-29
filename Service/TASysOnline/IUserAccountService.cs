@@ -44,6 +44,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<UserAccountResponse> GetUserAccountEagerLoadCourse(Guid userId);
 
-        public Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo);
+        public Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId);
     }
 }

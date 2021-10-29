@@ -30,11 +30,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._AnswerRepository.CountAsync();
-        }
-
         public async Task<Response> CreateAnswerAsync(AnswerRequest answerRequest)
         {
 
@@ -102,82 +97,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<AnswerResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._AnswerRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new AnswerResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Answer not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<AnswerResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Answer is Found!";
-                        return response;*/
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<AnswerResponse>> FindByQuestionId(Guid questionId)
-        {
-            var questions = await this._AnswerRepository.FindByQuestionId(questionId);
-
-            var responses = this._mapper.Map<List<AnswerTable>, List<AnswerResponse>>(questions);
-            return responses;
-        }
-
         public async Task<IEnumerable<AnswerResponse>> GetAllAnswerAsync()
         {
             var tables = await this._AnswerRepository.GetAllAsync();
             var responses = this._mapper.Map<List<AnswerTable>, List<AnswerResponse>>(tables);
             return responses;
-        }
-
-        public async Task<PageResponse<List<AnswerResponse>>> GetAllAnswerPagingAsync(Pagination paginationFilter, string route)
-        {
-            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._AnswerRepository.CountAsync();
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._AnswerRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
-
-            var pageData = this._mapper.Map<List<AnswerTable>, List<AnswerResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }
-
-        public async Task<AnswerResponse> GetAnswerById(Guid id, Guid userId)
-        {
-            var table = await this._AnswerRepository.FindByIdAsync(id);
-            var response = this._mapper.Map<AnswerResponse>(table);
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Find Answer successfully";
-            return response;
         }
 
         public async Task<SearchResponse<List<AnswerResponse>>> SearchAnswerBy(Search searchRequest, string route)

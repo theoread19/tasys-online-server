@@ -154,13 +154,13 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("courses")]
+        [Route("{userId}/courses")]
         [Authorize(Roles = Roles.Learner)]
-        public async Task<IActionResult> GetCourseOfLeaner([FromQuery] Search searchRequest)
+        public async Task<IActionResult> GetCourseOfLeaner([FromQuery] Search searchRequest, Guid userId)
         {
             var user = this.GetAccountAuthorInfo();
             var route = Request.Path.Value;
-            var response = await this._userAccountService.SearchCourseOfLearnerBy(searchRequest, route, user);
+            var response = await this._userAccountService.SearchCourseOfLearnerBy(searchRequest, route, user, userId);
             return StatusCode(response.StatusCode, response);
         }
 

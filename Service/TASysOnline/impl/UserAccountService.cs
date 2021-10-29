@@ -374,13 +374,29 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new UserAccountResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!"};
         }
 
-        public async Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo)
+        public async Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId)
         {
-            var user = await this._userAccountRepository.GetUserAccountEagerLoadCourse(accountAuthorInfo.Id!.Value);
+            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
+
+            if (userId != accountAuthorInfo.Id)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, 0, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status403Forbidden;
+                reponse.ResponseMessage = "Invalid access data!";
+                return reponse;
+            }
+
+            var user = await this._userAccountRepository.GetUserAccountEagerLoadCourse(userId);
+
+            if (user == null)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, 0, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status404NotFound;
+                reponse.ResponseMessage = "User Not Found!";
+                return reponse;
+            }
 
             var course = user.CoursesOfLearner.ToList();
-
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
             var totalData = course.Count;
 
