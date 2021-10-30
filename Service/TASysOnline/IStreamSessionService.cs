@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
@@ -35,5 +36,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<IEnumerable<StreamSessionResponse>> GetComingStreamSessionAsync(DateTime now);
 
         public Task<FilterSearchResponse<List<StreamSessionResponse>>> FilterSearchStreamSessionBy(FilterSearch filterSearchRequest, string route);
+
+        public Task<MemoryStream> ExportDBToExcel(List<UserAccountAuthRequest> learner);
     }
 }

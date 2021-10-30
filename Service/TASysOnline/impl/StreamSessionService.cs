@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Requests;
@@ -73,6 +75,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 StatusCode = StatusCodes.Status200OK,
                 ResponseMessage = "Delete StreamSession successfully!"
             };
+        }
+
+        public async Task<MemoryStream> ExportDBToExcel(List<UserAccountAuthRequest> learner)
+        {
+            var stream = new MemoryStream();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells.LoadFromCollection(learner, true);
+                package.Save();
+            }
+            stream.Position = 0;
+            return stream;
         }
 
         public async Task<FilterSearchResponse<List<StreamSessionResponse>>> FilterSearchStreamSessionBy(FilterSearch filterSearchRequest, string route)

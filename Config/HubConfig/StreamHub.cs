@@ -31,7 +31,11 @@ namespace TASysOnlineProject.Config.HubConfig
             this._testResultService = testResultService;
         }
 
-
+        private void note()
+        {
+            //phat bieu
+            //xuat file diem danh
+        }
         public string GetConnectionId()
         {
             return Context.ConnectionId;
@@ -206,6 +210,11 @@ namespace TASysOnlineProject.Config.HubConfig
         {
             var time = DateTime.UtcNow.ToLocalTime().ToString();
             await Clients.Group(roomName).SendAsync("privateMessage", sendUserEntry, receiveUserEntry, message, time);
+        }
+
+        public async Task RaiseHand(string roomName, UserAccountAuthRequest sendUserEntry)
+        {
+            await Clients.Group(roomName).SendAsync("raiseHand", sendUserEntry);
         }
 
         private Task EmitJoinRoom(string roomName)

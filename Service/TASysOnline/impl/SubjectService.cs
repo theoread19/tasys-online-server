@@ -178,5 +178,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 ResponseMessage = "Delete Subject Successfully!"
             };
         }
+
+        public async Task<SubjectResponse> FindById(Guid subjectId)
+        {
+            var table = await this._subjectRepository.FindByIdAsync(subjectId);
+
+            if(table == null)
+            {
+                return new SubjectResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Subject not found!" };
+            }
+
+            var response = this._mapper.Map<SubjectResponse>(table);
+            response.StatusCode = StatusCodes.Status200OK;
+            response.ResponseMessage = "Find subject successfull!";
+            return response;
+        }
     }
 }

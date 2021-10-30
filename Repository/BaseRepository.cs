@@ -146,8 +146,15 @@ namespace TASysOnlineProject.Repository
 
         public virtual async Task<TEntity> FindByIdAsync(Guid id)
         {
-            var std = await this._dbSet.FindAsync(id);
-            return std;
+            try
+            {
+                var std = await this._dbSet.FindAsync(id);
+                return std;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public virtual async Task<TEntity> InsertAsync(TEntity table)

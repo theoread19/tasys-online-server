@@ -57,13 +57,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> CreateCourseAsync(CourseRequest courseRequest)
         {
+
+            var subject = await this._subjectService.FindById(courseRequest.SubjectId);
+
+            if (subject.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Subject not found!" };
+            }
+
             var result = await this.FindByNameAsync(courseRequest.Name);
 
             if (result.StatusCode == StatusCodes.Status200OK)
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is Exist!" };
             }
-
 
             var table = this._mapper.Map<CourseTable>(courseRequest);
             table.CreatedDate = DateTime.UtcNow;
