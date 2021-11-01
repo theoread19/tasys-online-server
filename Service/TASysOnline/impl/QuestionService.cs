@@ -24,12 +24,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IAnswerService _answerService;
 
-        public QuestionService(IQuestionRepository QuestionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService)
+        private readonly ITestService _testService;
+
+        public QuestionService(IQuestionRepository QuestionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService, ITestService testService)
         {
             this._QuestionRepository = QuestionRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._answerService = answerService;
+            this._testService = testService;
         }
 
         public async Task<int> CountAsync()
@@ -39,6 +42,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> CreateQuestionAsync(QuestionRequest questionRequest)
         {
+            var test = await this._testService.GetTestById(questionRequest.TestId);
+
+            if (test == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
+            }
+
+            var countQuestionOfTest = test.QuestionResponses.Count();
+
+            if (test.TotalQuestions <= countQuestionOfTest)
+            {
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Test is full of questions!" };
+            }
+
             var table = this._mapper.Map<QuestionTable>(questionRequest);
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
