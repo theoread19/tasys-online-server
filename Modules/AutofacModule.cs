@@ -19,7 +19,6 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<SubjectRepository>().As<ISubjectRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CourseRepository>().As<ICourseRepository>().InstancePerLifetimeScope();
             builder.RegisterType<UserInfoRepository>().As<IUserInfoRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<DiscountRepository>().As<IDiscountRepository>().InstancePerLifetimeScope();
             builder.RegisterType<LessonRepository>().As<ILessonRepository>().InstancePerLifetimeScope();
             builder.RegisterType<PostRepository>().As<IPostRepository>().InstancePerLifetimeScope();
             builder.RegisterType<StreamSessionRepository>().As<IStreamSessionRepository>().InstancePerLifetimeScope();
@@ -43,7 +42,6 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<CourseService>().As<ICourseService>().InstancePerLifetimeScope();
             builder.RegisterType<UserInfoService>().As<IUserInfoService>().InstancePerLifetimeScope();
             builder.RegisterType<IdentityService>().As<IIdentityService>().InstancePerLifetimeScope();
-            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
             builder.RegisterType<LessonService>().As<ILessonService>().InstancePerLifetimeScope();
             builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
             builder.RegisterType<StreamSessionService>().As<IStreamSessionService>().InstancePerLifetimeScope();

@@ -311,32 +311,6 @@ namespace TASysOnlineProject.Context
 
             });
 
-            modelBuilder.Entity<CourseSuggestionTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Suggestion)
-                    .HasColumnType("text")
-                    .IsRequired();
-
-                e.Property(p => p.LevelOfImportance);
-
-                e.HasOne(o => o.Course)
-                    .WithMany(m => m.CourseSuggestions)
-                    .HasForeignKey(fk => fk.CourseId)
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
-
             modelBuilder.Entity<CurriCulumTable>(e => {
                 e.HasKey(k => k.Id);
 
@@ -357,35 +331,6 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.Course)
                     .WithMany(m => m.CurriCulums)
                     .HasForeignKey(fk => fk.CourseId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            modelBuilder.Entity<DiscountTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Title)
-                    .HasColumnType("text")
-                    .IsRequired();
-
-                e.Property(p => p.Rate);
-
-                e.Property(p => p.Duration)
-                    .IsRequired();
-
-                e.HasOne(o => o.Course)
-                    .WithOne(o => o.Discount)
-                    .HasForeignKey<DiscountTable>(fk => fk.CourseId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -679,34 +624,6 @@ namespace TASysOnlineProject.Context
                     .IsRequired();
             });
 
-            modelBuilder.Entity<TechnicalReportTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Reason)
-                    .HasMaxLength(255)
-                    .IsRequired();
-
-                e.Property(p => p.Comment)
-                    .HasColumnType("text")
-                    .IsRequired();
-
-                e.HasOne(o => o.UserAccount)
-                    .WithMany(m => m.TechnicalReports)
-                    .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
-
             modelBuilder.Entity<TestResultTable>(e =>
             {
                 e.HasKey(k => k.Id);
@@ -811,9 +728,7 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<BillTable> BillTables { get; private set; } = null!;
         public virtual DbSet<CartTable> CartTables { get; private set; } = null!;
         public virtual DbSet<CommentTable> CommentTables { get; private set; } = null!;
-        public virtual DbSet<CourseSuggestionTable> CourseSuggestionTables { get; private set; } = null!;
         public virtual DbSet<CurriCulumTable> CurriCulumTables { get; private set; } = null!;
-        public virtual DbSet<DiscountTable> DiscountTables { get; private set; } = null!;
         public virtual DbSet<LessonTable> LessonTables { get; private set; } = null!;
         public virtual DbSet<MediaTable> MediaTables { get; private set; } = null!;
         public virtual DbSet<MessageTable> MessageTables { get; private set; } = null!;
@@ -823,7 +738,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<QuestionTable> QuestionTables { get; private set; } = null!;
         public virtual DbSet<StreamSessionTable> StreamSessionTables { get; private set; } = null!;
         public virtual DbSet<SubjectTable> SubjectTables { get; private set; } = null!;
-        public virtual DbSet<TechnicalReportTable> TechnicalReportTables { get; private set; } = null!;
         public virtual DbSet<TestResultTable> TestResultTables { get; private set; } = null!;
         public virtual DbSet<TestTable> TestTables { get; private set; } = null!;
         public virtual DbSet<UserRankingTable> UserRankingTables { get; private set; } = null!;

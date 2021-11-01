@@ -10,7 +10,6 @@ namespace TASysOnlineProject.Context
 {
     public class SystemLogContext : DbContext
     {
-        public virtual DbSet<SystemLogTable> SystemLogTables { get; private set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,24 +28,7 @@ namespace TASysOnlineProject.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SystemLogTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                        .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Message)
-                    .IsRequired()
-                    .HasColumnType("text");
-            });
+            
         }
     }
 }

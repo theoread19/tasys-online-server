@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TASysOnlineProject.Context;
 
-namespace TASysOnlineProject.Migrations
+namespace TASysOnlineProject.Migrations.SystemLog
 {
-    [DbContext(typeof(AppConfigContext))]
-    partial class AppConfigContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SystemLogContext))]
+    [Migration("20211101141701_V1")]
+    partial class V1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

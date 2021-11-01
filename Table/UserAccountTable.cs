@@ -108,12 +108,6 @@ namespace TASysOnlineProject.Table
         public ICollection<CommentTable>? Comments{ get; set; }
 
         /// <summary>
-        ///     List of technical report table
-        ///     many to one
-        /// </summary>
-        public ICollection<TechnicalReportTable>? TechnicalReports { get; set; }
-
-        /// <summary>
         ///     List of notidication table
         ///     many to one
         /// </summary>

@@ -25,8 +25,6 @@ namespace TASysOnlineProject.Modules
                 .ForMember(identity => identity.Id, op => op.MapFrom(userTable => userTable.Id))
                 .ForMember(identity => identity.UserName, op => op.MapFrom(userTable => userTable.Username))
                 .ForMember(identity => identity.PasswordHash, op => op.MapFrom(userTable => userTable.Password));
-            CreateMap<DiscountRequest, DiscountTable>();
-            CreateMap<DiscountTable, DiscountResponse>();
             CreateMap<PostRequest, PostTable>();
             CreateMap<PostTable, PostResponse>()
                 .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount))

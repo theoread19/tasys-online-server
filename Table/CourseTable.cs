@@ -78,12 +78,6 @@ namespace TASysOnlineProject.Table
         public Guid? InstructorId { get; set; }
 
         /// <summary>
-        ///     Property for Discount table
-        ///     one to one
-        /// </summary>
-        public DiscountTable? Discount { get; set; }
-
-        /// <summary>
         ///     Property for subject table,
         ///     one to many
         /// </summary>
@@ -100,12 +94,6 @@ namespace TASysOnlineProject.Table
         ///     many to one
         /// </summary>
         public ICollection<LessonTable>? LessonTables { get; set; }
-
-        /// <summary>
-        ///     List for course suggestion table
-        ///     many to one
-        /// </summary>
-        public ICollection<CourseSuggestionTable>? CourseSuggestions { get; set; }
 
         /// <summary>
         ///     List for user ranking table
