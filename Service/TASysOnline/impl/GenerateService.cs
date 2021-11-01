@@ -40,6 +40,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IAuthorService _authorService;
 
+        private Random _random = new Random();
+
         public GenerateService(IRoleRepository roleRepository,
                                 RoleManager<IdentityRole> roleManager,
                                 IMapper mapper,
@@ -113,7 +115,22 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var course = await this._courseService.FindByNameAsync("Generate");
 
-            var data = new LessonRequest { BackText = "back", Description = "Generate", FrontText = "front", Name = "Generate", CourseId = course.Id };
+            var datas = new List<LessonRequest>
+            {
+                new LessonRequest { BackText = "A device for storing information on a computer", Description = "Generate", FrontText = $"disk", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "To make an action possible or easier", Description = "Generate", FrontText = $"facilitate", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "A number of computers and other devices that are connected together", Description = "Generate", FrontText = $"network", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "The state of being liked by a large number of people", Description = "Generate", FrontText = $"popularity", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "A series of something that are done in order to achieve a particular result", Description = "Generate", FrontText = $"process", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "To be used instead of something / somebody else", Description = "Generate", FrontText = $"replace", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "A great change in conditions, ways of working, beliefs, etc. ..that affects large numbers of people", Description = "Generate", FrontText = $"revolution", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "Sudden and rapid, especially of a change in something", Description = "Generate", FrontText = $"sharp", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "The ability to do something well", Description = "Generate", FrontText = "skill", Name = "Generate", CourseId = course.Id },
+                new LessonRequest { BackText = "The programs, etc....used to operate a computer", Description = "Generate", FrontText = $"software", Name = "Generate", CourseId = course.Id },
+            };
+
+            var randomNumer = this._random.Next(0, 9);
+            var data = datas[randomNumer];
 
             await this._lessonService.CreateLessonAsync(data);
         }
@@ -123,19 +140,131 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var tests = await this._testService.GetAllTestAsync();
             var testId = tests.FirstOrDefault().Id;
 
-            var data = new QuestionRequest
+            var datas = new List<QuestionRequest>
             {
-                Content = "1 + 1 = ?",
-                Score = 1,
-                TotalCorrectAnswer = 1,
-                TestId = testId,
-                AnswerRequests = new List<AnswerRequest>
+                new QuestionRequest
                 {
-                    new AnswerRequest { Content = "10", IsCorrect = false},
-                    new AnswerRequest { Content = "2", IsCorrect = true}
-                }
+                    Content = "1 + 1 = ?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "10", IsCorrect = false},
+                        new AnswerRequest { Content = "2", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "How many legs does a spider have?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "10", IsCorrect = false},
+                        new AnswerRequest { Content = "8", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "How many planets are in our solar system?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "12", IsCorrect = false},
+                        new AnswerRequest { Content = "8", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "How many days are in a year?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "367", IsCorrect = false},
+                        new AnswerRequest { Content = "365", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "In sports, what is an MVP?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "Minimum Viable Product", IsCorrect = false},
+                        new AnswerRequest { Content = "Most Valuable Player", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "What is the hardest natural substance?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "Iron", IsCorrect = false},
+                        new AnswerRequest { Content = "Diamond", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "Where does the President of the United States live while in office?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "The Black House", IsCorrect = false},
+                        new AnswerRequest { Content = "The White House", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "What is the opposite of 'cheap'?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "Explosion", IsCorrect = false},
+                        new AnswerRequest { Content = "Expensive", IsCorrect = true}
+                    }
+                },
+                new QuestionRequest
+                {
+                    Content = "What food do pandas eat?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "Apple", IsCorrect = false},
+                        new AnswerRequest { Content = "Bamboo", IsCorrect = true}
+                    }
+                },
+                 new QuestionRequest
+                {
+                    Content = "Can you name the closest star to Earth?",
+                    Score = 1,
+                    TotalCorrectAnswer = 1,
+                    TestId = testId,
+                    AnswerRequests = new List<AnswerRequest>
+                    {
+                        new AnswerRequest { Content = "The moon", IsCorrect = false},
+                        new AnswerRequest { Content = "The sun", IsCorrect = true}
+                    }
+                },
             };
-
+            var randomNumer = this._random.Next(0, 9);
+            var data = datas[randomNumer];
             await this._questionService.CreateQuestionAsync(data);
         }
 
@@ -165,10 +294,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var instructor = await this._userAccountRepository.FindByUsernameAsync("instructor");
 
+            var randomDate = this._random.Next(0, 31);
+
             var data = new StreamSessionRequest
             {
-                StartTime = DateTime.UtcNow.AddDays(31).ToString(),
-                EndTime = DateTime.UtcNow.AddDays(31).AddMinutes(50).ToString(),
+                StartTime = DateTime.UtcNow.AddDays(randomDate).ToString(),
+                EndTime = DateTime.UtcNow.AddDays(randomDate).AddMinutes(50).ToString(),
                 CourseId = course.Id,
                 CreatorId = instructor.Id,
                 MaxParticipants = await this._courseService.CountLeanerOfCourse(course.Id)
@@ -204,9 +335,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Deadline = DateTime.UtcNow.AddDays(30),
                 Description = "Generate",
                 MaxAttempt = 1000,
-                MaxScore = 1,
+                MaxScore = 1000,
                 TotalAttempt = 0,
-                TotalQuestions = 1,
+                TotalQuestions = 1000,
                 CourseId = course.Id,
                 Name = "Generate"
             };
