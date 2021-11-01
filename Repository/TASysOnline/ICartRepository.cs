@@ -10,5 +10,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
     {
         public Task<CartTable> GetCartByUserIdAsync(Guid userId);
 
+        public Task AddCourseToCart(CourseTable courseTable, Guid cartId);
+
     }
 }

@@ -120,7 +120,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPut]
         [Route("{userId}/add-to-cart")]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Learner)]
-        public async Task<IActionResult> AddCourseToCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
+        public async Task<IActionResult> AddCourseToCart(Guid userId, [FromBody] CourseRequest courseRequest)
         {
             var response = await this._CartService.AddCourseToCart(userId, courseRequest.Id);
             return StatusCode(response.StatusCode, response);
@@ -129,7 +129,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPut]
         [Route("{userId}/remove-from-cart")]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> RemoveCourseFromCart([FromQuery] Guid userId, [FromBody] CourseRequest courseRequest)
+        public async Task<IActionResult> RemoveCourseFromCart(Guid userId, [FromBody] CourseRequest courseRequest)
         {
 
             var userInfo = this.GetAccountAuthorInfo();
@@ -146,7 +146,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpDelete]
         [Route("{userId}/remove-all-from-cart")]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> RemoveAllCourseFromCart([FromQuery] Guid userId)
+        public async Task<IActionResult> RemoveAllCourseFromCart(Guid userId)
         {
             var userInfo = this.GetAccountAuthorInfo();
 

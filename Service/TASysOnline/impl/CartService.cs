@@ -37,7 +37,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> AddCourseToCart(Guid userId, Guid courseId)
         {
-            //can bat course trong cart nua
+            //can bat course trong cart và course da mua nua
             var course = await this._courseRepository.FindByIdAsyncEagerLoad(courseId);
             if (course == null)
             {
@@ -46,9 +46,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
 
-            cart.Courses.Add(course);
+            //cart.Courses.Add(course);
             cart.TotalCost += course.Cost;
             cart.TotalCourse += 1;
+            await this._cartRepository.AddCourseToCart(course, cart.Id);
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 

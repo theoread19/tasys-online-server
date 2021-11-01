@@ -17,6 +17,13 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             this._context = new TASysOnlineContext();
         }
 
+        public async Task AddCourseToCart(CourseTable courseTable, Guid cartId)
+        {
+            var table = await this._context.CartTables.Where(w => w.Id == cartId).FirstOrDefaultAsync();
+            table.Courses.Add(courseTable);
+            await this._context.SaveChangesAsync();
+        }
+
         public async Task<CartTable> GetCartByUserIdAsync(Guid userId)
         {
             try
