@@ -34,42 +34,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("paging")]
-        public async Task<IActionResult> GetAllUserInfoPaging([FromQuery] Pagination paginationFilter)
-        {
-            var route = Request.Path.Value;
-            var pagedReponse = await this._userInfoService.GetAllUserInfoPagingAsync(paginationFilter, route);
-            return StatusCode(pagedReponse.StatusCode, pagedReponse);
-        }
-
-        [HttpGet]
-        [Route("search")]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
-        {
-            var route = Request.Path.Value;
-            var responses = await this._userInfoService.SearchUserInfoBy(searchRequest, route);
-            return StatusCode(responses.StatusCode, responses);
-        }
-
-        [HttpGet]
-        [Route("filter")]
-        public async Task<IActionResult> FilterUserInfo([FromQuery] Filter filterRequest)
-        {
-            var route = Request.Path.Value;
-            var responses = await this._userInfoService.FilterUserInfoBy(filterRequest, route);
-            return StatusCode(StatusCodes.Status200OK, responses);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> CreateUserInfo([FromBody] UserInfoRequest UserInfoRequest)
-        {
-            var response = await this._userInfoService.CreateUserInfoAsync(UserInfoRequest);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetUserInfoByUserAccountId(Guid id)
         {
@@ -95,16 +59,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             }
 
             var response = await this._userInfoService.UpdateUserInfo(userInfoRequest);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpPost]
-        [Route("delete")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> DeleteUserInfo([FromBody] Guid[] UserInfoId)
-        {
-            var response = await this._userInfoService.DeleteUserInfo(UserInfoId);
 
             return StatusCode(response.StatusCode, response);
         }

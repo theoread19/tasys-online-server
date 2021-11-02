@@ -19,18 +19,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     {
         private readonly IUserInfoRepository _userInfoRepository;
         private readonly IMapper _mapper;
-        private readonly IUriService _uriService;
 
-        public UserInfoService(IUserInfoRepository userInfoRepository, IUriService uriService, IMapper mapper)
+        public UserInfoService(IUserInfoRepository userInfoRepository, IMapper mapper)
         {
             this._userInfoRepository = userInfoRepository;
-            this._uriService = uriService;
             this._mapper = mapper;
         }
-        public async Task<int> CountAsync()
-        {
-            return await this._userInfoRepository.CountAsync();
-        }
+
 
         public async Task<Response> CreateUserInfoAsync(UserInfoRequest userInfoRequest)
         {
@@ -55,49 +50,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             };
         }
 
-        public async Task<Response> DeleteUserInfo(Guid[] UserInfoId)
-        {
-            for (var i = 0; i < UserInfoId.Length; i++)
-            {
-                await this._userInfoRepository.DeleteAsync(UserInfoId[i]);
-            }
-
-            await this._userInfoRepository.SaveAsync();
-
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete user information successfully!"
-            };
-        }
-
-        public async Task<FilterResponse<List<UserInfoResponse>>> FilterUserInfoBy(Filter filterRequest, string route)
-        {
-            var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
-
-            var totalData = await this._userInfoRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._userInfoRepository.FilterByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<UserInfoTable>, List<UserInfoResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }
-
         public async Task<IEnumerable<UserInfoResponse>> GetAllUserInfoAsync()
         {
             var tables = await this._userInfoRepository.GetAllAsync();
@@ -105,31 +57,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var responses = this._mapper.Map<List<UserInfoTable>, List<UserInfoResponse>>(tables);
 
             return responses;
-        }
-
-        public async Task<PageResponse<List<UserInfoResponse>>> GetAllUserInfoPagingAsync(Pagination paginationFilter, string route)
-        {
-            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._userInfoRepository.CountAsync();
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._userInfoRepository.GetAllPadingAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<UserInfoTable>, List<UserInfoResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
         }
 
         public async Task<UserInfoResponse> GetUserInfoById(Guid id)
@@ -145,33 +72,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find user info successfully";
             return response;
-        }
-
-        public async Task<SearchResponse<List<UserInfoResponse>>> SearchUserInfoBy(Search searchRequest, string route)
-        {
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
-
-            var totalData = await this._userInfoRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._userInfoRepository.SearchByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<UserInfoTable>, List<UserInfoResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<UserInfoResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
         }
 
         public async Task<Response> UpdateUserInfo(UserInfoRequest userInfoRequest)

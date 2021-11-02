@@ -12,5 +12,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
 
         public Task AddCourseToCart(CourseTable courseTable, Guid cartId);
 
+        public Task RemoveCourseFromCart(Guid courseId, Guid cartId);
+
     }
 }

@@ -38,5 +38,13 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
                 return null;
             }
         }
+
+        public async Task RemoveCourseFromCart(Guid courseId, Guid cartId)
+        {
+            var table = await this._context.CartTables.Where(w => w.Id == cartId).FirstOrDefaultAsync();
+            var course = table.Courses.Where(w => w.Id == courseId).FirstOrDefault();
+            table.Courses.Remove(course);
+            await this._context.SaveChangesAsync();
+        }
     }
 }

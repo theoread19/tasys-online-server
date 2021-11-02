@@ -46,7 +46,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
 
-            //cart.Courses.Add(course);
             cart.TotalCost += course.Cost;
             cart.TotalCourse += 1;
             await this._cartRepository.AddCourseToCart(course, cart.Id);
@@ -227,9 +226,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
             }
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
-            cart.Courses.Remove(course);
             cart.TotalCourse -= 1;
             cart.TotalCost -= course.Cost;
+            await this._cartRepository.RemoveCourseFromCart(courseId, cart.Id);
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 
@@ -243,7 +242,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var coursesOfCart = cart.Courses.ToList();
             foreach(var course in coursesOfCart)
             {
-                cart.Courses.Remove(course);
+                await this._cartRepository.RemoveCourseFromCart(course.Id, cart.Id);
             }
             cart.TotalCourse = 0;
             cart.TotalCost = 0;
