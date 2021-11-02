@@ -40,14 +40,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._subjectService = subjectService;
         }
 
-        public async Task AddLeanersAsync(Guid leanerId, Guid courseId)
+        public async Task<Response> AddLeanersAsync(Guid leanerId, Guid courseId)
         {
-
-            var courseTable = await this._courseRepository.FindByIdAsync(courseId);
             var user = this._mapper.Map<UserAccountTable>(await this._userAccountService.FindByIdAsync(leanerId));
-            courseTable.LearnerAccounts.Add(user);
-
-            await this._courseRepository.SaveAsync();
+            await this._courseRepository.AddLeanerToCourse(user, courseId);
+            return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Add leaner to course successfully!" };
         }
 
         public async Task<int> CountAsync()

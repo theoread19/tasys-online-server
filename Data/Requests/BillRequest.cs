@@ -27,11 +27,6 @@ namespace TASysOnlineProject.Data.Requests
         /// </summary>
         public Guid UserAccountId { get; set; }
 
-        public virtual ICollection<CourseRequest> CourseRequests { get; set; }
-
-        public BillRequest()
-        {
-            this.CourseRequests = new HashSet<CourseRequest>();
-        }
+        public virtual ICollection<CourseRequest>? CourseRequests { get; set; }
     }
 }

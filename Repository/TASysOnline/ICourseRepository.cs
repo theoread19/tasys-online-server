@@ -15,5 +15,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
         public Task<CourseTable> FindByIdAsyncEagerLoad(Guid id);
 
         public Task<int> CountLeanerOfCourse(Guid courseId);
+
+        public Task AddLeanerToCourse(UserAccountTable userAccountTable, Guid courseId);
     }
 }

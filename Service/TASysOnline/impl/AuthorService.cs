@@ -97,23 +97,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> RegisterAsync(RegisterRequest registerRequest)
         {
-            var user = await this._userAccountService.FindByUsernameForAuthorAsync(registerRequest.Username!);
-            if (user != null)
-            {
-                return new Response
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError,
-                    ResponseMessage = "User already exists!"
-                };
-            }
+            var response = await this._userAccountService.CreateUserAsync(new UserAccountRequest {Password = registerRequest.Password, DisplayName = registerRequest.DisplayName,Username = registerRequest.Username, RoleId = registerRequest.RoleId });
 
-            await this._userAccountService.CreateUserAsync(new UserAccountRequest {Password = registerRequest.Password, DisplayName = registerRequest.DisplayName,Username = registerRequest.Username, RoleId = registerRequest.RoleId });
-
-            return new Response
-            {
-                StatusCode = StatusCodes.Status201Created,
-                ResponseMessage = "Account was created!"
-            };
+            return response;
         }
     }
 }

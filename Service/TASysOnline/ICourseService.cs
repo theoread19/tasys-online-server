@@ -36,6 +36,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> DeleteAllCourse();
 
-        public Task AddLeanersAsync(Guid leanerId, Guid courseId);
+        public Task<Response> AddLeanersAsync(Guid leanerId, Guid courseId);
     }
 }

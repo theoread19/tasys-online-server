@@ -55,6 +55,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> CreateUserAsync(UserAccountRequest userAccountRequest)
         {
 
+            var existUser = await this._userAccountRepository.FindByUsernameAsync(userAccountRequest.Username);
+
+            if (existUser != null)
+            {
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Username was exist!" };
+            }
+
             userAccountRequest.Password = BC.HashPassword(userAccountRequest.Password);
             var table = this._mapper.Map<UserAccountTable>(userAccountRequest);
 
