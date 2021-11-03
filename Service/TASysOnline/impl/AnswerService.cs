@@ -104,6 +104,39 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return responses;
         }
 
+        public async Task<PageResponse<List<AnswerResponse>>> GetAllCartPagingAsync(Pagination paginationFilter, string route)
+        {
+            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
+            var totalData = await this._AnswerRepository.CountAsync();
+
+            if (totalData == 0)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status500InternalServerError;
+                reponse.ResponseMessage = "No data!";
+                return reponse;
+            }
+
+            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
+
+            var tables = await this._AnswerRepository.GetAllPadingAsync(validFilter);
+
+            if (tables == null)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status500InternalServerError;
+                reponse.ResponseMessage = "Column name inlvaid";
+                return reponse;
+            }
+
+            var pageData = this._mapper.Map<List<AnswerTable>, List<AnswerResponse>>(tables);
+
+            var pagedReponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(pageData, validFilter, totalData, this._uriService, route);
+            pagedReponse.StatusCode = StatusCodes.Status200OK;
+            pagedReponse.ResponseMessage = "Fectching data successfully!";
+            return pagedReponse;
+        }
+
         public async Task<SearchResponse<List<AnswerResponse>>> SearchAnswerBy(Search searchRequest, string route)
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);

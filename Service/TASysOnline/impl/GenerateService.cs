@@ -83,7 +83,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Id = Guid.NewGuid(),
                 RatingCount = 0,
                 MaxSlot = 40,
-                Name = "Generate",
+                Name = "Generate" + Guid.NewGuid(),
                 Summary = "Summary",
                 InstructorId = instructor.Id,
                 Rating = 0,
@@ -298,8 +298,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var data = new StreamSessionRequest
             {
-                StartTime = DateTime.UtcNow.AddDays(randomDate).ToString(),
-                EndTime = DateTime.UtcNow.AddDays(randomDate).AddMinutes(50).ToString(),
+                StartTime = DateTime.UtcNow.AddDays(randomDate).ToString("yyyy/MM/dd HH:mm:ss"),
+                EndTime = DateTime.UtcNow.AddDays(randomDate).AddMinutes(50).ToString("yyyy/MM/dd HH:mm:ss"),
                 CourseId = course.Id,
                 CreatorId = instructor.Id,
                 MaxParticipants = await this._courseService.CountLeanerOfCourse(course.Id)
