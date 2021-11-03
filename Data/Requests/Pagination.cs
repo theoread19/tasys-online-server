@@ -22,7 +22,7 @@ namespace TASysOnlineProject.Data
         {
             this.PageNumber = pageNumber < 1 ? 1 : pageNumber;
             this.PageSize = ((pageSize > 100) || (pageSize < 0)) ? 100 : pageSize;
-            this.SortBy = (sortBy == null) ? this.SortBy = "CreatedDate" : this.SortBy = char.ToUpper(sortBy[0]) + sortBy.Substring(1);
+            this.SortBy = (sortBy == null || sortBy == string.Empty) ? this.SortBy = "CreatedDate" : this.SortBy = char.ToUpper(sortBy[0]) + sortBy.Substring(1);
             this.Order = order.Equals("asc") ? this.Order = order : "desc";
         }
     }

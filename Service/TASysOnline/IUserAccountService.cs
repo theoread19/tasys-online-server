@@ -18,8 +18,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<UserAccountResponse> FindByNameAsync(string username);
 
-        public Task<int> CountAsync();
-
         public Task<int> CountByRoleIdAsync(Guid roleId);
 
         public Task<Response> ChangeUserAccountPasswordAsync(Guid id, ChangePasswordRequest changePasswordRequest);

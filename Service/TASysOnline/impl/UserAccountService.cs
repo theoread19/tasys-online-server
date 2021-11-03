@@ -123,11 +123,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return reponse;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._userAccountRepository.CountAsync();
-        }
-
         public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo)
         {
             var table = await this._userAccountRepository.FindByIdAsync(userAccountRequest.Id);

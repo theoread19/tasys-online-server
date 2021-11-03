@@ -14,7 +14,7 @@ namespace TASysOnlineProject.Modules
         public AutoMapModule()
         {
             CreateMap<UserAccountRequest, UserAccountTable>();
-            CreateMap<UserAccountTable, UserAccountResponse>();
+            CreateMap<UserAccountTable, UserAccountResponse>().ReverseMap();
             CreateMap<UserInfoRequest, UserInfoTable>();
             CreateMap<UserInfoTable, UserInfoResponse>();
             CreateMap<CourseRequest, CourseTable>();
