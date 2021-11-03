@@ -239,25 +239,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._userAccountRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<UserAccountResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._userAccountRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<UserAccountResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<UserAccountTable>, List<UserAccountResponse>>(tables);
 
@@ -271,19 +255,24 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var table = await this._userAccountRepository.FindByIdAsync(id);
 
+            if (table == null)
+            {
+                return new UserAccountResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!"};
+            }
+
             var reponse = this._mapper.Map<UserAccountResponse>(table);
             reponse.ResponseMessage = "Find user account successfully";
             reponse.StatusCode = StatusCodes.Status200OK;
             return reponse;
         }
 
-        public async Task<Response> ChangeUserAccountPasswordAsync(Guid id, ChangePasswordRequest changePasswordRequest)
+        public async Task<Response> ChangeUserAccountPasswordAsync(Guid userId, ChangePasswordRequest changePasswordRequest)
         {
-            var user = await this._userAccountRepository.FindByIdAsync(id);
+            var user = await this._userAccountRepository.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "not found user account!" };
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
             }
 
             if (!(BC.Verify(changePasswordRequest.OldPassword, user.Password)))
@@ -334,6 +323,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> BlockUserAccount(Guid userId)
         {
             var user = await this._userAccountRepository.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             user.Status = -1;
             await this._userAccountRepository.UpdateAsync(user);
             await this._userAccountRepository.SaveAsync(); 
@@ -348,32 +343,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<int> CountByRoleIdAsync(Guid roleId)
         {
             return await this._userAccountRepository.CountByRole(roleId);
-        }
-
-        public async Task<UserAccountResponse> GetUserAccountEagerLoadCourse(Guid userId)
-        {
-            var user = await this._userAccountRepository.GetUserAccountEagerLoadCourse(userId);
-
-            var response = this._mapper.Map<UserAccountResponse>(user);
-
-            if (user != null)
-            {
-                if (user.RoleId.ToString() == Roles.InstructorId)
-                {
-                    response.CourseResponses = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(user.CoursesOfInstrucor.ToList());
-                }
-                else if (user.RoleId.ToString() == Roles.LearnerId)
-                {
-                    response.CourseResponses = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(user.CoursesOfLearner.ToList());
-                }
-
-                response.StatusCode = StatusCodes.Status200OK;
-                response.ResponseMessage = "Fetching a user successfully!";
-
-                return response;
-            }
-
-            return new UserAccountResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!"};
         }
 
         public async Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId)

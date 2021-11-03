@@ -30,10 +30,10 @@ namespace TASysOnlineProject.Data.Requests
                         string searchProperty): base(pageNumber, pageSize, sortBy, order)
         {
             this.FilterValue = filterValue ?? "";
-            this.FilterProperty = (filterProperty == null) ? this.FilterProperty = "" : char.ToUpper(filterProperty[0]) + filterProperty.Substring(1);
+            this.FilterProperty = (filterProperty == null || filterProperty == string.Empty) ? this.FilterProperty = "" : char.ToUpper(filterProperty[0]) + filterProperty.Substring(1);
 
             this.SearchValue = searchValue ?? "";
-            this.SearchProperty = (searchProperty == null) ? this.SearchProperty = "" : char.ToUpper(searchProperty[0]) + searchProperty.Substring(1);
+            this.SearchProperty = (searchProperty == null || searchProperty == string.Empty) ? this.SearchProperty = "" : char.ToUpper(searchProperty[0]) + searchProperty.Substring(1);
         }
             
     }

@@ -20,7 +20,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<int> CountByRoleIdAsync(Guid roleId);
 
-        public Task<Response> ChangeUserAccountPasswordAsync(Guid id, ChangePasswordRequest changePasswordRequest);
+        public Task<Response> ChangeUserAccountPasswordAsync(Guid userId, ChangePasswordRequest changePasswordRequest);
 
         public Task<UserAccountResponse> FindByIdAsync(Guid id);
 
@@ -39,8 +39,6 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<PageResponse<List<UserAccountResponse>>> GetAllUserAccountPagingAsync(Pagination paginationFilter, string route);
 
         public Task<Response> BlockUserAccount(Guid userId);
-
-        public Task<UserAccountResponse> GetUserAccountEagerLoadCourse(Guid userId);
 
         public Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId);
     }

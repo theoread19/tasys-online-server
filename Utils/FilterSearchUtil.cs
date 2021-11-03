@@ -31,7 +31,8 @@ namespace TASysOnlineProject.Utils
                 var filterData = data
                     .Where(s => propertyfilter!.GetValue(s, null)!.ToString() == filterSearch.FilterValue).ToList();
 
-                var searchData = filterData.Where(w =>
+                var searchData = (filterSearch.SearchValue == string.Empty) ? data
+                    : filterData.Where(w =>
                 {
                     if (ConvertUtil.ConvertToUnSign(propertySearch!.GetValue(w, null)!.ToString()!).IndexOf(unSignSearchValue, StringComparison.CurrentCultureIgnoreCase) >= 0)
                         return true;
