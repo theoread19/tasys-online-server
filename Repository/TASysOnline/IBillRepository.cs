@@ -8,5 +8,6 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface IBillRepository : IRepository<BillTable>
     {
+        public Task AddCourseToBill(Guid billId, CourseTable courseTable);
     }
 }

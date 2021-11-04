@@ -41,5 +41,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<Response> BlockUserAccount(Guid userId);
 
         public Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId);
+
+        public Task<Response> AddCourseToLearner(Guid userId, List<CourseRequest> courseRequests);
     }
 }

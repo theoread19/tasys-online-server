@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,13 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public BillRepository() : base(new TASysOnlineContext())
         {
             this._context = new TASysOnlineContext();
+        }
+
+        public async Task AddCourseToBill(Guid billId, CourseTable courseTable)
+        {
+            var table = await this._context.BillTables.Where(w => w.Id == billId).FirstOrDefaultAsync();
+            table.CourseTables.Add(courseTable);
+            await this._context.SaveChangesAsync();
         }
     }
 }

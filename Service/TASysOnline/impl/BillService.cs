@@ -22,38 +22,37 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        private readonly ICourseService _courseService;
-
         private readonly ICartService _cartService;
+
+        private readonly IUserAccountService _userAccountService;
 
         public BillService(IBillRepository BillRepository, 
                             IUriService uriService, 
-                            IMapper mapper, 
-                            ICourseService courseService,
-                            ICartService cartService)
+                            IMapper mapper,
+                            ICartService cartService,
+                            IUserAccountService userAccountService)
         {
             this._billRepository = BillRepository;
             this._uriService = uriService;
             this._mapper = mapper;
-            this._courseService = courseService;
             this._cartService = cartService;
+            this._userAccountService = userAccountService;
         }
 
         public async Task<Response> CreateBillAsync(BillRequest BillRequest)
         {
-
             var table = this._mapper.Map<BillTable>(BillRequest);
 
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
             var bill = await this._billRepository.InsertAsync(table);
-            foreach(var courseRequest in BillRequest.CourseRequests)
-            {
-                bill.CourseTables.Add(this._mapper.Map<CourseTable>(courseRequest));
-                await this._courseService.AddLeanersAsync(BillRequest.UserAccountId, courseRequest.Id);
-            }
-            
             await this._billRepository.SaveAsync();
+            foreach (var courseRequest in BillRequest.CourseRequests)
+            {
+                await this._billRepository.AddCourseToBill(bill.Id, this._mapper.Map<CourseTable>(courseRequest));
+            }
+
+            await this._userAccountService.AddCourseToLearner(BillRequest.UserAccountId, BillRequest.CourseRequests.ToList());
 
             await this._cartService.RemoveAllCourseFromCart(BillRequest.UserAccountId);
 

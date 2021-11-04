@@ -13,5 +13,7 @@ namespace TASysOnlineProject.Repository.TASysOnline
         public Task<int> CountByRole(Guid Role);
 
         public Task<UserAccountTable> GetUserAccountEagerLoadCourse(Guid userId);
+
+        public Task AddCourseToLeaner(Guid userId, CourseTable course);
     }
 }

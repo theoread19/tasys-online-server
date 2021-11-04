@@ -388,5 +388,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
         }
+
+        public async Task<Response> AddCourseToLearner(Guid userId, List<CourseRequest> courseRequests)
+        {
+            var courses = this._mapper.Map<List<CourseRequest>, List<CourseTable>>(courseRequests);
+            foreach (var course in courses)
+            {
+                await this._userAccountRepository.AddCourseToLeaner(userId, course);
+            }
+            
+            return new Response
+            {
+                StatusCode = StatusCodes.Status200OK,
+                ResponseMessage = "Delete all user account successfully!"
+            };
+        }
     }
 }
