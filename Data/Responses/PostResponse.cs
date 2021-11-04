@@ -28,6 +28,11 @@ namespace TASysOnlineProject.Data.Responses
         /// </summary>
         public Guid UserAccountId { get; set; }
 
+        /// <summary>
+        ///     Property for course id
+        /// </summary>
+        public Guid CourseId { get; set; }
+
         public UserAccountResponse UserAccountResponse { get; set; }
 
         public List<PostLikeResponse>? postLikeResponses { get; set; }

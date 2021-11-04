@@ -157,7 +157,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<BillResponse> GetBillById(Guid id)
         {
-            var table = await this._billRepository.FindByIdAsync(id);
+            var table = await this._billRepository.GetByIdEagerLoad(id);
+
+            if (table == null)
+            {
+                return new BillResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Bill not found!" };
+            }
+
             var response = this._mapper.Map<BillResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Bill successfully";

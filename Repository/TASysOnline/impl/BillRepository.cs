@@ -23,5 +23,21 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             table.CourseTables.Add(courseTable);
             await this._context.SaveChangesAsync();
         }
+
+        public async Task<BillTable> GetByIdEagerLoad(Guid Id)
+        {
+            try
+            {
+                var table = await this._context.BillTables.Where(w => w.Id == Id)
+                                .Include(i => i.CourseTables)
+                                .FirstOrDefaultAsync();
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
     }
 }
