@@ -103,6 +103,34 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
+        public async Task<FilterSearchResponse<List<PostResponse>>> FilterSearchPostBy(FilterSearch filterSearchRequest, string route)
+        {
+            var validFilter = new FilterSearch(filterSearchRequest.PageNumber, filterSearchRequest.PageSize, filterSearchRequest.SortBy!, filterSearchRequest.Order!, filterSearchRequest.FilterValue!, filterSearchRequest.FilterProperty!, filterSearchRequest.SearchValue!, filterSearchRequest.SearchProperty!);
+
+            var data = await this._postRepository.GetAllPostEagerLoadAsync();
+
+            var filterSearchData = FilterSearchUtil.FilterSearch<PostTable>(filterSearchRequest, data);
+
+            var totalData = filterSearchData.Count;
+
+            if (totalData == 0)
+            {
+                var reponse = PaginationHelper.CreatePagedReponse<PostResponse>(null, validFilter, totalData, this._uriService, route);
+                reponse.StatusCode = StatusCodes.Status404NotFound;
+                reponse.ResponseMessage = "Not Found!";
+                return reponse;
+            }
+
+            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
+
+            var pageData = this._mapper.Map<List<PostTable>, List<PostResponse>>(filterSearchData);
+
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PostResponse>(pageData, validFilter, totalData, this._uriService, route);
+            pagedReponse.StatusCode = StatusCodes.Status200OK;
+            pagedReponse.ResponseMessage = "Fectching data successfully!";
+            return pagedReponse;
+        }
+
         public async Task<PostResponse> FindByTitleAsync(string title)
         {
             /*            var result = await this._PostRepository.FindByTitleAsync(title);

@@ -19,8 +19,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private ICourseRepository _courseRepository;
 
-        private readonly IUserAccountService _userAccountService;
-
         private IUriService _uriService;
 
         private IMapper _mapper;
@@ -29,14 +27,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public CourseService(ICourseRepository courseRepository, 
                             IUriService uriService, 
-                            IMapper mapper, 
-                            IUserAccountService userAccountService,
+                            IMapper mapper,
                             ISubjectService subjectService)
         {
             this._courseRepository = courseRepository;
             this._uriService = uriService;
             this._mapper = mapper;
-            this._userAccountService = userAccountService;
             this._subjectService = subjectService;
         }
 

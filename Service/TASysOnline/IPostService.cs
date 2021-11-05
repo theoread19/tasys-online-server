@@ -30,6 +30,8 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<SearchResponse<List<PostResponse>>> SearchPostBy(Search searchRequest, string route);
 
+        public Task<FilterSearchResponse<List<PostResponse>>> FilterSearchPostBy(FilterSearch filterSearchRequest, string route);
+
         public Task<Response> DeleteAllPost();
     }
 }
