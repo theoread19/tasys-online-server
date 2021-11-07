@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<PageResponse<List<TestResultResponse>>> GetAllTestResultPagingAsync(Pagination paginationFilter, string route);
 
-        public Task<Response> CreateTestResultAsync(TestResultRequest testResultRequest);
-
         public Task<TestResultResponse> GetTestResultById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> DeleteTestResult(Guid[] testResultId);
 
@@ -29,5 +25,7 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<SearchResponse<List<TestResultResponse>>> SearchTestResultBy(Search searchRequest, string route);
 
         public Task<Response> DeleteAllTestResult();
+
+        public Task<IEnumerable<TestResultResponse>> GetTestResultByTestIdAndUserIdAsync(Guid userId, Guid testId);
     }
 }

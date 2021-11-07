@@ -44,6 +44,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetTestResultById(Guid id)
         {
             var response = await this._TestResultService.GetTestResultById(id);
@@ -100,6 +101,16 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var response = await this._TestResultService.DeleteAllTestResult();
             return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost]
+        [Route("{userId}/test/{testId}")]
+        [Authorize(Roles = Roles.All)]
+        public async Task<IActionResult> GetTestResultByUserIdAndTestId(Guid userId, Guid testId)
+        {
+            var responses = await this._TestResultService.GetTestResultByTestIdAndUserIdAsync(userId, testId);
+
+            return StatusCode(StatusCodes.Status200OK, responses);
         }
     }
 }

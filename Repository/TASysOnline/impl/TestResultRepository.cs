@@ -25,5 +25,41 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
                                 .CountAsync();
             return count;
         }
+
+        public async Task<TestResultTable> FindTestResultByIdEagerLoad(Guid Id)
+        {
+            try
+            {
+                var table = await this._context.TestResultTables.Where(w => w.Id == Id).Include(i => i.UserAccount).FirstOrDefaultAsync();
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<TestResultTable>> GetAllTestResultTablesEagerLoad()
+        {
+            var tables = await this._context.TestResultTables.Include(i => i.UserAccount).ToListAsync();
+            return tables;
+        }
+
+        public async Task<List<TestResultTable>> GetTestResultByUserIdAndTestId(Guid userId, Guid testId)
+        {
+            try
+            {
+                var tables = await this._context.TestResultTables
+                    .Where(w => w.TestId == testId)
+                    .Where(w => w.UserAccountId == userId)
+                    .ToListAsync();
+
+                return tables;
+            }
+            catch
+            {
+                return new List<TestResultTable>();
+            }
+        }
     }
 }
