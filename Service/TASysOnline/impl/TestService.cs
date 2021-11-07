@@ -28,11 +28,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._testRepository.CountAsync();
-        }
-
         public async Task<Response> CreateTestAsync(TestRequest testRequest)
         {
 
@@ -40,7 +35,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Id = new Guid();
             table.CreatedDate = DateTime.UtcNow;
 
-            var test = await this._testRepository.InsertAsync(table);
+            await this._testRepository.InsertAsync(table);
 
             await this._testRepository.SaveAsync();
 
@@ -101,27 +96,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<TestResponse> FindByNameAsync(string name)
-        {
-            /*var result = await this._TestRepository.FindByNameAsync(name);
-
-            if (result == null)
-            {
-                return new TestResponse
-                {
-                    StatusCode = StatusCodes.Status404NotFound,
-                    ResponseMessage = "Test not Found!"
-                };
-            }
-
-            var response = this._mapper.Map<TestResponse>(result);
-
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Test is Found!";
-            return response;*/
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<TestResponse>> GetAllTestAsync()
         {
             var tables = await this._testRepository.GetAllAsync();
@@ -136,25 +110,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._testRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<TestResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._testRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<TestResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<TestTable>, List<TestResponse>>(tables);
 
@@ -167,6 +125,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<TestResponse> GetTestById(Guid id)
         {
             var table = await this._testRepository.FindTestByIdEagerAsync(id);
+
+            if (table == null)
+            {
+                return new TestResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
+            }
+
             var response = this._mapper.Map<TestResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Test successfully";
@@ -203,6 +167,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
 
             var table = await this._testRepository.FindByIdAsync(testRequest.Id);
+
+            if (table == null)
+            {
+                return new TestResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
+            }
 
             table.Name = testRequest.Name;
             table.ModifiedDate = DateTime.UtcNow;

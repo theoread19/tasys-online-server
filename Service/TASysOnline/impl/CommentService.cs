@@ -29,11 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._CommentRepository.CountAsync();
-        }
-
         public async Task<Response> CreateCommentAsync(CommentRequest commentRequest)
         {
 
@@ -91,35 +86,16 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CommentRepository.FilterByAsync(validFilter);
+            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
 
-            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(tables);
+            var filterData = FilterUtils.Filter<CommentTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(filterData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CommentResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task<CommentResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._CommentRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new CommentResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Comment not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<CommentResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Comment is Found!";
-                        return response;*/
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<CommentResponse>> GetAllCommentAsync()
@@ -136,27 +112,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._CommentRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CommentResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CommentRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
 
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CommentResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
+            var pagedData = PagedUtil.Pagination<CommentTable>(validFilter, tables);
 
-            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(tables);
+            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(pagedData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CommentResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -175,25 +137,27 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<SearchResponse<List<CommentResponse>>> SearchCommentBy(Search searchRequest, string route)
         {
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
+            var validSearch = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
-            var totalData = await this._CommentRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._CommentRepository.CountByAsync(validSearch.Property!, validSearch.Value!);
 
             if (totalData == 0)
             {
-                var reponse = PaginationHelper.CreatePagedReponse<CommentResponse>(null, validFilter, totalData, this._uriService, route);
+                var reponse = PaginationHelper.CreatePagedReponse<CommentResponse>(null, validSearch, totalData, this._uriService, route);
                 reponse.StatusCode = StatusCodes.Status404NotFound;
                 reponse.ResponseMessage = "Not Found!";
                 return reponse;
             }
 
 
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
+            validSearch.PageSize = (totalData < validSearch.PageSize) ? totalData : validSearch.PageSize;
 
-            var tables = await this._CommentRepository.SearchByAsync(validFilter);
+            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
 
-            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(tables);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<CommentResponse>(pageData, validFilter, totalData, this._uriService, route);
+            var searchData = SearchUtils.Search<CommentTable>(validSearch, tables);
+
+            var pageData = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(searchData);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<CommentResponse>(pageData, validSearch, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;

@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateCurriCulumAsync(CurriCulumRequest curriCulumRequest);
 
-        public Task<CurriCulumResponse> FindByNameAsync(string name);
-
         public Task<CurriCulumResponse> GetCurriCulumById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateCurriCulum(CurriCulumRequest curriCulumRequest);
 

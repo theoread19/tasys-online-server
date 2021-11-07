@@ -8,5 +8,8 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface ICurriCulumRepository : IRepository<CurriCulumTable>
     {
+        public Task<List<CurriCulumTable>> GetAllCurriCulumTablesEagerLoad();
+
+        public Task<CurriCulumTable> FindByIdEagerLoad(Guid id);
     }
 }

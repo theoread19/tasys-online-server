@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateCommentAsync(CommentRequest commentRequest);
 
-        public Task<CommentResponse> FindByNameAsync(string name);
-
         public Task<CommentResponse> GetCommentById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateComment(CommentRequest commentRequest);
 

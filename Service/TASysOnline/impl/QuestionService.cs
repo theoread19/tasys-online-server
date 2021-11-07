@@ -44,7 +44,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var test = await this._testService.GetTestById(questionRequest.TestId);
 
-            if (test == null)
+            if (test.StatusCode == StatusCodes.Status404NotFound)
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test not found!" };
             }

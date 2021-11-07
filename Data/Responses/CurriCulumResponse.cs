@@ -22,5 +22,7 @@ namespace TASysOnlineProject.Data.Responses
         ///     Property for course id
         /// </summary>
         public Guid CourseId { get; set; }
+
+        public CourseResponse CourseResponse { get; set; }
     }
 }

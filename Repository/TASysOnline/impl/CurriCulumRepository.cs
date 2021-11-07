@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,26 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public CurriCulumRepository() : base(new TASysOnlineContext())
         {
             this._context = new TASysOnlineContext();
+        }
+
+        public async Task<CurriCulumTable> FindByIdEagerLoad(Guid id)
+        {
+            try
+            {
+                var table = await this._context.CurriCulumTables.Where(w => w.Id == id).Include(i => i.Course).FirstOrDefaultAsync();
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<CurriCulumTable>> GetAllCurriCulumTablesEagerLoad()
+        {
+            var tables = await this._context.CurriCulumTables.Include(i => i.Course).ToListAsync();
+
+            return tables;
         }
     }
 }

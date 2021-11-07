@@ -29,11 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._CurriCulumRepository.CountAsync();
-        }
-
         public async Task<Response> CreateCurriCulumAsync(CurriCulumRequest CurriCulumRequest)
         {
 
@@ -91,35 +86,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CurriCulumRepository.FilterByAsync(validFilter);
+            var tables = await this._CurriCulumRepository.GetAllCurriCulumTablesEagerLoad();
+            var filterData = FilterUtils.Filter<CurriCulumTable>(validFilter, tables);
 
-            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(tables);
+            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(filterData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CurriCulumResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task<CurriCulumResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._CurriCulumRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new CurriCulumResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "CurriCulum not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<CurriCulumResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "CurriCulum is Found!";
-                        return response;*/
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<CurriCulumResponse>> GetAllCurriCulumAsync()
@@ -136,27 +111,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._CurriCulumRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CurriCulumResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CurriCulumRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._CurriCulumRepository.GetAllCurriCulumTablesEagerLoad();
 
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CurriCulumResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
+            var pagedData = PagedUtil.Pagination<CurriCulumTable>(validFilter, tables);
 
-            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(tables);
+            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(pagedData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<CurriCulumResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -166,7 +127,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<CurriCulumResponse> GetCurriCulumById(Guid id)
         {
-            var table = await this._CurriCulumRepository.FindByIdAsync(id);
+            var table = await this._CurriCulumRepository.FindByIdEagerLoad(id);
             var response = this._mapper.Map<CurriCulumResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find CurriCulum successfully";
@@ -190,9 +151,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CurriCulumRepository.SearchByAsync(validFilter);
+            var tables = await this._CurriCulumRepository.GetAllCurriCulumTablesEagerLoad();
 
-            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(tables);
+            var searchData = SearchUtils.Search<CurriCulumTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<CurriCulumTable>, List<CurriCulumResponse>>(searchData);
             var pagedReponse = PaginationHelper.CreatePagedReponse<CurriCulumResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";

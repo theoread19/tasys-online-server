@@ -8,5 +8,6 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface ICommentRepository : IRepository<CommentTable>
     {
+        public Task<List<CommentTable>> GetAllCommentTablesEagerLoad();
     }
 }

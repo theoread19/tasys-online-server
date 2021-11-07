@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateTestAsync(TestRequest testRequest);
 
-        public Task<TestResponse> FindByNameAsync(string name);
-
         public Task<TestResponse> GetTestById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateTest(TestRequest testRequest);
 

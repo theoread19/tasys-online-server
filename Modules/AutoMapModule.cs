@@ -41,14 +41,16 @@ namespace TASysOnlineProject.Modules
                 .ForMember(m => m.CourseTable, op => op.MapFrom(res => res.CourseTable))
                 .ForMember(m => m.Creator, op => op.MapFrom(res => res.Creator));
             CreateMap<CurriCulumRequest, CurriCulumTable>();
-            CreateMap<CurriCulumTable, CurriCulumResponse>();
+            CreateMap<CurriCulumTable, CurriCulumResponse>()
+                .ForMember(m => m.CourseResponse, op => op.MapFrom(res => res.Course)); ; ;
             CreateMap<CartRequest, CartTable>();
             CreateMap<CartTable, CartResponse>()
                 .ForMember(m => m.Courses, op => op.MapFrom(res => res.Courses));
             CreateMap<MessageRequest, MessageTable>();
             CreateMap<MessageTable, MessageResponse>();
             CreateMap<CommentRequest, CommentTable>();
-            CreateMap<CommentTable, CommentResponse>();
+            CreateMap<CommentTable, CommentResponse>()
+                .ForMember(m => m.userAccountResponse, op => op.MapFrom(res => res.UserAccount)); ;
             CreateMap<QuestionRequest, QuestionTable>();
             CreateMap<QuestionTable, QuestionResponse>()
                 .ForMember(container => container.AnswerResponses, op => op.MapFrom(res => res.Answers));
