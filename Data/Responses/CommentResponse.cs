@@ -27,6 +27,6 @@ namespace TASysOnlineProject.Data.Responses
         /// </summary>
         public Guid UserAccountId { get; set; }
 
-        public UserAccountResponse userAccountResponse { get; set; }
+        public UserAccountResponse UserAccountResponse { get; set; }
     }
 }

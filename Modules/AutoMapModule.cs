@@ -50,7 +50,7 @@ namespace TASysOnlineProject.Modules
             CreateMap<MessageTable, MessageResponse>();
             CreateMap<CommentRequest, CommentTable>();
             CreateMap<CommentTable, CommentResponse>()
-                .ForMember(m => m.userAccountResponse, op => op.MapFrom(res => res.UserAccount)); ;
+                .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));
             CreateMap<QuestionRequest, QuestionTable>();
             CreateMap<QuestionTable, QuestionResponse>()
                 .ForMember(container => container.AnswerResponses, op => op.MapFrom(res => res.Answers));
@@ -71,7 +71,8 @@ namespace TASysOnlineProject.Modules
             CreateMap<BillTable, BillResponse>()
                 .ForMember(m => m.Courses, op => op.MapFrom(res => res.CourseTables));
             CreateMap<TestResultRequest, TestResultTable>();
-            CreateMap<TestResultTable, TestResultResponse>();
+            CreateMap<TestResultTable, TestResultResponse>()
+                .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));
             CreateMap<PostLikeRequest, PostLikeTable>();
             CreateMap<PostLikeTable, PostLikeResponse>()
                 .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));
