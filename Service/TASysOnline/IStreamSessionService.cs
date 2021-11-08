@@ -17,8 +17,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateStreamSessionAsync(StreamSessionRequest streamSessionRequest);
 
-        public Task<StreamSessionResponse> FindByNameAsync(string name);
-
         public Task<StreamSessionResponse> GetStreamSessionById(Guid id);
 
         public Task<int> CountAsync();

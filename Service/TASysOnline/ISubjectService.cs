@@ -12,8 +12,6 @@ namespace TASysOnlineProject.Service.TASysOnline
     {
         public Task<Response> CreateSubjectAsync(SubjectRequest subjectRequest);
 
-        public Task<SubjectResponse> FindByNameAsync(string subjectName);
-
         public Task<SubjectResponse> FindById(Guid subjectId);
 
         public Task<PageResponse<List<SubjectResponse>>> GetAllSubjectPagingAsync(Pagination paginationFilter, string route);

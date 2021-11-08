@@ -147,28 +147,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
         }
-
-        public async Task<StreamSessionResponse> FindByNameAsync(string name)
-        {
-            /*var result = await this._StreamSessionRepository.FindByNameAsync(name);
-
-            if (result == null)
-            {
-                return new StreamSessionResponse
-                {
-                    StatusCode = StatusCodes.Status404NotFound,
-                    ResponseMessage = "StreamSession not Found!"
-                };
-            }
-
-            var response = this._mapper.Map<StreamSessionResponse>(result);
-
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "StreamSession is Found!";
-            return response;*/
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<StreamSessionResponse>> GetAllStreamSessionAsync()
         {
             var tables = await this._StreamSessionRepository.GetAllAsync();
@@ -183,27 +161,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._StreamSessionRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._StreamSessionRepository.GetAllStreamSessionEagerLoadAsync();
 
             var pagedData = PagedUtil.Pagination<StreamSessionTable>(validFilter, tables);
-
-            if (pagedData == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<StreamSessionResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(pagedData);
 

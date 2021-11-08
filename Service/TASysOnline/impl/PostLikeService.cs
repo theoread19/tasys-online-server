@@ -14,13 +14,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     {
         private readonly IPostLikeRepository _postLikeRepository;
 
-        private readonly IMapper _mapper;
-
-        public PostLikeService(IPostLikeRepository postLikeRepository, IMapper mapper)
+        public PostLikeService(IPostLikeRepository postLikeRepository)
         {
             this._postLikeRepository = postLikeRepository;
-            this._mapper = mapper;
         }
+
         public async Task<Response> LikeOrUnlikePost(PostLikeRequest postLikeRequest)
         {
             var table = await this._postLikeRepository.FindPostLikeByPostIdAndUserId(postLikeRequest.PostId, postLikeRequest.UserAccountId);
