@@ -24,6 +24,8 @@ using TASysOnlineProject.Service.Paging.impl;
 using TASysOnlineProject.Table.Identity;
 using Microsoft.AspNetCore.SignalR;
 using TASysOnlineProject.Data.Provider;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace TASysOnlineProject
 {
@@ -39,6 +41,10 @@ namespace TASysOnlineProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("vi-VN");
+            });
 
             //Config to get base uri
             services.AddSingleton<IUriService>(o =>
@@ -156,11 +162,13 @@ namespace TASysOnlineProject
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestLocalization();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data.Requests;
+using TASysOnlineProject.Service.TASysOnline;
 using TASysOnlineProject.Service.TASysOnline.impl;
 
 namespace TASysOnlineProject.Controllers.TASysOnline
@@ -13,9 +14,9 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     [ApiController]
     public class PostLikeController : ControllerBase
     {
-        private readonly PostLikeService _postLikeService;
+        private IPostLikeService _postLikeService;
 
-        public PostLikeController(PostLikeService postLikeService)
+        public PostLikeController(IPostLikeService postLikeService)
         {
             this._postLikeService = postLikeService;
         }

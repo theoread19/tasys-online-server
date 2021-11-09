@@ -33,6 +33,7 @@ namespace TASysOnlineProject.Data.Responses
         /// </summary>
         public Guid CourseId { get; set; }
 
+        public int CountPostLike { get; set; }
         public UserAccountResponse UserAccountResponse { get; set; }
 
         public List<PostLikeResponse>? postLikeResponses { get; set; }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Repository.TASysOnline;
+using TASysOnlineProject.Table;
 
 namespace TASysOnlineProject.Service.TASysOnline.impl
 {
@@ -14,9 +15,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     {
         private readonly IPostLikeRepository _postLikeRepository;
 
-        public PostLikeService(IPostLikeRepository postLikeRepository)
+        private IMapper _mapper;
+
+        public PostLikeService(IPostLikeRepository postLikeRepository, IMapper mapper)
         {
             this._postLikeRepository = postLikeRepository;
+            this._mapper = mapper;
         }
 
         public async Task<Response> LikeOrUnlikePost(PostLikeRequest postLikeRequest)
@@ -28,8 +32,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Unlike post successfully!" };
             }
 
-            table!.CreatedDate = DateTime.UtcNow;
-            await this._postLikeRepository.InsertAsync(table);
+            var postLike = this._mapper.Map<PostLikeTable>(postLikeRequest);
+            postLike.CreatedDate = DateTime.UtcNow;
+            await this._postLikeRepository.InsertAsync(postLike);
             await this._postLikeRepository.SaveAsync();
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Like post successfully!" };
         }
