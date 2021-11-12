@@ -29,11 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._messageRepository.CountAsync();
-        }
-
         public async Task<Response> CreateMessageAsync(MessageRequest messageRequest)
         {
 
@@ -100,28 +95,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<MessageResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._MessageRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new MessageResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Message not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<MessageResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Message is Found!";
-                        return response;*/
-
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<MessageResponse>> GetAllMessageAsync()
         {
             var tables = await this._messageRepository.GetAllAsync();
@@ -136,25 +109,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._messageRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<MessageResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._messageRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<MessageResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(tables);
 
@@ -171,13 +128,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Message successfully";
             return response;
-        }
-
-        public async Task<List<MessageResponse>> GetMessageBySenderIdAndRecipientIdAsync(Guid senderId, Guid recipientId)
-        {
-            var tables = await this._messageRepository.FindMessageBySenderIdAnRecipientId(senderId, recipientId);
-            var responses = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(tables);
-            return responses;
         }
 
         public async Task<SearchResponse<List<MessageResponse>>> SearchMessageBy(Search searchRequest, string route)

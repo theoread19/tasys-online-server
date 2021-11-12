@@ -16,12 +16,5 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         {
             this._context = new TASysOnlineContext();
         }
-
-        public async Task<List<MessageTable>> FindMessageBySenderIdAnRecipientId(Guid senderId, Guid recipientId)
-        {
-            var tables = await this._context.MessageTables.Where(w => w.SenderId.Equals(senderId)
-                                                            && w.RecipientId.Equals(recipientId)).ToListAsync();
-            return tables;
-        }
     }
 }

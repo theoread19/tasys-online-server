@@ -21,11 +21,6 @@ namespace TASysOnlineProject.Table
         public string? FileURL { get; set; }
 
         /// <summary>
-        ///     Property for is seen by recipient of message
-        /// </summary>
-        public bool IsSeen { get; set; }
-
-        /// <summary>
         ///     Property for sender id
         /// </summary>
         public Guid SenderId { get; set; }
@@ -39,12 +34,12 @@ namespace TASysOnlineProject.Table
         /// <summary>
         ///     Property for recipient id
         /// </summary>
-        public Guid RecipientId { get; set; }
+        public Guid CourseId { get; set; }
 
         /// <summary>
-        ///     Property for user account table is recipient
+        ///     Property for course table is recipient
         ///     one to many
         /// </summary>
-        public UserAccountTable? Recipient { get; set; }
+        public CourseTable Course { get; set; }
     }
 }

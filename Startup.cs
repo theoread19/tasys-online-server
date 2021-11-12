@@ -179,7 +179,6 @@ namespace TASysOnlineProject
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chatHub");
                 endpoints.MapHub<AuthHub>("/hubs/auth");
                 endpoints.MapHub<StreamHub>("/hubs/streaming");
                 endpoints.MapHub<ClassroomHub>("/hubs/classroom");

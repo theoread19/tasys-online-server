@@ -126,6 +126,12 @@ namespace TASysOnlineProject.Table
         public ICollection<PostTable>? PostTables { get; set; }
 
         /// <summary>
+        ///     List for message in course
+        ///     many to one
+        /// </summary>
+        public ICollection<MessageTable>? Message { get; set; }
+
+        /// <summary>
         ///     List of user is learner
         ///     many to many
         /// </summary>

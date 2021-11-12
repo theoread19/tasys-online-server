@@ -78,12 +78,6 @@ namespace TASysOnlineProject.Table
         public ICollection<MessageTable>? SentMessage { get; set; }
 
         /// <summary>
-        ///     List for message is received
-        ///     many to one
-        /// </summary>
-        public ICollection<MessageTable>? ReceivedMessage { get; set; }
-
-        /// <summary>
         ///     List for course of user is instructor
         ///     many to one
         /// </summary>
@@ -106,12 +100,6 @@ namespace TASysOnlineProject.Table
         ///     many to one
         /// </summary>
         public ICollection<CommentTable>? Comments{ get; set; }
-
-        /// <summary>
-        ///     List of notidication table
-        ///     many to one
-        /// </summary>
-        public ICollection<NotificationTable>? NotificationTables { get; set; }
 
         /// <summary>
         ///     List of stream session created

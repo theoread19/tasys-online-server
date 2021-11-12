@@ -8,6 +8,5 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface IMessageRepository : IRepository<MessageTable>
     {
-        public Task<List<MessageTable>> FindMessageBySenderIdAnRecipientId(Guid senderId, Guid recipientId);
     }
 }

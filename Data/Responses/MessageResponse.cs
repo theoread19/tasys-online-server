@@ -24,11 +24,6 @@ namespace TASysOnlineProject.Data.Responses
         public string? FileURL { get; set; }
 
         /// <summary>
-        ///     Property for is seen by recipient of message
-        /// </summary>
-        public bool IsSeen { get; set; }
-
-        /// <summary>
         ///     Property for sender id
         /// </summary>
         public Guid SenderId { get; set; }
@@ -36,6 +31,12 @@ namespace TASysOnlineProject.Data.Responses
         /// <summary>
         ///     Property for recipient id
         /// </summary>
-        public Guid RecipientId { get; set; }
+        public Guid CourseId { get; set; }
+
+        /// <summary>
+        ///     Property for course table is recipient
+        ///     one to many
+        /// </summary>
+        public CourseResponse Course { get; set; }
     }
 }

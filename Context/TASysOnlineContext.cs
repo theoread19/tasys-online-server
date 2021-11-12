@@ -441,49 +441,15 @@ namespace TASysOnlineProject.Context
                     .HasMaxLength(255)
                     .IsRequired();
 
-                e.Property(p => p.IsSeen)
-                    .HasColumnType("bit");
-
                 e.HasOne(o => o.Sender)
                     .WithMany(m => m.SentMessage)
                     .HasForeignKey(fk => fk.SenderId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                e.HasOne(o => o.Recipient)
-                    .WithMany(m => m.ReceivedMessage)
-                    .HasForeignKey(fk => fk.RecipientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
-            });
-
-            modelBuilder.Entity<NotificationTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
-
-                e.Property(p => p.Content)
-                    .HasColumnType("text")
-                    .IsRequired();
-
-                e.Property(p => p.IsSeen)
-                    .HasColumnType("bit");
-
-                e.HasOne(o => o.UserAccount)
-                    .WithMany(m => m.NotificationTables)
-                    .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                e.HasOne(o => o.Course)
+                    .WithMany(m => m.Message)
+                    .HasForeignKey(fk => fk.CourseId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PostLikeTable>(e =>
@@ -728,7 +694,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<LessonTable> LessonTables { get; private set; } = null!;
         public virtual DbSet<MediaTable> MediaTables { get; private set; } = null!;
         public virtual DbSet<MessageTable> MessageTables { get; private set; } = null!;
-        public virtual DbSet<NotificationTable> NotificationTables { get; private set; } = null!;
         public virtual DbSet<PostLikeTable> PostLikeTables { get; private set; } = null!;
         public virtual DbSet<PostTable> PostTables { get; private set; } = null!;
         public virtual DbSet<QuestionTable> QuestionTables { get; private set; } = null!;

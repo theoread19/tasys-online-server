@@ -17,15 +17,36 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        public PostLikeService(IPostLikeRepository postLikeRepository, IMapper mapper)
+        private readonly IPostService _postService;
+
+        private readonly IUserAccountService _userAccountService;
+
+        public PostLikeService(IPostLikeRepository postLikeRepository, IMapper mapper, IPostService postService, IUserAccountService userAccountService)
         {
             this._postLikeRepository = postLikeRepository;
             this._mapper = mapper;
+            this._userAccountService = userAccountService;
+            this._postService = postService;
         }
 
         public async Task<Response> LikeOrUnlikePost(PostLikeRequest postLikeRequest)
         {
+            var user = await this._userAccountService.FindByIdAsync(postLikeRequest.UserAccountId);
+
+            if (user.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            var post = await this._postService.GetPostById(postLikeRequest.PostId);
+
+            if (post.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Post not found!" };
+            }
+
             var table = await this._postLikeRepository.FindPostLikeByPostIdAndUserId(postLikeRequest.PostId, postLikeRequest.UserAccountId);
+
             if (table != null){
                 await this._postLikeRepository.DeleteAsync(table.Id);
                 await this._postLikeRepository.SaveAsync();

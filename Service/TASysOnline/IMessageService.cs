@@ -12,17 +12,11 @@ namespace TASysOnlineProject.Service.TASysOnline
     {
         public Task<IEnumerable<MessageResponse>> GetAllMessageAsync();
 
-        public Task<List<MessageResponse>> GetMessageBySenderIdAndRecipientIdAsync(Guid senderId, Guid recipientId);
-
         public Task<PageResponse<List<MessageResponse>>> GetAllMessagePagingAsync(Pagination paginationFilter, string route);
 
         public Task<Response> CreateMessageAsync(MessageRequest messageRequest);
 
-        public Task<MessageResponse> FindByNameAsync(string name);
-
         public Task<MessageResponse> GetMessageById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateMessage(MessageRequest messageRequest);
 

@@ -18,12 +18,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for file url of message
         /// </summary>
-        public string FileURL { get; set; }
-
-        /// <summary>
-        ///     Property for is seen by recipient of message
-        /// </summary>
-        public bool IsSeen { get; set; }
+        public string FileURL { get; set; } = string.Empty;
 
         /// <summary>
         ///     Property for sender id
@@ -35,11 +30,9 @@ namespace TASysOnlineProject.Data.Requests
         /// </summary>
         public Guid RecipientId { get; set; }
 
-
-        public MessageRequest()
-        {
-            this.FileURL = "";
-            IsSeen = false;
-        }
+        /// <summary>
+        ///     Property for recipient id
+        /// </summary>
+        public Guid CourseId { get; set; }
     }
 }
