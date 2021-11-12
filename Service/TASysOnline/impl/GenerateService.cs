@@ -302,7 +302,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 EndTime = DateTime.UtcNow.AddDays(randomDate).AddMinutes(50).ToString("yyyy/MM/dd HH:mm:ss"),
                 CourseId = course.Id,
                 CreatorId = instructor.Id,
-                MaxParticipants = await this._courseService.CountLeanerOfCourse(course.Id)
             };
 
             await this._streamSessionService.CreateStreamSessionAsync(data);
@@ -336,7 +335,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Description = "Generate",
                 MaxAttempt = 1000,
                 MaxScore = 1000,
-                TotalAttempt = 0,
                 TotalQuestions = 1000,
                 CourseId = course.Id,
                 Name = "Generate"

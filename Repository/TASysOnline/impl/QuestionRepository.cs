@@ -19,21 +19,37 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
 
         public async Task<QuestionTable> FindQuestionByIdEagerAsync(Guid Id)
         {
-            var table = await this._context.QuestionTables
-                            .Where(w => w.Id == Id)
-                            .Include(i => i.Answers)
-                            .FirstOrDefaultAsync();
+            try
+            {
+                var table = await this._context.QuestionTables
+                .Where(w => w.Id == Id)
+                .Include(i => i.Answers)
+                .FirstOrDefaultAsync();
 
-            return table;
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
 
         public async Task<List<QuestionTable>> FindQuestionByTestIdEagerAsync(Guid testId)
         {
-            var table = await this._context.QuestionTables
-                            .Where(w => w.TestId == testId)
-                            .Include(i => i.Answers)
-                            .ToListAsync();
-            return table;
+            try
+            {
+                var table = await this._context.QuestionTables
+                .Where(w => w.TestId == testId)
+                .Include(i => i.Answers)
+                .ToListAsync();
+                return table;
+            }
+            catch
+            {
+                return new List<QuestionTable>();
+            }
+
         }
     }
 }

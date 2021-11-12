@@ -29,11 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._postRepository.CountAsync();
-        }
-
         public async Task<Response> CreatePostAsync(PostRequest postRequest)
         {
 
@@ -131,28 +126,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<PostResponse> FindByTitleAsync(string title)
-        {
-            /*            var result = await this._PostRepository.FindByTitleAsync(title);
-
-                        if (result == null)
-                        {
-                            return new PostResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Post not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<PostResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Post is Found!";
-                        return response;*/
-
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<PostResponse>> GetAllPostAsync()
         {
             var tables = await this._postRepository.GetAllAsync();
@@ -184,6 +157,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<PostResponse> GetPostById(Guid id)
         {
             var table = await this._postRepository.FindByIdAsync(id);
+
+            if (table == null)
+            {
+                return new PostResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Post not found!" };
+            }
+
             var response = this._mapper.Map<PostResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Post successfully";
@@ -221,6 +200,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdatePost(PostRequest postRequest)
         {
             var table = await this._postRepository.FindByIdAsync(postRequest.Id);
+
+            if (table == null)
+            {
+                return new PostResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Post not found!" };
+            }
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Content = postRequest.Content;

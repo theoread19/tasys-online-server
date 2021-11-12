@@ -592,8 +592,6 @@ namespace TASysOnlineProject.Context
                 e.Property(p => p.EndTime)
                     .IsRequired();
 
-                e.Property(p => p.MaxParticipants);
-
                 e.HasOne(o => o.Creator)
                     .WithMany(m => m.StreamSessionsCreated)
                     .HasForeignKey(fk => fk.CreatorId)
@@ -680,8 +678,6 @@ namespace TASysOnlineProject.Context
                 e.Property(p => p.TotalQuestions);
 
                 e.Property(p => p.MaxScore);
-
-                e.Property(p => p.TotalAttempt);
 
                 e.Property(p => p.MaxAttempt);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Requests;
@@ -17,8 +16,6 @@ namespace TASysOnlineProject.Service.TASysOnline
         public Task<Response> CreateQuestionAsync(QuestionRequest questionRequest);
 
         public Task<QuestionResponse> GetQuestionById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateQuestion(QuestionRequest questionRequest);
 

@@ -47,7 +47,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new RoleResponse
                 {
                     StatusCode = StatusCodes.Status404NotFound,
-                    ResponseMessage = "not found role!"
+                    ResponseMessage = "Role not found!"
                 };
             }
 
@@ -57,7 +57,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Name = result.Name,
                 CreatedDate = result.CreatedDate,
                 StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "founded role!"
+                ResponseMessage = "Find role successfully!"
             };
         }
 

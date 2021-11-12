@@ -44,11 +44,6 @@ namespace TASysOnlineProject.Data.Responses
         public int MaxScore { get; set; }
 
         /// <summary>
-        ///     Property for total attempt for test
-        /// </summary>
-        public int TotalAttempt { get; set; }
-
-        /// <summary>
         ///     Property for max attempt for test
         /// </summary>
         public int MaxAttempt { get; set; }

@@ -16,11 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreatePostAsync(PostRequest postRequest);
 
-        public Task<PostResponse> FindByTitleAsync(string title);
-
         public Task<PostResponse> GetPostById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdatePost(PostRequest postRequest);
 

@@ -187,6 +187,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<StreamSessionResponse> GetStreamSessionById(Guid id)
         {
             var table = await this._StreamSessionRepository.FindByIdAsync(id);
+
+            if (table == null)
+            {
+                return new StreamSessionResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Stream not found!" };
+            }
+
             var response = this._mapper.Map<StreamSessionResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find StreamSession successfully";
@@ -226,9 +232,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var table = await this._StreamSessionRepository.FindByIdAsync(streamSessionRequest.Id);
 
+            if (table == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Stream not found!" };
+            }
+
             table.ModifiedDate = DateTime.UtcNow;
             table.EndTime = DateTime.ParseExact(streamSessionRequest.EndTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-            table.MaxParticipants = streamSessionRequest.MaxParticipants;
             table.StartTime = DateTime.ParseExact(streamSessionRequest.StartTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture); ;
 
             await this._StreamSessionRepository.UpdateAsync(table);

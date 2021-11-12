@@ -16,7 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 {
     public class QuestionService : IQuestionService
     {
-        private IQuestionRepository _QuestionRepository;
+        private IQuestionRepository _questionRepository;
 
         private IUriService _uriService;
 
@@ -26,18 +26,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly ITestService _testService;
 
-        public QuestionService(IQuestionRepository QuestionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService, ITestService testService)
+        public QuestionService(IQuestionRepository questionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService, ITestService testService)
         {
-            this._QuestionRepository = QuestionRepository;
+            this._questionRepository = questionRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._answerService = answerService;
             this._testService = testService;
-        }
-
-        public async Task<int> CountAsync()
-        {
-            return await this._QuestionRepository.CountAsync();
         }
 
         public async Task<Response> CreateQuestionAsync(QuestionRequest questionRequest)
@@ -59,13 +54,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var table = this._mapper.Map<QuestionTable>(questionRequest);
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
-            var question = await this._QuestionRepository.InsertAsync(table);
             var answerRequests = questionRequest.AnswerRequests.ToList().Distinct();
-            if (question.TotalCorrectAnswer != answerRequests.Where(w => w.IsCorrect == true).Count())
+            if (table.TotalCorrectAnswer != answerRequests.Where(w => w.IsCorrect == true).Count())
             {
                 return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Total number of correct answers and correct answers are inconsistent!" };
             }
-            await this._QuestionRepository.SaveAsync();
+
+            var question = await this._questionRepository.InsertAsync(table);
+            await this._questionRepository.SaveAsync();
             foreach (var answerRequest in answerRequests)
             {
                 answerRequest.QuestionId = question.Id;
@@ -77,8 +73,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> DeleteAllQuestion()
         {
-            await this._QuestionRepository.DeleteAllAsyn();
-            await this._QuestionRepository.SaveAsync();
+            await this._questionRepository.DeleteAllAsyn();
+            await this._questionRepository.SaveAsync();
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
@@ -90,10 +86,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             for (var i = 0; i < QuestionId.Length; i++)
             {
-                await this._QuestionRepository.DeleteAsync(QuestionId[i]);
+                await this._questionRepository.DeleteAsync(QuestionId[i]);
             }
 
-            await this._QuestionRepository.SaveAsync();
+            await this._questionRepository.SaveAsync();
 
             return new Response
             {
@@ -106,7 +102,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
 
-            var totalData = await this._QuestionRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._questionRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
 
             if (totalData == 0)
             {
@@ -119,7 +115,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._QuestionRepository.FilterByAsync(validFilter);
+            var tables = await this._questionRepository.FilterByAsync(validFilter);
 
             var pageData = this._mapper.Map<List<QuestionTable>, List<QuestionResponse>>(tables);
 
@@ -131,7 +127,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<IEnumerable<QuestionResponse>> GetAllQuestionAsync()
         {
-            var tables = await this._QuestionRepository.GetAllAsync();
+            var tables = await this._questionRepository.GetAllAsync();
 
             var responses = this._mapper.Map<List<QuestionTable>, List<QuestionResponse>>(tables);
 
@@ -141,27 +137,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<PageResponse<List<QuestionResponse>>> GetAllQuestionPagingAsync(Pagination paginationFilter, string route)
         {
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._QuestionRepository.CountAsync();
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<QuestionResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
+            var totalData = await this._questionRepository.CountAsync();
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._QuestionRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<QuestionResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
+            var tables = await this._questionRepository.GetAllPadingAsync(validFilter);
 
             var pageData = this._mapper.Map<List<QuestionTable>, List<QuestionResponse>>(tables);
 
@@ -173,7 +153,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<QuestionResponse> GetQuestionById(Guid id)
         {
-            var table = await this._QuestionRepository.FindQuestionByIdEagerAsync(id);
+            var table = await this._questionRepository.FindQuestionByIdEagerAsync(id);
+
+            if (table == null)
+            {
+                return new QuestionResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Questions not found!" };
+            }
+
             var response = this._mapper.Map<QuestionResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Question successfully";
@@ -184,7 +170,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
-            var totalData = await this._QuestionRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._questionRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
 
             if (totalData == 0)
             {
@@ -197,7 +183,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._QuestionRepository.SearchByAsync(validFilter);
+            var tables = await this._questionRepository.SearchByAsync(validFilter);
 
             var pageData = this._mapper.Map<List<QuestionTable>, List<QuestionResponse>>(tables);
             var pagedReponse = PaginationHelper.CreatePagedReponse<QuestionResponse>(pageData, validFilter, totalData, this._uriService, route);
@@ -208,7 +194,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdateQuestion(QuestionRequest questionRequest)
         {
-            var table = await this._QuestionRepository.FindByIdAsync(questionRequest.Id);
+            var table = await this._questionRepository.FindByIdAsync(questionRequest.Id);
+
+            if (table == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Questions not found!" };
+            }
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Score = questionRequest.Score;
@@ -216,15 +207,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Score = questionRequest.Score;
             table.Content = questionRequest.Content;
 
-            await this._QuestionRepository.UpdateAsync(table);
-            await this._QuestionRepository.SaveAsync();
+            await this._questionRepository.UpdateAsync(table);
+            await this._questionRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update Question successfully!" };
         }
 
         public async Task<IEnumerable<QuestionResponse>> FindQuestionByTestId(Guid testId)
         {
-            var tables = await this._QuestionRepository.FindQuestionByTestIdEagerAsync(testId);
+            var tables = await this._questionRepository.FindQuestionByTestIdEagerAsync(testId);
 
             var responses = this._mapper.Map<List<QuestionTable>, List<QuestionResponse>>(tables);
 
@@ -242,7 +233,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                                         filterSearchRequest.SearchValue!,
                                         filterSearchRequest.SearchProperty!);
 
-            var data = await this._QuestionRepository.GetAllAsync();
+            var data = await this._questionRepository.GetAllAsync();
 
             var filterSearchData = FilterSearchUtil.FilterSearch<QuestionTable>(validFilter, data);
 

@@ -25,11 +25,6 @@ namespace TASysOnlineProject.Data.Responses
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        ///     Property for max paticipant of session
-        /// </summary>
-        public int MaxParticipants { get; set; }
-
-        /// <summary>
         ///     Property for creator id
         /// </summary>
         public Guid CreatorId { get; set; }
