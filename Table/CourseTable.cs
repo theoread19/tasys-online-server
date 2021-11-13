@@ -102,12 +102,6 @@ namespace TASysOnlineProject.Table
         public ICollection<UserRankingTable>? UserRankings { get; set; }
 
         /// <summary>
-        ///     List for curri culum table
-        ///     many to one
-        /// </summary>
-        public ICollection<CurriCulumTable>? CurriCulums { get; set; }
-
-        /// <summary>
         ///     List of test table
         ///     many to one
         /// </summary>

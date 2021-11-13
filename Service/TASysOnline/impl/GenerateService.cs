@@ -32,8 +32,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IQuestionService _questionService;
 
-        private readonly ICurriCulumService _curriCulumService;
-
         private readonly ILessonService _lessonService;
 
         private readonly IStreamSessionService _streamSessionService;
@@ -50,7 +48,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                                 ISubjectRepository subjectRepository,
                                 ITestService testService,
                                 IQuestionService questionService,
-                                ICurriCulumService curriCulumService,
                                 ILessonService lessonService,
                                 IStreamSessionService streamSessionService,
                                 IAuthorService authorService)
@@ -63,7 +60,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._subjectRepository = subjectRepository;
             this._testService = testService;
             this._questionService = questionService;
-            this._curriCulumService = curriCulumService;
             this._lessonService = lessonService;
             this._streamSessionService = streamSessionService;
             this._authorService = authorService;
@@ -92,23 +88,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             };
 
             await this._courseService.CreateCourseAsync(data);
-        }
-
-        public async Task GenerateCurriCulumData()
-        {
-            var course = await this._courseService.FindByNameAsync("Generate");
-            var datas = new List<CurriCulumRequest>
-            {
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 1"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 2"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 3"},
-                new CurriCulumRequest { CourseId = course.Id, Name = "Generate 4"},
-            };
-
-            foreach (var data in datas)
-            {
-                await this._curriCulumService.CreateCurriCulumAsync(data);
-            }
         }
 
         public async Task GenerateLessonData()

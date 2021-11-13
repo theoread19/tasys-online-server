@@ -19,8 +19,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task GenerateQuestionsData();
 
-        public Task GenerateCurriCulumData();
-
         public Task GenerateLessonData();
 
         public Task GenerateStreamData();

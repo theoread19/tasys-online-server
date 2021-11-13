@@ -41,9 +41,6 @@ namespace TASysOnlineProject.Modules
             CreateMap<StreamSessionTable, StreamSessionResponse>()
                 .ForMember(m => m.CourseTable, op => op.MapFrom(res => res.CourseTable))
                 .ForMember(m => m.Creator, op => op.MapFrom(res => res.Creator));
-            CreateMap<CurriCulumRequest, CurriCulumTable>();
-            CreateMap<CurriCulumTable, CurriCulumResponse>()
-                .ForMember(m => m.CourseResponse, op => op.MapFrom(res => res.Course)); ; ;
             CreateMap<CartRequest, CartTable>();
             CreateMap<CartTable, CartResponse>()
                 .ForMember(m => m.Courses, op => op.MapFrom(res => res.Courses));

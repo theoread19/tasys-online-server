@@ -311,29 +311,6 @@ namespace TASysOnlineProject.Context
 
             });
 
-            modelBuilder.Entity<CurriCulumTable>(e => {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                e.HasOne(o => o.Course)
-                    .WithMany(m => m.CurriCulums)
-                    .HasForeignKey(fk => fk.CourseId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
-
             modelBuilder.Entity<LessonTable>(e =>
             {
                 e.HasKey(k => k.Id);
@@ -690,7 +667,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<BillTable> BillTables { get; private set; } = null!;
         public virtual DbSet<CartTable> CartTables { get; private set; } = null!;
         public virtual DbSet<CommentTable> CommentTables { get; private set; } = null!;
-        public virtual DbSet<CurriCulumTable> CurriCulumTables { get; private set; } = null!;
         public virtual DbSet<LessonTable> LessonTables { get; private set; } = null!;
         public virtual DbSet<MediaTable> MediaTables { get; private set; } = null!;
         public virtual DbSet<MessageTable> MessageTables { get; private set; } = null!;

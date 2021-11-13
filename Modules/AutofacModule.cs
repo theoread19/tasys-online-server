@@ -23,7 +23,6 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<PostRepository>().As<IPostRepository>().InstancePerLifetimeScope();
             builder.RegisterType<StreamSessionRepository>().As<IStreamSessionRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TestRepository>().As<ITestRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CurriCulumRepository>().As<ICurriCulumRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CartRepository>().As<ICartRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AnswerRepository>().As<IAnswerRepository>().InstancePerLifetimeScope();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();
@@ -46,7 +45,6 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
             builder.RegisterType<StreamSessionService>().As<IStreamSessionService>().InstancePerLifetimeScope();
             builder.RegisterType<TestService>().As<ITestService>().InstancePerLifetimeScope();
-            builder.RegisterType<CurriCulumService>().As<ICurriCulumService>().InstancePerLifetimeScope();
             builder.RegisterType<CartService>().As<ICartService>().InstancePerLifetimeScope();
             builder.RegisterType<MessageService>().As<IMessageService>().InstancePerLifetimeScope();
             builder.RegisterType<CommentService>().As<ICommentService>().InstancePerLifetimeScope();

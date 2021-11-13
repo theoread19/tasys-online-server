@@ -29,7 +29,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             await this._generateService.GenerateCourseData();
             await this._generateService.GenerateLessonData();
             await this._generateService.GenerateTestData();
-            await this._generateService.GenerateCurriCulumData();
             await this._generateService.GenerateQuestionsData();
             await this._generateService.GenerateStreamData();
             return Ok();
@@ -72,14 +71,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         public async Task<IActionResult> GenerateLesson()
         {
             await this._generateService.GenerateLessonData();
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("generate-curriculum-data")]
-        public async Task<IActionResult> GenerateCurriCulum()
-        {
-            await this._generateService.GenerateCurriCulumData();
             return Ok();
         }
 
