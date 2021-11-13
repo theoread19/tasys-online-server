@@ -35,11 +35,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._blobService = blobService;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._mediaRepository.CountAsync();
-        }
-
         public async Task<Response> CreateMediasAsync(MediaRequest[] mediaRequests)
         {
             foreach(var mediaRequest in mediaRequests)
@@ -132,49 +127,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<IEnumerable<MediaResponse>> FindByContainerNameAsync(string container)
         {
-            if(container == null)
-            {
-                return null;
-            }
-
             var tables = await this._mediaRepository.FindByContainerNameAsync(container);
+
             var responses = this._mapper.Map<List<MediaTable>, List<MediaResponse>>(tables);
             return responses;
         }
 
-        public async Task<IEnumerable<MediaResponse>> GetAllMediaAsync()
-        {
-            var tables = await this._mediaRepository.GetAllAsync();
-
-            var responses = this._mapper.Map<List<MediaTable>, List<MediaResponse>>(tables);
-
-            return responses;
-        }
-
-        public async Task<PageResponse<List<MediaResponse>>> GetAllMediaPagingAsync(Pagination paginationFilter, string route)
+/*        public async Task<PageResponse<List<MediaResponse>>> GetAllMediaPagingAsync(Pagination paginationFilter, string route)
         {
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._mediaRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<MediaResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._mediaRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<MediaResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<MediaTable>, List<MediaResponse>>(tables);
 
@@ -182,18 +148,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
+        }*/
 
-        public async Task<MediaResponse> GetMediaById(Guid id)
-        {
-            var table = await this._mediaRepository.FindByIdAsync(id);
-            var response = this._mapper.Map<MediaResponse>(table);
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Find Media successfully";
-            return response;
-        }
-
-        public async Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route)
+/*        public async Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route)
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
@@ -217,7 +174,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
+        }*/
 
         public async Task<Response> MoveMediasAsync(MediasRequest mediaRequest)
         {
@@ -225,7 +182,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 var table = await this._mediaRepository.FindByIdAsync(mediaId);
 
-                if (table == null || mediaRequest.targetContainer == null)
+                if (table == null)
                 {
                     return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Media not found!" };
                 }
@@ -261,7 +218,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if(res.StatusCode != StatusCodes.Status200OK)
             {
-                return new Response { StatusCode = res.StatusCode, ResponseMessage = res.ResponseMessage + $@". Error in {table.FileName}" };
+                return new Response { StatusCode = res.StatusCode, ResponseMessage = res.ResponseMessage };
             }
 
             table.ModifiedDate = DateTime.UtcNow;
@@ -280,7 +237,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 var table = await this._mediaRepository.FindByIdAsync(mediaId);
 
-                if (table == null || mediaRequest.targetContainer == null)
+                if (table == null)
                 {
                     return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Media not found!" };
                 }
@@ -315,6 +272,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var media = await this._mediaRepository.FindByIdAsync(mediaId);
 
+            if (media == null)
+            {
+                return new MediaResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Media not found!" };
+            }
+
             var response = this._mapper.Map<MediaResponse>(media);
 
             response.StatusCode = StatusCodes.Status200OK;
@@ -325,7 +287,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Stream> DownloadFileZipAsync(Guid[] Ids)
         {
-            string zipName = DateTime.Now.ToString().Replace("/", "_") + ".zip";
+            //string zipName = DateTime.Now.ToString().Replace("/", "_") + ".zip";
 
             var zipStream = new MemoryStream();
             using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))

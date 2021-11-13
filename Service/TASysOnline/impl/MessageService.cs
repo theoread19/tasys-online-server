@@ -82,12 +82,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return reponse;
             }
 
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._messageRepository.FilterByAsync(validFilter);
+            var tables = await this._messageRepository.GetAllMessageEagerLoad();
 
-            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(tables);
+            var filterData = FilterUtils.Filter<MessageTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(filterData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<MessageResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -111,9 +112,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._messageRepository.GetAllPadingAsync(validFilter);
+            var tables = await this._messageRepository.GetAllMessageEagerLoad();
 
-            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(tables);
+            var pagedData = PagedUtil.Pagination<MessageTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(pagedData);
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<MessageResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
@@ -124,6 +127,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<MessageResponse> GetMessageById(Guid id)
         {
             var table = await this._messageRepository.FindByIdAsync(id);
+
+            if (table == null)
+            {
+                return new MessageResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
+            }
+
             var response = this._mapper.Map<MessageResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Message successfully";
@@ -144,12 +153,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return reponse;
             }
 
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._messageRepository.SearchByAsync(validFilter);
+            var tables = await this._messageRepository.GetAllMessageEagerLoad();
 
-            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(tables);
+            var searchData = SearchUtils.Search<MessageTable>(validFilter, tables);
+
+            var pageData = this._mapper.Map<List<MessageTable>, List<MessageResponse>>(searchData);
             var pagedReponse = PaginationHelper.CreatePagedReponse<MessageResponse>(pageData, validFilter, totalData, this._uriService, route);
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
@@ -159,6 +169,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdateMessage(MessageRequest messageRequest)
         {
             var table = await this._messageRepository.FindByIdAsync(messageRequest.Id);
+
+            if (table == null)
+            {
+                return new MessageResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
+            }
+
             table.ModifiedDate = DateTime.UtcNow;
             table.Content = messageRequest.Content;
 

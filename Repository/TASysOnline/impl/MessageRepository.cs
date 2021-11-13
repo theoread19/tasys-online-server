@@ -16,5 +16,11 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         {
             this._context = new TASysOnlineContext();
         }
+
+        public async Task<List<MessageTable>> GetAllMessageEagerLoad()
+        {
+            var tables = await this._context.MessageTables.Include(i => i.Sender).ToListAsync();
+            return tables;
+        }
     }
 }

@@ -96,7 +96,7 @@ namespace TASysOnlineProject.Config.HubConfig
             var sender = ConnectedClients[className].Where(w => w.Id == message.SenderId).FirstOrDefault();
             var recipient = ConnectedClients[className].Where(w => w.Id == message.RecipientId).FirstOrDefault();
 
-            await Clients.User(recipient.Id.ToString()).SendAsync("message", sender, message);
+            await Clients.Group(className).SendAsync("message", sender, message);
         }
 
         public async Task CreatePost(string className, PostRequest post)

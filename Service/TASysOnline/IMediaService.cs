@@ -12,17 +12,12 @@ namespace TASysOnlineProject.Service.TASysOnline
 {
     public interface IMediaService
     {
-        public Task<IEnumerable<MediaResponse>> GetAllMediaAsync();
 
-        public Task<PageResponse<List<MediaResponse>>> GetAllMediaPagingAsync(Pagination paginationFilter, string route);
+ //       public Task<PageResponse<List<MediaResponse>>> GetAllMediaPagingAsync(Pagination paginationFilter, string route);
 
         public Task<Response> CreateMediasAsync(MediaRequest[] mediaRequests);
 
         public Task<IEnumerable<MediaResponse>> FindByContainerNameAsync(string container);
-
-        public Task<MediaResponse> GetMediaById(Guid id);
-
-        public Task<int> CountAsync();
 
         public Task<Response> MoveMediasAsync(MediasRequest mediaRequest);
 
@@ -36,7 +31,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<FilterResponse<List<MediaResponse>>> FilterMediaBy(Filter filterRequest, string route);
 
-        public Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route);
+//        public Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route);
 
         public Task<MediaResponse> FindMediaByIdAsync(Guid mediaId);
 
