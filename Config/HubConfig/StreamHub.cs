@@ -59,7 +59,7 @@ namespace TASysOnlineProject.Config.HubConfig
                 ConnectedClients.Add(roomName, new List<UserAccountAuthRequest>());
                 Lessons.Add(roomName, new List<LessonResponse>());
                 TestResults.Add(roomName, new List<TestResultResponse>());
-                Creator.Add(roomName, userAccountAuthRequest);
+                //Creator.Add(roomName, userAccountAuthRequest);
             }
 
             var user = ConnectedClients[roomName].Where(w => w.Id.Equals(userAccountAuthRequest.Id)).FirstOrDefault();
