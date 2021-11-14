@@ -77,13 +77,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Description = "Generate",
                 Duration = 45,
                 Id = Guid.NewGuid(),
-                RatingCount = 0,
                 MaxSlot = 40,
                 Name = "Generate" + Guid.NewGuid(),
                 Summary = "Summary",
                 InstructorId = instructor.Id,
-                Rating = 0,
-                Feedback = "string",
                 SubjectId = subjectId
             };
 

@@ -51,9 +51,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Subject not found!" };
             }
 
-            var result = await this.FindByNameAsync(courseRequest.Name);
+            var result = await this._courseRepository.FindByNameAsync(courseRequest.Name);
 
-            if (result.StatusCode == StatusCodes.Status200OK)
+            if (result != null)
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is Exist!" };
             }
@@ -158,27 +158,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._courseRepository.CountAsync();
 
-            if(totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._courseRepository.GetCourseTablesEagerLoadAsync();
 
             var PagingDatas = PagedUtil.Pagination<CourseTable>(validFilter, tables);
-
-            if (PagingDatas == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<CourseTable>, List<CourseResponse>>(PagingDatas);
 
@@ -237,15 +221,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdateCourse(CourseRequest courseRequest)
         {
             var table = await this._courseRepository.FindByIdAsync(courseRequest.Id);
+
+            if (table == null)
+            {
+                return new CourseResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
+            }
+
             table.Name = courseRequest.Name;
             table.Cost = courseRequest.Cost;
             table.AvailableSlot = courseRequest.AvailableSlot;
             table.ModifiedDate = DateTime.UtcNow;
             table.Description = courseRequest.Description;
             table.Duration = courseRequest.Duration;
-            table.Feedback = courseRequest.Feedback;
-            table.Rating = courseRequest.Rating;
-            table.RatingCount = courseRequest.RatingCount;
             table.InstructorId = courseRequest.InstructorId;
             table.MaxSlot = courseRequest.MaxSlot;
             table.SubjectId = courseRequest.SubjectId;
@@ -255,11 +242,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._courseRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update course successfully!" };
-        }
-
-        public async Task<int> CountLeanerOfCourse(Guid courseId)
-        {
-            return await this._courseRepository.CountLeanerOfCourse(courseId);
         }
 
         public async Task<FilterSearchResponse<List<CourseResponse>>> FilterSearchCourseBy(FilterSearch filterSearchRequest, string route)

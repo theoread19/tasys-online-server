@@ -182,13 +182,6 @@ namespace TASysOnlineProject.Context
 
                 e.Property(p => p.MaxSlot);
 
-                e.Property(p => p.Rating);
-
-                e.Property(p => p.Feedback)
-                    .HasColumnType("Text");
-
-                e.Property(p => p.RatingCount);
-
                 e.Property(p => p.Cost);
 
                 e.HasOne(o => o.Subject)

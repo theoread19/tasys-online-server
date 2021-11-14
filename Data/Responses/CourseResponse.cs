@@ -45,21 +45,6 @@ namespace TASysOnlineProject.Data.Responses
         public int MaxSlot { get; set; }
 
         /// <summary>
-        ///     Property for rating of course
-        /// </summary>
-        public float Rating { get; set; }
-
-        /// <summary>
-        ///     Property for feefback of course
-        /// </summary>
-        public string? Feedback { get; set; }
-
-        /// <summary>
-        ///     Property for rating count of course
-        /// </summary>
-        public int RatingCount { get; set; }
-
-        /// <summary>
         ///     Property for cost of course
         /// </summary>
         public decimal Cost { get; set; }

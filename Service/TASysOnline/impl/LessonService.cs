@@ -29,16 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._LessonRepository.CountAsync();
-        }
-
-        public Task<int> CountByCourseId(Guid courseId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Response> CreateLessonAsync(LessonRequest lessonRequest)
         {
 
@@ -141,27 +131,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<LessonResponse> FindByNameAsync(string name)
-        {
-            /*            var result = await this._LessonRepository.FindByNameAsync(name);
-
-                        if (result == null)
-                        {
-                            return new LessonResponse
-                            {
-                                StatusCode = StatusCodes.Status404NotFound,
-                                ResponseMessage = "Lesson not Found!"
-                            };
-                        }
-
-                        var response = this._mapper.Map<LessonResponse>(result);
-
-                        response.StatusCode = StatusCodes.Status200OK;
-                        response.ResponseMessage = "Lesson is Found!";
-                        return response;*/
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<LessonResponse>> GetAllLessonAsync()
         {
             var tables = await this._LessonRepository.GetAllAsync();
@@ -176,25 +145,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._LessonRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<LessonResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._LessonRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<LessonResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<LessonTable>, List<LessonResponse>>(tables);
 
@@ -207,6 +160,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<LessonResponse> GetLessonById(Guid id)
         {
             var table = await this._LessonRepository.FindByIdAsync(id);
+
+            if (table == null)
+            {
+                return new LessonResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Lesson not found!" };
+            }
+
             var response = this._mapper.Map<LessonResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Lesson successfully";
@@ -242,6 +201,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdateLesson(LessonRequest lessonRequest)
         {
             var table = await this._LessonRepository.FindByIdAsync(lessonRequest.Id);
+
+            if (table == null)
+            {
+                return new LessonResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Lesson not found!" };
+            }
 
             table.Name = lessonRequest.Name;
             table.ModifiedDate = DateTime.UtcNow;

@@ -16,13 +16,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateLessonAsync(LessonRequest lessonRequest);
 
-        public Task<LessonResponse> FindByNameAsync(string name);
-
         public Task<LessonResponse> GetLessonById(Guid id);
-
-        public Task<int> CountByCourseId(Guid courseId);
-
-        public Task<int> CountAsync();
 
         public Task<Response> UpdateLesson(LessonRequest lessonRequest);
 

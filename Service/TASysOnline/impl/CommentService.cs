@@ -16,15 +16,15 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 {
     public class CommentService : ICommentService
     {
-        private ICommentRepository _CommentRepository;
+        private ICommentRepository _commentRepository;
 
         private IUriService _uriService;
 
         private IMapper _mapper;
 
-        public CommentService(ICommentRepository CommentRepository, IUriService uriService, IMapper mapper)
+        public CommentService(ICommentRepository commentRepository, IUriService uriService, IMapper mapper)
         {
-            this._CommentRepository = CommentRepository;
+            this._commentRepository = commentRepository;
             this._uriService = uriService;
             this._mapper = mapper;
         }
@@ -36,16 +36,16 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
-            await this._CommentRepository.InsertAsync(table);
-            await this._CommentRepository.SaveAsync();
+            await this._commentRepository.InsertAsync(table);
+            await this._commentRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Comment was created!" };
         }
 
         public async Task<Response> DeleteAllComment()
         {
-            await this._CommentRepository.DeleteAllAsyn();
-            await this._CommentRepository.SaveAsync();
+            await this._commentRepository.DeleteAllAsyn();
+            await this._commentRepository.SaveAsync();
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
@@ -57,10 +57,10 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             for (var i = 0; i < commentId.Length; i++)
             {
-                await this._CommentRepository.DeleteAsync(commentId[i]);
+                await this._commentRepository.DeleteAsync(commentId[i]);
             }
 
-            await this._CommentRepository.SaveAsync();
+            await this._commentRepository.SaveAsync();
 
             return new Response
             {
@@ -73,7 +73,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
 
-            var totalData = await this._CommentRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
+            var totalData = await this._commentRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
 
             if (totalData == 0)
             {
@@ -86,7 +86,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
+            var tables = await this._commentRepository.GetAllCommentTablesEagerLoad();
 
             var filterData = FilterUtils.Filter<CommentTable>(validFilter, tables);
 
@@ -100,7 +100,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<IEnumerable<CommentResponse>> GetAllCommentAsync()
         {
-            var tables = await this._CommentRepository.GetAllAsync();
+            var tables = await this._commentRepository.GetAllAsync();
 
             var responses = this._mapper.Map<List<CommentTable>, List<CommentResponse>>(tables);
 
@@ -110,11 +110,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<PageResponse<List<CommentResponse>>> GetAllCommentPagingAsync(Pagination paginationFilter, string route)
         {
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._CommentRepository.CountAsync();
+            var totalData = await this._commentRepository.CountAsync();
 
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
-            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
+            var tables = await this._commentRepository.GetAllCommentTablesEagerLoad();
 
             var pagedData = PagedUtil.Pagination<CommentTable>(validFilter, tables);
 
@@ -128,7 +128,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<CommentResponse> GetCommentById(Guid id)
         {
-            var table = await this._CommentRepository.FindByIdAsync(id);
+            var table = await this._commentRepository.FindByIdAsync(id);
+
+            if (table == null)
+            {
+                return new CommentResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
+            }
+
             var response = this._mapper.Map<CommentResponse>(table);
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Comment successfully";
@@ -139,7 +145,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var validSearch = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
 
-            var totalData = await this._CommentRepository.CountByAsync(validSearch.Property!, validSearch.Value!);
+            var totalData = await this._commentRepository.CountByAsync(validSearch.Property!, validSearch.Value!);
 
             if (totalData == 0)
             {
@@ -152,7 +158,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             validSearch.PageSize = (totalData < validSearch.PageSize) ? totalData : validSearch.PageSize;
 
-            var tables = await this._CommentRepository.GetAllCommentTablesEagerLoad();
+            var tables = await this._commentRepository.GetAllCommentTablesEagerLoad();
 
             var searchData = SearchUtils.Search<CommentTable>(validSearch, tables);
 
@@ -165,13 +171,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdateComment(CommentRequest commentRequest)
         {
-            var table = await this._CommentRepository.FindByIdAsync(commentRequest.Id);
+            var table = await this._commentRepository.FindByIdAsync(commentRequest.Id);
+
+            if (table == null)
+            {
+                return new CommentResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
+            }
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Content = commentRequest.Content;
 
-            await this._CommentRepository.UpdateAsync(table);
-            await this._CommentRepository.SaveAsync();
+            await this._commentRepository.UpdateAsync(table);
+            await this._commentRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update Comment successfully!" };
         }
