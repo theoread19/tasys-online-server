@@ -28,11 +28,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for recipient id
         /// </summary>
-        public Guid RecipientId { get; set; }
-
-        /// <summary>
-        ///     Property for recipient id
-        /// </summary>
         public Guid CourseId { get; set; }
     }
 }
