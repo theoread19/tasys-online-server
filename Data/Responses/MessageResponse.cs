@@ -19,24 +19,15 @@ namespace TASysOnlineProject.Data.Responses
         public string? Content { get; set; }
 
         /// <summary>
-        ///     Property for file url of message
-        /// </summary>
-        public string? FileURL { get; set; }
-
-        /// <summary>
         ///     Property for sender id
         /// </summary>
         public Guid SenderId { get; set; }
+
+        public UserAccountResponse Sender { get; set; }
 
         /// <summary>
         ///     Property for recipient id
         /// </summary>
         public Guid CourseId { get; set; }
-
-        /// <summary>
-        ///     Property for course table is recipient
-        ///     one to many
-        /// </summary>
-        public CourseResponse Course { get; set; }
     }
 }

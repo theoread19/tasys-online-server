@@ -45,7 +45,8 @@ namespace TASysOnlineProject.Modules
             CreateMap<CartTable, CartResponse>()
                 .ForMember(m => m.Courses, op => op.MapFrom(res => res.Courses));
             CreateMap<MessageRequest, MessageTable>();
-            CreateMap<MessageTable, MessageResponse>();
+            CreateMap<MessageTable, MessageResponse>()
+                .ForMember(m => m.Sender, op => op.MapFrom(res => res.Sender));
             CreateMap<CommentRequest, CommentTable>();
             CreateMap<CommentTable, CommentResponse>()
                 .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));

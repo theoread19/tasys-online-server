@@ -414,10 +414,6 @@ namespace TASysOnlineProject.Context
                     .IsRequired()
                     .HasColumnType("text");
 
-                e.Property(p => p.FileURL)
-                    .HasMaxLength(255)
-                    .IsRequired();
-
                 e.HasOne(o => o.Sender)
                     .WithMany(m => m.SentMessage)
                     .HasForeignKey(fk => fk.SenderId)

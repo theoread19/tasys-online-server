@@ -16,11 +16,6 @@ namespace TASysOnlineProject.Data.Requests
         public string? Content { get; set; }
 
         /// <summary>
-        ///     Property for file url of message
-        /// </summary>
-        public string FileURL { get; set; } = string.Empty;
-
-        /// <summary>
         ///     Property for sender id
         /// </summary>
         public Guid SenderId { get; set; }

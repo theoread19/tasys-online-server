@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TASysOnlineProject.Context;
 
 namespace TASysOnlineProject.Migrations.TASysOnline
 {
     [DbContext(typeof(TASysOnlineContext))]
-    partial class TASysOnlineContextModelSnapshot : ModelSnapshot
+    [Migration("20211114070418_V9")]
+    partial class V9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
