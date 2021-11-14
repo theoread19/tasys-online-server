@@ -14,7 +14,7 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
         public static Dictionary<string, List<LessonResponse>> Lessons = new Dictionary<string, List<LessonResponse>>();
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
-        public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
+        //public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
 
         private readonly ILessonService _lessonService;
 
@@ -31,11 +31,6 @@ namespace TASysOnlineProject.Config.HubConfig
             this._testResultService = testResultService;
         }
 
-        private void note()
-        {
-            //phat bieu
-            //xuat file diem danh
-        }
         public string GetConnectionId()
         {
             return Context.ConnectionId;

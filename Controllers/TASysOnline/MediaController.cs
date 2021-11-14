@@ -25,7 +25,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreateContainer([FromBody] MediaRequest[] mediaRequests)
         {
             var response = await this._mediaService.CreateMediasAsync(mediaRequests);
@@ -33,7 +33,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllMediaByContainerAsync(string container)
         {
             var responses = await this._mediaService.FindByContainerNameAsync(container);
@@ -47,7 +47,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DeleteMediaAsync([FromBody] Guid[] mediaId)
         {
             var response = await this._mediaService.DeleteMediaAsync(mediaId);
@@ -56,7 +56,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("move")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> MoveMediaAsync([FromBody] MediasRequest mediaRequest)
         {
             var response = await this._mediaService.MoveMediasAsync(mediaRequest);
@@ -65,7 +65,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("change-name")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> ChangeMediaNameAsync([FromBody] MediaRequest mediaRequest)
         {
             var response = await this._mediaService.ChangeMediaNameAsync(mediaRequest);
@@ -74,7 +74,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateMediaAsync([FromBody] MediaRequest mediaRequest)
         {
             var response = await this._mediaService.UpdateMediaAsync(mediaRequest);
@@ -83,7 +83,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("copy")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CopyMediaAsync([FromBody] MediasRequest mediaRequest)
         {
             var response = await this._mediaService.CopyMediasAsync(mediaRequest);
@@ -92,7 +92,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("download/file")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DownloadFile([FromBody] MediaRequest mediaRequest)
         {
             var response = await this._mediaService.FindMediaByIdAsync(mediaRequest.Id);
@@ -102,7 +102,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("download/files")]
-        //[Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DownloadFileZip([FromServices] IMediaService mediaService, [FromBody] Guid[] mediaIds)
         {
             var zip = await this._mediaService.DownloadFileZipAsync(mediaIds);
@@ -111,7 +111,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
-        public async Task<IActionResult> FilterCart([FromQuery] Filter filterRequest)
+        [Authorize(Roles = Roles.All)]
+        public async Task<IActionResult> FilterMedia([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._mediaService.FilterMediaBy(filterRequest, route);
