@@ -23,7 +23,7 @@ namespace TASysOnlineProject.Controllers.AzureStorage
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllContainerAsync()
         {
             var responses = await this._containerService.GetAllContainerAsync();
@@ -31,7 +31,7 @@ namespace TASysOnlineProject.Controllers.AzureStorage
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> CreateContainerAsync([FromBody] ContainerRequest container)
         {
             var response = await this._containerService.CreateContainerAsync(container.Name);
@@ -58,7 +58,7 @@ namespace TASysOnlineProject.Controllers.AzureStorage
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> ChangeContainerNameAsync([FromBody] ContainerUpdateRequest containerUpdateRequest)
         {
             var response = await this._containerService.ChangeContainerNameAsync(containerUpdateRequest.oldContainerName, containerUpdateRequest.newContainerName);
