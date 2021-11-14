@@ -573,12 +573,12 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.Test)
                     .WithMany(m => m.TestResults)
                     .HasForeignKey(fk => fk.TestId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasOne(o => o.UserAccount)
                     .WithMany(m => m.TestResultTables)
                     .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<TestTable>(e =>
