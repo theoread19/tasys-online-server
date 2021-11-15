@@ -619,33 +619,6 @@ namespace TASysOnlineProject.Context
                     .OnDelete(DeleteBehavior.Cascade);
 
             });
-
-            modelBuilder.Entity<UserRankingTable>(e =>
-            {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.TotalScore);
-
-                e.HasOne(o => o.UserAccount)
-                    .WithMany(m => m.UserRankings)
-                    .HasForeignKey(fk => fk.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
-
-                e.HasOne(o => o.Course)
-                    .WithMany(m => m.UserRankings)
-                    .HasForeignKey(fk => fk.CourseId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
         }
 
         public virtual DbSet<UserAccountTable> UserAccountTables { get; private set; } = null!;
@@ -666,7 +639,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<SubjectTable> SubjectTables { get; private set; } = null!;
         public virtual DbSet<TestResultTable> TestResultTables { get; private set; } = null!;
         public virtual DbSet<TestTable> TestTables { get; private set; } = null!;
-        public virtual DbSet<UserRankingTable> UserRankingTables { get; private set; } = null!;
 
         
     }

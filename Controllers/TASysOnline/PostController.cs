@@ -34,6 +34,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllPostPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -43,6 +44,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetPostById(Guid id)
         {
             var response = await this._postService.GetPostById(id);
@@ -51,6 +53,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
@@ -60,6 +63,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterPost([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
@@ -68,7 +72,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreatePost([FromBody] PostRequest postRequest)
         {
             //them courseId
@@ -78,7 +82,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdatePost([FromBody] PostRequest postRequest)
         {
             var response = await this._postService.UpdatePost(postRequest);
@@ -88,7 +92,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> DeletePost([FromBody] Guid[] PostId)
         {
             var response = await this._postService.DeletePost(PostId);
@@ -105,6 +109,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter-search")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterSearchPost([FromQuery] FilterSearch filterSearchRequest)
         {
             var route = Request.Path.Value;

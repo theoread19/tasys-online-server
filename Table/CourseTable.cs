@@ -81,12 +81,6 @@ namespace TASysOnlineProject.Table
         public ICollection<LessonTable>? LessonTables { get; set; }
 
         /// <summary>
-        ///     List for user ranking table
-        ///     many to one
-        /// </summary>
-        public ICollection<UserRankingTable>? UserRankings { get; set; }
-
-        /// <summary>
         ///     List of test table
         ///     many to one
         /// </summary>
