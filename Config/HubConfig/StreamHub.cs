@@ -100,6 +100,7 @@ namespace TASysOnlineProject.Config.HubConfig
                 {
                     ConnectedClients.Remove(roomName);
                     Lessons.Remove(roomName);
+                    TestResults.Remove(roomName);
                     EmitLog("Room " + roomName + " is now empty - resetting its state", roomName);
                 }
             }

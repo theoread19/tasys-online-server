@@ -23,15 +23,23 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        public AnswerService(IAnswerRepository AnswerRepository, IUriService uriService, IMapper mapper)
+        private IQuestionService _questionService;
+        public AnswerService(IAnswerRepository AnswerRepository, IUriService uriService, IMapper mapper, IQuestionService questionService)
         {
             this._AnswerRepository = AnswerRepository;
             this._uriService = uriService;
             this._mapper = mapper;
+            this._questionService = questionService;
         }
 
         public async Task<Response> CreateAnswerAsync(AnswerRequest answerRequest)
         {
+            var question = await this._questionService.GetQuestionById(answerRequest.QuestionId);
+
+            if (question.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Question not found!" };
+            }
 
             var table = this._mapper.Map<AnswerTable>(answerRequest);
 
@@ -39,6 +47,17 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Id = new Guid();
             await this._AnswerRepository.InsertAsync(table);
             await this._AnswerRepository.SaveAsync();
+
+            if (table.IsCorrect)
+            {
+                question.TotalCorrectAnswer += 1;
+                await this._questionService.UpdateQuestion(new QuestionRequest {
+                Id = question.Id,
+                TotalCorrectAnswer = question.TotalCorrectAnswer,
+                Content = question.Content,
+                Score = question.Score,
+                TestId = question.TestId});
+            }
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Answer was created!" };
         }
@@ -58,6 +77,21 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             for (var i = 0; i < answerId.Length; i++)
             {
+                var table = await this._AnswerRepository.FindByIdAsync(answerId[i]);
+
+                if (table.IsCorrect)
+                {
+                    var question = await this._questionService.GetQuestionById(table.QuestionId);
+                    await this._questionService.UpdateQuestion(new QuestionRequest
+                    {
+                        Id = question.Id,
+                        TotalCorrectAnswer = question.TotalCorrectAnswer - 1,
+                        Content = question.Content,
+                        Score = question.Score,
+                        TestId = question.TestId
+                    });
+                }
+
                 await this._AnswerRepository.DeleteAsync(answerId[i]);
             }
 

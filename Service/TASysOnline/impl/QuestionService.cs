@@ -22,16 +22,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        private readonly IAnswerService _answerService;
-
         private readonly ITestService _testService;
 
-        public QuestionService(IQuestionRepository questionRepository, IUriService uriService, IMapper mapper, IAnswerService answerService, ITestService testService)
+        public QuestionService(IQuestionRepository questionRepository, IUriService uriService, IMapper mapper, ITestService testService)
         {
             this._questionRepository = questionRepository;
             this._uriService = uriService;
             this._mapper = mapper;
-            this._answerService = answerService;
             this._testService = testService;
         }
 
@@ -54,19 +51,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var table = this._mapper.Map<QuestionTable>(questionRequest);
             table.CreatedDate = DateTime.UtcNow;
             table.Id = new Guid();
-            var answerRequests = questionRequest.AnswerRequests.ToList().Distinct();
-            if (table.TotalCorrectAnswer != answerRequests.Where(w => w.IsCorrect == true).Count())
-            {
-                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Total number of correct answers and correct answers are inconsistent!" };
-            }
 
-            var question = await this._questionRepository.InsertAsync(table);
+            await this._questionRepository.InsertAsync(table);
             await this._questionRepository.SaveAsync();
-            foreach (var answerRequest in answerRequests)
-            {
-                answerRequest.QuestionId = question.Id;
-                await this._answerService.CreateAnswerAsync(answerRequest);
-            }
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Question was created!" };
         }
@@ -204,7 +191,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.ModifiedDate = DateTime.UtcNow;
             table.Score = questionRequest.Score;
             table.TotalCorrectAnswer = questionRequest.TotalCorrectAnswer;
-            table.Score = questionRequest.Score;
             table.Content = questionRequest.Content;
 
             await this._questionRepository.UpdateAsync(table);

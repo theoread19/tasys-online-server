@@ -24,31 +24,57 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private ICourseRepository _courseRepository;
 
+        private IUserAccountRepository _userAccountRepository;
+
         public CartService(ICartRepository cartRepository, 
                             IUriService uriService, 
                             IMapper mapper, 
-                            ICourseRepository courseRepository)
+                            ICourseRepository courseRepository,
+                            IUserAccountRepository userAccountRepository)
         {
             this._cartRepository = cartRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._courseRepository = courseRepository;
+            this._userAccountRepository = userAccountRepository;
         }
 
         public async Task<Response> AddCourseToCart(Guid userId, Guid courseId)
         {
-            //can bat course trong cart và course da mua nua
+            var user = await this._userAccountRepository.GetUserAccountEagerLoadCourse(userId);
+
+            if (user == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             var course = await this._courseRepository.FindByIdAsyncEagerLoad(courseId);
             if (course == null)
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
             }
 
+            var courseOfLearnerIds = user.CoursesOfLearner.Select(s => s.Id).ToList();
+
+            if (courseOfLearnerIds.Contains(courseId))
+            {
+                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "course was bought!" };
+            }
+
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
+
+            var courseInCartIds = cart.Courses.Select(s => s.Id).ToList();
+
+            if (courseInCartIds.Contains(courseId))
+            {
+                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "course already in cart!" };
+            }
+
+            await this._cartRepository.AddCourseToCart(course, cart.Id);
 
             cart.TotalCost += course.Cost;
             cart.TotalCourse += 1;
-            await this._cartRepository.AddCourseToCart(course, cart.Id);
+
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 
