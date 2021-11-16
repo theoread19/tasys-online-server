@@ -18,7 +18,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo);
 
-        public Task<Response> UpdateCart(CartRequest cartRequest);
+        public Task<Response> UpdateCart(CartRequest cartRequest, AccountAuthorInfo accountAuthorInfo);
 
         public Task<Response> DeleteCart(Guid[] cartId);
 

@@ -241,7 +241,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
             else if (table.InstructorId != accountAuthorInfo.Id)
             {             
-                return new CourseResponse { StatusCode = StatusCodes.Status401Unauthorized, ResponseMessage = "Invalid access data!" };
+                return new CourseResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
             }
 
             table.ModifiedDate = DateTime.UtcNow;

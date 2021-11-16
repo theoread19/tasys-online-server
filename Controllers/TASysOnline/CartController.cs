@@ -94,7 +94,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> UpdateCart([FromBody] CartRequest CartRequest)
         {
-            var response = await this._CartService.UpdateCart(CartRequest);
+            var response = await this._CartService.UpdateCart(CartRequest, this.GetAccountAuthorInfo());
 
             return StatusCode(response.StatusCode, response);
         }

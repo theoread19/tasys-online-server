@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
+using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Repository.TASysOnline;
@@ -172,25 +173,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._cartRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CartResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._cartRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CartResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<CartTable>, List<CartResponse>>(tables);
 
@@ -204,7 +189,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var table = await this._cartRepository.GetCartByUserIdAsync(userId);
 
-            if (table.UserAccountId != accountAuthorInfo.Id)
+            if (table == null)
+            {
+                return new CartResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            if (table.UserAccountId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
             {
                 return new CartResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
             }
@@ -241,9 +231,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<Response> UpdateCart(CartRequest cartRequest)
+        public async Task<Response> UpdateCart(CartRequest cartRequest, AccountAuthorInfo accountAuthorInfo)
         {
             var table = await this._cartRepository.FindByIdAsync(cartRequest.Id);
+
+            if (table == null)
+            {
+                return new CartResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            if (table.UserAccountId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
+            {
+                return new CartResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
+            }
 
             table.ModifiedDate = DateTime.UtcNow;
             table.TotalCourse = cartRequest.TotalCourse;
@@ -261,7 +261,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
             }
+
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
+
+            if (cart == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             cart.TotalCourse -= 1;
             cart.TotalCost -= course.Cost;
             await this._cartRepository.RemoveCourseFromCart(courseId, cart.Id);
@@ -274,6 +281,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> RemoveAllCourseFromCart(Guid userId)
         {
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
+
+            if (cart == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
 
             var coursesOfCart = cart.Courses.ToList();
             foreach(var course in coursesOfCart)
