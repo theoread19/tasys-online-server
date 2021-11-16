@@ -33,7 +33,7 @@ namespace TASysOnlineProject.Table
         /// <summary>
         ///     Property for available slot of course
         /// </summary>
-        public int AvailableSlot { get; set; }
+        public int AvailableSlot { get; set; } = 0;
 
         /// <summary>
         ///     Property for max slot of course

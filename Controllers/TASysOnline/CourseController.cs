@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
 using TASysOnlineProject.Data.Const;
@@ -19,6 +20,18 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
+
+        private AccountAuthorInfo GetAccountAuthorInfo()
+        {
+            var user = HttpContext.User;
+
+            return new AccountAuthorInfo
+            {
+                Id = new Guid(user.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Role = user.FindFirst(ClaimTypes.Role).Value,
+                Username = user.FindFirst(ClaimTypes.Name).Value
+            };
+        }
 
         public CourseController(ICourseService courseService)
         {
@@ -82,7 +95,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> UpdateCourse([FromBody] CourseRequest courseRequest)
         {
-            var response = await this._courseService.UpdateCourse(courseRequest);
+            var response = await this._courseService.UpdateCourse(courseRequest, this.GetAccountAuthorInfo());
 
             return StatusCode(response.StatusCode, response);
         }

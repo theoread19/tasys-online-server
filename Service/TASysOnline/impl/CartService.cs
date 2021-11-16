@@ -58,7 +58,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (courseOfLearnerIds.Contains(courseId))
             {
-                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "course was bought!" };
+                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Course was bought!" };
             }
 
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
@@ -67,8 +67,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (courseInCartIds.Contains(courseId))
             {
-                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "course already in cart!" };
+                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Course already in cart!" };
             }
+
+            if (course.AvailableSlot >= course.MaxSlot)
+            {
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is out of slot!" };
+            }
+
+            course.AvailableSlot += 1;
+
+            await this._courseRepository.UpdateAsync(course);
+            await this._courseRepository.SaveAsync();
 
             await this._cartRepository.AddCourseToCart(course, cart.Id);
 

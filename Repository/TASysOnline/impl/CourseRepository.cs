@@ -45,6 +45,7 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
                 return await this._context.CourseTables.Where(w => w.Id == id)
                                                         .Include(i => i.LessonTables)
                                                         .Include(i => i.Tests)
+                                                        .Include(i => i.LearnerAccounts)
                                                         .FirstOrDefaultAsync();
             }
             catch

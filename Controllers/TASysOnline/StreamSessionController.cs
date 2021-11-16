@@ -37,6 +37,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllStreamSessionPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -46,6 +47,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetStreamSessionById(Guid id)
         {
             var response = await this._StreamSessionService.GetStreamSessionById(id);
@@ -54,7 +56,8 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        [Authorize(Roles = Roles.All)]
+        public async Task<IActionResult> SearchStreamSession([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._StreamSessionService.SearchStreamSessionBy(searchRequest, route);
@@ -63,6 +66,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterStreamSession([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
+using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Repository.TASysOnline;
@@ -218,7 +219,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<Response> UpdateCourse(CourseRequest courseRequest)
+        public async Task<Response> UpdateCourse(CourseRequest courseRequest, AccountAuthorInfo accountAuthorInfo)
         {
             var table = await this._courseRepository.FindByIdAsync(courseRequest.Id);
 
@@ -227,16 +228,24 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new CourseResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
             }
 
-            table.Name = courseRequest.Name;
-            table.Cost = courseRequest.Cost;
-            table.AvailableSlot = courseRequest.AvailableSlot;
+            if (accountAuthorInfo.Role == Roles.Admin)
+            {
+                table.Duration = courseRequest.Duration;
+                table.InstructorId = courseRequest.InstructorId;
+                table.MaxSlot = courseRequest.MaxSlot;
+                table.SubjectId = courseRequest.SubjectId;
+                table.Summary = courseRequest.Summary;
+                table.Name = courseRequest.Name;
+                table.Cost = courseRequest.Cost;
+                table.AvailableSlot = courseRequest.AvailableSlot;
+            }
+            else if (table.InstructorId != accountAuthorInfo.Id)
+            {             
+                return new CourseResponse { StatusCode = StatusCodes.Status401Unauthorized, ResponseMessage = "Invalid access data!" };
+            }
+
             table.ModifiedDate = DateTime.UtcNow;
             table.Description = courseRequest.Description;
-            table.Duration = courseRequest.Duration;
-            table.InstructorId = courseRequest.InstructorId;
-            table.MaxSlot = courseRequest.MaxSlot;
-            table.SubjectId = courseRequest.SubjectId;
-            table.Summary = courseRequest.Summary;
 
             await this._courseRepository.UpdateAsync(table);
             await this._courseRepository.SaveAsync();
