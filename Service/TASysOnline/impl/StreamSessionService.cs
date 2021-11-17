@@ -238,8 +238,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
 
             table.ModifiedDate = DateTime.UtcNow;
-            table.EndTime = DateTime.ParseExact(streamSessionRequest.EndTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-            table.StartTime = DateTime.ParseExact(streamSessionRequest.StartTime, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture); ;
+            table.EndTime = streamSessionRequest.EndTime;
+            table.StartTime = streamSessionRequest.StartTime;
 
             await this._StreamSessionRepository.UpdateAsync(table);
             await this._StreamSessionRepository.SaveAsync();

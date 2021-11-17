@@ -274,8 +274,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var data = new StreamSessionRequest
             {
-                StartTime = DateTime.UtcNow.AddDays(randomDate).ToString("yyyy/MM/dd HH:mm:ss"),
-                EndTime = DateTime.UtcNow.AddDays(randomDate).AddMinutes(50).ToString("yyyy/MM/dd HH:mm:ss"),
+                StartTime = DateTime.UtcNow.AddDays(randomDate),
+                EndTime = DateTime.UtcNow.AddDays(randomDate),
                 CourseId = course.Id,
                 CreatorId = instructor.Id,
             };

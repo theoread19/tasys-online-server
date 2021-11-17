@@ -143,25 +143,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
             var totalData = await this._AnswerRepository.CountAsync();
 
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "No data!";
-                return reponse;
-            }
-
             validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
 
             var tables = await this._AnswerRepository.GetAllPadingAsync(validFilter);
-
-            if (tables == null)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<AnswerResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status500InternalServerError;
-                reponse.ResponseMessage = "Column name inlvaid";
-                return reponse;
-            }
 
             var pageData = this._mapper.Map<List<AnswerTable>, List<AnswerResponse>>(tables);
 
@@ -200,6 +184,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         public async Task<Response> UpdateAnswer(AnswerRequest answerRequest)
         {
             var table = await this._AnswerRepository.FindByIdAsync(answerRequest.Id);
+
+            if (table == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Answer not found!" };
+            }
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Content = answerRequest.Content;
