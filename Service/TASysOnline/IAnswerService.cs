@@ -18,7 +18,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> DeleteAnswer(Guid[] answerId);
 
-        public Task<PageResponse<List<AnswerResponse>>> GetAllCartPagingAsync(Pagination paginationFilter, string route);
+        public Task<PageResponse<List<AnswerResponse>>> GetAllAnswerPagingAsync(Pagination paginationFilter, string route);
 
         public Task<FilterResponse<List<AnswerResponse>>> FilterAnswerBy(Filter filterRequest, string route);
 

@@ -47,6 +47,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Id = new Guid();
             var bill = await this._billRepository.InsertAsync(table);
             await this._billRepository.SaveAsync();
+
             foreach (var courseRequest in BillRequest.CourseRequests)
             {
                 await this._billRepository.AddCourseToBill(bill.Id, this._mapper.Map<CourseTable>(courseRequest));

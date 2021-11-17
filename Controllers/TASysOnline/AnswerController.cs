@@ -37,7 +37,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         public async Task<IActionResult> GetAllAnswerPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
-            var pagedReponse = await this._AnswerService.GetAllCartPagingAsync(paginationFilter, route);
+            var pagedReponse = await this._AnswerService.GetAllAnswerPagingAsync(paginationFilter, route);
             return StatusCode(pagedReponse.StatusCode, pagedReponse);
         }
 
