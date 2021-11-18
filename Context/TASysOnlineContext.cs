@@ -192,7 +192,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.InstructorAccount)
                     .WithMany(m => m.CoursesOfInstrucor)
                     .HasForeignKey(fk => fk.InstructorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 e.HasMany(m => m.LearnerAccounts)
                     .WithMany(m => m.CoursesOfLearner);
@@ -248,7 +248,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.UserAccount)
                     .WithMany(m => m.BillTables)
                     .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasMany(m => m.CourseTables)
                     .WithMany(m => m.BillTables);
@@ -300,7 +300,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.UserAccount)
                     .WithMany(m => m.Comments)
                     .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.NoAction);
 
             });
 
@@ -410,7 +410,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.Sender)
                     .WithMany(m => m.SentMessage)
                     .HasForeignKey(fk => fk.SenderId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
 
                 e.HasOne(o => o.Course)
                     .WithMany(m => m.Message)
@@ -440,7 +440,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(p => p.UserAccount)
                     .WithMany(m => m.PostLikes)
                     .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<PostTable>(e =>
@@ -468,7 +468,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.UserAccount)
                     .WithMany(m => m.Posts)
                     .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.NoAction);
 
                 e.HasOne(o => o.CourseTable)
                     .WithMany(m => m.PostTables)
@@ -527,7 +527,7 @@ namespace TASysOnlineProject.Context
                 e.HasOne(o => o.Creator)
                     .WithMany(m => m.StreamSessionsCreated)
                     .HasForeignKey(fk => fk.CreatorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.NoAction);
 
                 e.HasOne(o => o.CourseTable)
                     .WithMany(m => m.StreamSessionTables)
