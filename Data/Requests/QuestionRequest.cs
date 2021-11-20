@@ -22,7 +22,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for total correct answer of question
         /// </summary>
-        public int TotalCorrectAnswer { get; set; }
+        public int? TotalCorrectAnswer { get; set; }
 
         /// <summary>
         ///     Property for test id

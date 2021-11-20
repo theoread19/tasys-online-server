@@ -192,6 +192,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Score = questionRequest.Score;
             table.Content = questionRequest.Content;
 
+            if (questionRequest.TotalCorrectAnswer != null)
+            {
+                table.TotalCorrectAnswer = questionRequest.TotalCorrectAnswer.Value;
+            }
+            
             await this._questionRepository.UpdateAsync(table);
             await this._questionRepository.SaveAsync();
 
