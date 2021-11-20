@@ -71,7 +71,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Course already in cart!" };
             }
 
-            if (course.AvailableSlot >= 0)
+            if (course.AvailableSlot <= 0)
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is out of slot!" };
             }
