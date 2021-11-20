@@ -71,17 +71,17 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "Course already in cart!" };
             }
 
-            if (course.AvailableSlot >= course.MaxSlot)
+            if (course.AvailableSlot >= 0)
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is out of slot!" };
             }
 
-            course.AvailableSlot += 1;
+            course.AvailableSlot -= 1;
+
+            await this._cartRepository.AddCourseToCart(course, cart.Id);
 
             await this._courseRepository.UpdateAsync(course);
             await this._courseRepository.SaveAsync();
-
-            await this._cartRepository.AddCourseToCart(course, cart.Id);
 
             cart.TotalCost += course.Cost;
             cart.TotalCourse += 1;
