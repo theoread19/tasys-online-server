@@ -198,7 +198,22 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Content = answerRequest.Content;
-            table.IsCorrect = answerRequest.IsCorrect;
+
+            if (table.IsCorrect != answerRequest.IsCorrect)
+            {
+                table.IsCorrect = answerRequest.IsCorrect;
+
+                var question = await this._questionService.GetQuestionById(table.QuestionId);
+
+                await this._questionService.UpdateQuestion(new QuestionRequest
+                {
+                    Id = question.Id,
+                    TotalCorrectAnswer = answerRequest.IsCorrect ? question.TotalCorrectAnswer + 1 : question.TotalCorrectAnswer - 1,
+                    Content = question.Content,
+                    Score = question.Score,
+                    TestId = question.TestId
+                });
+            }
 
             await this._answerRepository.UpdateAsync(table);
             await this._answerRepository.SaveAsync();

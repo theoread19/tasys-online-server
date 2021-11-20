@@ -607,7 +607,7 @@ namespace TASysOnlineProject.Context
 
                 e.Property(p => p.Deadline);
 
-                e.Property(p => p.TotalQuestions);
+                e.Property(p => p.MaxQuestion);
 
                 e.Property(p => p.MaxScore);
 

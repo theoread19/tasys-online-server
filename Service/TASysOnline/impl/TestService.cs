@@ -180,7 +180,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             table.Deadline = testRequest.Deadline;
             table.MaxAttempt = testRequest.MaxAttempt;
             table.MaxScore = testRequest.MaxScore;
-            table.TotalQuestions = testRequest.TotalQuestions;
+            table.MaxQuestion = testRequest.MaxQuestion;
 
             await this._testRepository.UpdateAsync(table);
             await this._testRepository.SaveAsync();

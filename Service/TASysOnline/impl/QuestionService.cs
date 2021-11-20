@@ -43,7 +43,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var countQuestionOfTest = test.QuestionResponses.Count();
 
-            if (test.TotalQuestions <= countQuestionOfTest)
+            if (test.MaxQuestion <= countQuestionOfTest)
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Test is full of questions!" };
             }
@@ -190,7 +190,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             table.ModifiedDate = DateTime.UtcNow;
             table.Score = questionRequest.Score;
-            table.TotalCorrectAnswer = questionRequest.TotalCorrectAnswer;
             table.Content = questionRequest.Content;
 
             await this._questionRepository.UpdateAsync(table);

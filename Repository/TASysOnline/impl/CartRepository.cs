@@ -20,6 +20,7 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
         public async Task AddCourseToCart(CourseTable courseTable, Guid cartId)
         {
             var table = await this._context.CartTables.Where(w => w.Id == cartId).FirstOrDefaultAsync();
+            courseTable.LearnerAccounts = null;
             table.Courses.Add(courseTable);
             await this._context.SaveChangesAsync();
         }

@@ -311,7 +311,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 Description = "Generate",
                 MaxAttempt = 1000,
                 MaxScore = 1000,
-                TotalQuestions = 1000,
+                MaxQuestion = 1000,
                 CourseId = course.Id,
                 Name = "Generate"
             };

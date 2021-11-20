@@ -31,9 +31,9 @@ namespace TASysOnlineProject.Table
         public DateTime Deadline { get; set; }
 
         /// <summary>
-        ///     Property for total questions of test
+        ///     Property for max questions of test
         /// </summary>
-        public int TotalQuestions { get; set; }
+        public int MaxQuestion { get; set; }
 
         /// <summary>
         ///     Property for max score of test
