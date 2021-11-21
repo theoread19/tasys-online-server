@@ -14,6 +14,7 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
         public static Dictionary<string, List<LessonResponse>> Lessons = new Dictionary<string, List<LessonResponse>>();
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
+        public static Dictionary<string, OperationFlag> OperationFlags = new Dictionary<string, OperationFlag>();
         //public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
 
         private readonly ILessonService _lessonService;
@@ -55,6 +56,7 @@ namespace TASysOnlineProject.Config.HubConfig
                 Lessons.Add(roomName, new List<LessonResponse>());
                 TestResults.Add(roomName, new List<TestResultResponse>());
                 //Creator.Add(roomName, userAccountAuthRequest);
+                OperationFlags.Add(roomName, new OperationFlag());
             }
 
             var user = ConnectedClients[roomName].Where(w => w.Id.Equals(userAccountAuthRequest.Id)).FirstOrDefault();
@@ -101,6 +103,7 @@ namespace TASysOnlineProject.Config.HubConfig
                     ConnectedClients.Remove(roomName);
                     Lessons.Remove(roomName);
                     TestResults.Remove(roomName);
+                    OperationFlags.Remove(roomName);
                     EmitLog("Room " + roomName + " is now empty - resetting its state", roomName);
                 }
             }
@@ -211,6 +214,18 @@ namespace TASysOnlineProject.Config.HubConfig
         public async Task RaiseHand(string roomName, UserAccountAuthRequest sendUserEntry)
         {
             await Clients.Group(roomName).SendAsync("raiseHand", sendUserEntry);
+        }
+
+        public async Task SetOperationFlag(string roomName, OperationFlag operationFlag) {
+
+            OperationFlags[roomName] = operationFlag;
+            await Clients.Group(roomName).SendAsync("operationFlag", operationFlag);
+        }
+
+        public async Task GetOperationFlag(string roomName)
+        {
+            var operation = OperationFlags[roomName];
+            await Clients.Group(roomName).SendAsync("operationFlag", operation);
         }
 
         private Task EmitJoinRoom(string roomName)
