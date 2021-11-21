@@ -59,17 +59,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var questionsOfUser = doTestRequest.QuestionRequest.ToList();
             float toltalScorce = 0;
 
-            for (var i = 0; i < questions.Count(); i++)
+            for (var i = 0; i < questionsOfUser.Count(); i++)
             {
-                var answer = questions[i].AnswerResponses.ToList();
                 var answerOfUser = questionsOfUser[i].AnswerRequests.Select(s => s.Id).ToList();
-                var vaildAnswer = answer.Where(w => answerOfUser.Contains(w.Id));
+                var answer = questions.Where(w => w.Id == questionsOfUser[i].Id).FirstOrDefault().AnswerResponses.ToList();
+                if (answerOfUser.Count > 0)
+                {
+                    var vaildAnswer = answer.Where(w => answerOfUser.Contains(w.Id));
+                    var countCorrectAnswer = vaildAnswer.Where(w => w.IsCorrect == true).Count();
+                    var countIncorrectAnswer = vaildAnswer.Count() - countCorrectAnswer;
+                    var pointOfQuestion = ((float)countCorrectAnswer / questions[i].TotalCorrectAnswer) * questions[i].Score;
 
-                var countCorrectAnswer = vaildAnswer.Where(w => w.IsCorrect == true).Count();
-                var countIncorrectAnswer = vaildAnswer.Count() - countCorrectAnswer;
-                var pointOfQuestion = ((float)countCorrectAnswer /questions[i].TotalCorrectAnswer) * questions[i].Score;
-
-                toltalScorce += pointOfQuestion;
+                    toltalScorce += pointOfQuestion;
+                }
             }
 
             var table = await this._testResultRepository.InsertAsync(
