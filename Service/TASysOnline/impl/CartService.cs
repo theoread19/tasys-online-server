@@ -275,10 +275,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._cartRepository.UpdateAsync(cart);
             await this._cartRepository.SaveAsync();
 
+            course.AvailableSlot += 1;
+            await this._courseRepository.UpdateAsync(course);
+            await this._courseRepository.SaveAsync();
+
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Remove course from cart successfully!" };
         }
 
-        public async Task<Response> RemoveAllCourseFromCart(Guid userId)
+        public async Task<Response> RemoveAllCourseFromCart(Guid userId, bool isCreateBill = false)
         {
             var cart = await this._cartRepository.GetCartByUserIdAsync(userId);
 
@@ -290,6 +294,12 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var coursesOfCart = cart.Courses.ToList();
             foreach(var course in coursesOfCart)
             {
+                if (!isCreateBill) {
+                    course.AvailableSlot += 1;
+                    await this._courseRepository.UpdateAsync(course);
+                    await this._courseRepository.SaveAsync();
+                }
+
                 await this._cartRepository.RemoveCourseFromCart(course.Id, cart.Id);
             }
             cart.TotalCourse = 0;

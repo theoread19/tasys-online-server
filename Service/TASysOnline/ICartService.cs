@@ -32,6 +32,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> RemoveCourseFromCart(Guid userId, Guid courseId);
 
-        public Task<Response> RemoveAllCourseFromCart(Guid userId);
+        public Task<Response> RemoveAllCourseFromCart(Guid userId, bool isCreateBill = false);
     }
 }

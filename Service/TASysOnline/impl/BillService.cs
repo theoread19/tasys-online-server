@@ -55,7 +55,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             await this._userAccountService.AddCourseToLearner(BillRequest.UserAccountId, BillRequest.CourseRequests.ToList());
 
-            await this._cartService.RemoveAllCourseFromCart(BillRequest.UserAccountId);
+            await this._cartService.RemoveAllCourseFromCart(BillRequest.UserAccountId, true);
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Bill was created!" };
         }
