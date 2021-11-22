@@ -99,6 +99,10 @@ namespace TASysOnlineProject
                             context.Token = context.Request.Query["access_token"];
                         }
 
+                        if (context.Request.Path.Value.StartsWith("/hubs/classroom") && (context.Request.Query.ContainsKey("access_token")))
+                        {
+                            context.Token = context.Request.Query["access_token"];
+                        }
                         return Task.CompletedTask;
                     },
                 };
