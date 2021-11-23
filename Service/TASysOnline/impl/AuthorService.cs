@@ -78,7 +78,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var token = new JwtSecurityToken(
 
                 issuer: _configuration["JWT:ValidIssuer"],
-                //expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.UtcNow.AddHours(12),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

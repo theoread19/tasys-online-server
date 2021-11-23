@@ -83,7 +83,7 @@ namespace TASysOnlineProject
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
-                    RequireExpirationTime = false,
+                    RequireExpirationTime = true,
                     ValidateAudience = false,
                     //ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],

@@ -328,15 +328,28 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
             }
-
-            user.Status = -1;
-            await this._userAccountRepository.UpdateAsync(user);
-            await this._userAccountRepository.SaveAsync(); 
             
+            if (user.Status >= 0)
+            {
+                user.Status = -1;
+                await this._userAccountRepository.UpdateAsync(user);
+                await this._userAccountRepository.SaveAsync();
+
+                return new Response
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    ResponseMessage = "Block user account successfully!"
+                };
+            }
+
+            user.Status = 0;
+            await this._userAccountRepository.UpdateAsync(user);
+            await this._userAccountRepository.SaveAsync();
+
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Block user account successfully!"
+                ResponseMessage = "Unblock user account successfully!"
             };
         }
 
