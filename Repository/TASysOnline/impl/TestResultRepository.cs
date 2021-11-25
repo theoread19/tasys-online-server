@@ -22,6 +22,7 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             var count = await this._context.TestResultTables
                                 .Where(w => w.TestId == testId)
                                 .Where(w => w.UserAccountId == userId)
+                                .Where(w => w.IsPractice == false)
                                 .CountAsync();
             return count;
         }

@@ -50,7 +50,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
             var totalAttempt = await this._testResultRepository.CountTestResultByUserIdAndTestId(doTestRequest.UserId, doTestRequest.TestId);
 
-            if (totalAttempt >= test.MaxAttempt)
+            if (totalAttempt >= test.MaxAttempt && !doTestRequest.IsPractice)
             {
                 return new TestResultResponse { StatusCode = StatusCodes.Status401Unauthorized, ResponseMessage = "Out of attempt of test" };
             }
