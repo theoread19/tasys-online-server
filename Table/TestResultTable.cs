@@ -16,6 +16,11 @@ namespace TASysOnlineProject.Table
         public float Score { get; set; }
 
         /// <summary>
+        ///     Property true if is practice
+        /// </summary>
+        public bool IsPractice { get; set; } = false;
+
+        /// <summary>
         ///     Property for test id
         /// </summary>
         public Guid TestId { get; set; }

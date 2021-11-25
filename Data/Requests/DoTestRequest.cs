@@ -12,6 +12,8 @@ namespace TASysOnlineProject.Data.Requests
 
         public Guid UserId { get; set; }
 
+        public bool IsPractice { get; set; } = false;
+
         public List<QuestionRequest>? QuestionRequest { get; set; }
     }
 }

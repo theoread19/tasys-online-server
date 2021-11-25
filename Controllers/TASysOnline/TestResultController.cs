@@ -35,6 +35,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> GetAllTestResultPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
@@ -53,6 +54,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchTestResult([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
@@ -62,6 +64,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterTestResult([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
@@ -88,7 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteTestResult([FromBody] Guid[] TestResultId)
         {
             var response = await this._TestResultService.DeleteTestResult(TestResultId);

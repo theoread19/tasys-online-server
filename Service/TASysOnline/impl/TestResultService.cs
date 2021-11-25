@@ -80,6 +80,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                     Score = toltalScorce,
                     TestId = doTestRequest.TestId,
                     CreatedDate = DateTime.UtcNow,
+                    IsPractice = doTestRequest.IsPractice,
                     UserAccountId = doTestRequest.UserId
                 });
 

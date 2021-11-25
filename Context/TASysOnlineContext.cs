@@ -570,6 +570,8 @@ namespace TASysOnlineProject.Context
 
                 e.Property(p => p.Score);
 
+                e.Property(p => p.IsPractice);
+
                 e.HasOne(o => o.Test)
                     .WithMany(m => m.TestResults)
                     .HasForeignKey(fk => fk.TestId)

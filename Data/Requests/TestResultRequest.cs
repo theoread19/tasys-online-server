@@ -12,6 +12,10 @@ namespace TASysOnlineProject.Data.Requests
         /// </summary>
         public float Score { get; set; }
 
+        ///     Property true if is practice
+        /// </summary>
+        public bool IsPractice { get; set; } = false;
+
         /// <summary>
         ///     Property for test id
         /// </summary>
