@@ -298,7 +298,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             var data = await this._userAccountRepository.GetAllAsync();
 
-            var filterSearchData = FilterSearchUtil.FilterSearch<UserAccountTable>(filterSearchRequest, data);
+            var filterSearchData = FilterSearchUtil.FilterSearch<UserAccountTable>(validFilter, data);
 
             var totalData = filterSearchData.Count;
 

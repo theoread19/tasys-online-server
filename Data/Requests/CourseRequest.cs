@@ -9,7 +9,6 @@ namespace TASysOnlineProject.Data.Requests
 {
     public class CourseRequest
     {
-
         public Guid Id { get; set; }
 
         /// <summary>

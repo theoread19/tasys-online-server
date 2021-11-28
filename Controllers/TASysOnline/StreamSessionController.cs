@@ -108,21 +108,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             var response = await this._StreamSessionService.DeleteAllStreamSession();
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpPost("{courseId}/export/roll-call")]
-        [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
-        public async Task<IActionResult> ExportFile(Guid courseId, [FromBody] List<UserAccountAuthRequest> learner)
-        {
-            var course = await this._courseService.GetCourseById(courseId);
-
-            if (course.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return StatusCode(course.StatusCode, course);
-            }
-
-            var stream = await this._StreamSessionService.ExportDBToExcel(learner);
-            var now = DateTime.Today;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", course.Name + "-" + now + ".xlsx");
-        }
     }
 }
