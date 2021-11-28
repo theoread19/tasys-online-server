@@ -149,7 +149,7 @@ namespace TASysOnlineProject.Service.AzureStorage.impl
                     await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
                 }
 
-                if (blobContainerRequest.FileName != null && blobContainerRequest.FileContain != null)
+                if (blobContainerRequest.FileName != string.Empty && blobContainerRequest.FileContain != string.Empty)
                 {
                     var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(blobContainerRequest.FileName);
                     cloudBlockBlob.Properties.ContentType = blobContainerRequest.FileType;
@@ -157,7 +157,7 @@ namespace TASysOnlineProject.Service.AzureStorage.impl
                     await cloudBlockBlob.UploadFromByteArrayAsync(data, 0, data.Length);
                     return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = cloudBlockBlob.Uri.AbsoluteUri };
                 }
-                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "file name or contain is null!" };
+                return new Response { StatusCode = StatusCodes.Status400BadRequest, ResponseMessage = "file name or contain is empty!" };
             }
             catch (Exception ex)
             {

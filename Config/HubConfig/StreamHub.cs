@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Service.TASysOnline;
@@ -15,7 +16,8 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<LessonResponse>> Lessons = new Dictionary<string, List<LessonResponse>>();
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
         public static Dictionary<string, OperationFlag> OperationFlags = new Dictionary<string, OperationFlag>();
-        //public static Dictionary<string, UserAccountAuthRequest> Creator = new Dictionary<string, UserAccountAuthRequest>();
+        public static Dictionary<string, string> Time = new Dictionary<string, string>();
+        public static Dictionary<string, QuestionResponse> Question = new Dictionary<string, QuestionResponse>();
 
         private readonly ILessonService _lessonService;
 
@@ -55,8 +57,9 @@ namespace TASysOnlineProject.Config.HubConfig
                 ConnectedClients.Add(roomName, new List<UserAccountAuthRequest>());
                 Lessons.Add(roomName, new List<LessonResponse>());
                 TestResults.Add(roomName, new List<TestResultResponse>());
-                //Creator.Add(roomName, userAccountAuthRequest);
                 OperationFlags.Add(roomName, new OperationFlag());
+                Time.Add(roomName, "00:00");
+                Question.Add(roomName, new QuestionResponse());
             }
 
             var user = ConnectedClients[roomName].Where(w => w.Id.Equals(userAccountAuthRequest.Id)).FirstOrDefault();
@@ -104,6 +107,8 @@ namespace TASysOnlineProject.Config.HubConfig
                     Lessons.Remove(roomName);
                     TestResults.Remove(roomName);
                     OperationFlags.Remove(roomName);
+                    Time.Remove(roomName);
+                    Question.Remove(roomName);
                     EmitLog("Room " + roomName + " is now empty - resetting its state", roomName);
                 }
             }
@@ -160,6 +165,10 @@ namespace TASysOnlineProject.Config.HubConfig
 
             var question = await this._questionService.GetQuestionById(questionId);
 
+            TestResults[roomName] = new List<TestResultResponse>();
+
+            //add or update question for dictionary
+            await Clients.Groups(roomName).SendAsync("test", new List<TestResultResponse>());
             await Clients.Group(roomName).SendAsync("question", question);
         }
 
@@ -224,8 +233,26 @@ namespace TASysOnlineProject.Config.HubConfig
 
         public async Task GetOperationFlag(string roomName)
         {
+            Object onjectOperation = null;
             var operation = OperationFlags[roomName];
-            await Clients.Group(roomName).SendAsync("operationFlag", operation);
+            if (operation.IsShowingLesson)
+            {
+                onjectOperation = Lessons[roomName].ToList();
+            }
+            await Clients.Group(roomName).SendAsync("operationFlag", operation, onjectOperation);
+        }
+
+        public Task SetTime(string roomName, string time)
+        {
+            Time[roomName] = time;
+            return Task.Run(() => { return; });
+        }
+
+        public async Task GetTime(string roomName)
+        {
+            var time = Time[roomName];
+
+            await Clients.Group(roomName).SendAsync("time", time);
         }
 
         private Task EmitJoinRoom(string roomName)
