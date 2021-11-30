@@ -16,8 +16,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateCommentAsync(CommentRequest commentRequest);
 
-        public Task<CommentResponse> GetCommentById(Guid id);
-
         public Task<Response> UpdateComment(CommentRequest commentRequest);
 
         public Task<Response> DeleteComment(Guid[] commentId);

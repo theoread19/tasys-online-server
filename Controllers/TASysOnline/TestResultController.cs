@@ -25,44 +25,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> GetAllTestResult()
-        {
-            var responses = await this._TestResultService.GetAllTestResultAsync();
-
-            return StatusCode(StatusCodes.Status200OK, responses);
-        }
-
-        [HttpGet]
-        [Route("paging")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetAllTestResultPaging([FromQuery] Pagination paginationFilter)
-        {
-            var route = Request.Path.Value;
-            var pagedReponse = await this._TestResultService.GetAllTestResultPagingAsync(paginationFilter, route);
-            return StatusCode(pagedReponse.StatusCode, pagedReponse);
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetTestResultById(Guid id)
-        {
-            var response = await this._TestResultService.GetTestResultById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
-        [Route("search")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> SearchTestResult([FromQuery] Search searchRequest)
-        {
-            var route = Request.Path.Value;
-            var responses = await this._TestResultService.SearchTestResultBy(searchRequest, route);
-            return StatusCode(responses.StatusCode, responses);
-        }
-
-        [HttpGet]
         [Route("filter")]
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterTestResult([FromQuery] Filter filterRequest)
@@ -86,23 +48,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
             var response = await this._TestResultService.CalculateTestResult(doTestRequest);
 
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpPost]
-        [Route("delete")]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> DeleteTestResult([FromBody] Guid[] TestResultId)
-        {
-            var response = await this._TestResultService.DeleteTestResult(TestResultId);
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllTestResult()
-        {
-            var response = await this._TestResultService.DeleteAllTestResult();
             return StatusCode(response.StatusCode, response);
         }
 

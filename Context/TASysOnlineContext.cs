@@ -225,35 +225,6 @@ namespace TASysOnlineProject.Context
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<BillTable>(e => {
-                e.HasKey(k => k.Id);
-
-                e.Property(p => p.Id)
-                       .ValueGeneratedOnAdd()
-                       .HasAnnotation("Relational:ColumnType", "nvarchar(100)")
-                       .HasAnnotation("Relational:GeneratedValueSql", "newid()");
-
-                e.Property(p => p.CreatedDate)
-                   .IsRequired();
-
-                e.Property(p => p.ModifiedDate);
-
-                e.Property(p => p.Description)
-                    .HasColumnType("text");
-
-                e.Property(p => p.TotalCost);
-
-                e.Property(p => p.TotalItem);
-
-                e.HasOne(o => o.UserAccount)
-                    .WithMany(m => m.BillTables)
-                    .HasForeignKey(fk => fk.UserAccountId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                e.HasMany(m => m.CourseTables)
-                    .WithMany(m => m.BillTables);
-            });
-
             modelBuilder.Entity<CartTable>(e => {
                 e.HasKey(k => k.Id);
 
@@ -628,7 +599,6 @@ namespace TASysOnlineProject.Context
         public virtual DbSet<RoleTable> RoleTables { get; private set; } = null!;
         public virtual DbSet<CourseTable> CourseTables { get; private set; } = null!;
         public virtual DbSet<AnswerTable> AnswerTables { get; private set; } = null!;
-        public virtual DbSet<BillTable> BillTables { get; private set; } = null!;
         public virtual DbSet<CartTable> CartTables { get; private set; } = null!;
         public virtual DbSet<CommentTable> CommentTables { get; private set; } = null!;
         public virtual DbSet<LessonTable> LessonTables { get; private set; } = null!;

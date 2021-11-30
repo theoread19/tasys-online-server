@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Service.TASysOnline;
 using TASysOnlineProject.Service.TASysOnline.impl;
@@ -22,6 +24,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> LikePost([FromBody] PostLikeRequest postLikeRequest)
         {
             var response = await this._postLikeService.LikeOrUnlikePost(postLikeRequest);

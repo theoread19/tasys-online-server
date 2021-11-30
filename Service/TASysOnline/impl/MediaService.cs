@@ -133,49 +133,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return responses;
         }
 
-/*        public async Task<PageResponse<List<MediaResponse>>> GetAllMediaPagingAsync(Pagination paginationFilter, string route)
-        {
-            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._mediaRepository.CountAsync();
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._mediaRepository.GetAllPadingAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<MediaTable>, List<MediaResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<MediaResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }*/
-
-/*        public async Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route)
-        {
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
-
-            var totalData = await this._mediaRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<MediaResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._mediaRepository.SearchByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<MediaTable>, List<MediaResponse>>(tables);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<MediaResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }*/
-
         public async Task<Response> MoveMediasAsync(MediasRequest mediaRequest)
         {
             foreach(var mediaId in mediaRequest.Id)
@@ -287,7 +244,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Stream> DownloadFileZipAsync(Guid[] Ids)
         {
-            //string zipName = DateTime.Now.ToString().Replace("/", "_") + ".zip";
 
             var zipStream = new MemoryStream();
             using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))

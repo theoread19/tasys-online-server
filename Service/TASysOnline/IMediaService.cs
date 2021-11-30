@@ -31,8 +31,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<FilterResponse<List<MediaResponse>>> FilterMediaBy(Filter filterRequest, string route);
 
-//        public Task<SearchResponse<List<MediaResponse>>> SearchMediaBy(Search searchRequest, string route);
-
         public Task<MediaResponse> FindMediaByIdAsync(Guid mediaId);
 
         public Task<Response> DeleteAllMedia();

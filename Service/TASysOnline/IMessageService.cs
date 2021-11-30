@@ -16,8 +16,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> CreateMessageAsync(MessageRequest messageRequest);
 
-        public Task<MessageResponse> GetMessageById(Guid id);
-
         public Task<Response> UpdateMessage(MessageRequest messageRequest);
 
         public Task<Response> DeleteMessage(Guid[] messageId);

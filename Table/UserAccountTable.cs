@@ -66,12 +66,6 @@ namespace TASysOnlineProject.Table
         public CartTable? Cart { get; set; }
 
         /// <summary>
-        ///     List for bill table
-        ///     many to one
-        /// </summary>
-        public ICollection<BillTable>? BillTables { get; set; }
-
-        /// <summary>
         ///     List for message is sent
         ///     many to one
         /// </summary>

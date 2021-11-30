@@ -37,11 +37,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._subjectService = subjectService;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._courseRepository.CountAsync();
-        }
-
         public async Task<Response> CreateCourseAsync(CourseRequest courseRequest)
         {
 
@@ -123,26 +118,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task<CourseResponse> FindByNameAsync(string name)
-        {
-            var result = await this._courseRepository.FindByNameAsync(name);
-
-            if (result == null)
-            {
-                return new CourseResponse
-                {
-                    StatusCode = StatusCodes.Status404NotFound,
-                    ResponseMessage = "Course not Found!"
-                };
-            }
-
-            var response = this._mapper.Map<CourseResponse>(result);
-
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Course is Found!";
-            return response;
         }
 
         public async Task<IEnumerable<CourseResponse>> GetAllCourseAsync()

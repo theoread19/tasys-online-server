@@ -25,15 +25,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> GetAllUserInfo()
-        {
-            var responses = await this._userInfoService.GetAllUserInfoAsync();
-
-            return StatusCode(StatusCodes.Status200OK, responses);
-        }
-
-        [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetUserInfoByUserAccountId(Guid id)
         {
@@ -63,12 +54,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> DeleteAllUserInfo()
-        {
-            var response = await this._userInfoService.DeleteAllUserInfo();
-            return StatusCode(response.StatusCode, response);
-        }
     }
 }

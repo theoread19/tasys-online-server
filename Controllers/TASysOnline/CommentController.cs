@@ -43,15 +43,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetCommentById(Guid id)
-        {
-            var response = await this._CommentService.GetCommentById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("search")]
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)

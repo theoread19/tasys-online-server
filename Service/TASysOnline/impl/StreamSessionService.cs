@@ -31,11 +31,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._mapper = mapper;
         }
 
-        public async Task<int> CountAsync()
-        {
-            return await this._StreamSessionRepository.CountAsync();
-        }
-
         public async Task<Response> CreateStreamSessionAsync(StreamSessionRequest streamSessionRequest)
         {
 
@@ -75,20 +70,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 StatusCode = StatusCodes.Status200OK,
                 ResponseMessage = "Delete StreamSession successfully!"
             };
-        }
-
-        public async Task<MemoryStream> ExportDBToExcel(List<UserAccountAuthRequest> learner)
-        {
-            var stream = new MemoryStream();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var package = new ExcelPackage(stream))
-            {
-                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
-                workSheet.Cells.LoadFromCollection(learner, true);
-                package.Save();
-            }
-            stream.Position = 0;
-            return stream;
         }
 
         public async Task<FilterSearchResponse<List<StreamSessionResponse>>> FilterSearchStreamSessionBy(FilterSearch filterSearchRequest, string route)
@@ -173,15 +154,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             pagedReponse.StatusCode = StatusCodes.Status200OK;
             pagedReponse.ResponseMessage = "Fectching data successfully!";
             return pagedReponse;
-        }
-
-        public async Task<IEnumerable<StreamSessionResponse>> GetComingStreamSessionAsync(DateTime now)
-        {
-            var tables = await this._StreamSessionRepository.GetComingStreamSessionEagerLoadAsync(now);
-
-            var responses = this._mapper.Map<List<StreamSessionTable>, List<StreamSessionResponse>>(tables);
-
-            return responses;
         }
 
         public async Task<StreamSessionResponse> GetStreamSessionById(Guid id)

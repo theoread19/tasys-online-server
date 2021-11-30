@@ -94,7 +94,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> CreateCartAsync(CartRequest CartRequest)
         {
-
             var table = this._mapper.Map<CartTable>(CartRequest);
 
             table.CreatedDate = DateTime.UtcNow;
@@ -103,86 +102,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._cartRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Cart was created!" };
-        }
-
-        public async Task<Response> DeleteAllCart()
-        {
-            await this._cartRepository.DeleteAllAsyn();
-            await this._cartRepository.SaveAsync();
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete all Cart successfully!"
-            };
-        }
-
-        public async Task<Response> DeleteCart(Guid[] CartId)
-        {
-            for (var i = 0; i < CartId.Length; i++)
-            {
-                await this._cartRepository.DeleteAsync(CartId[i]);
-            }
-
-            await this._cartRepository.SaveAsync();
-
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete Cart successfully!"
-            };
-        }
-
-        public async Task<FilterResponse<List<CartResponse>>> FilterCartBy(Filter filterRequest, string route)
-        {
-            var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
-
-            var totalData = await this._cartRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CartResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._cartRepository.FilterByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<CartTable>, List<CartResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<CartResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }
-
-        public async Task<IEnumerable<CartResponse>> GetAllCartAsync()
-        {
-            var tables = await this._cartRepository.GetAllAsync();
-
-            var responses = this._mapper.Map<List<CartTable>, List<CartResponse>>(tables);
-
-            return responses;
-        }
-
-        public async Task<PageResponse<List<CartResponse>>> GetAllCartPagingAsync(Pagination paginationFilter, string route)
-        {
-            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._cartRepository.CountAsync();
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._cartRepository.GetAllPadingAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<CartTable>, List<CartResponse>>(tables);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<CartResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
         }
 
         public async Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo)
@@ -203,55 +122,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             response.StatusCode = StatusCodes.Status200OK;
             response.ResponseMessage = "Find Cart successfully";
             return response;
-        }
-
-        public async Task<SearchResponse<List<CartResponse>>> SearchCartBy(Search searchRequest, string route)
-        {
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
-
-            var totalData = await this._cartRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<CartResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._cartRepository.SearchByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<CartTable>, List<CartResponse>>(tables);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<CartResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }
-
-        public async Task<Response> UpdateCart(CartRequest cartRequest, AccountAuthorInfo accountAuthorInfo)
-        {
-            var table = await this._cartRepository.FindByIdAsync(cartRequest.Id);
-
-            if (table == null)
-            {
-                return new CartResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
-            }
-
-            if (table.UserAccountId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
-            {
-                return new CartResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
-            }
-
-            table.ModifiedDate = DateTime.UtcNow;
-            table.TotalCourse = cartRequest.TotalCourse;
-
-            await this._cartRepository.UpdateAsync(table);
-            await this._cartRepository.SaveAsync();
-
-            return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update Cart successfully!" };
         }
 
         public async Task<Response> RemoveCourseFromCart(Guid userId, Guid courseId)

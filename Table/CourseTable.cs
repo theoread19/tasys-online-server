@@ -49,7 +49,6 @@ namespace TASysOnlineProject.Table
         {
             this.LearnerAccounts = new HashSet<UserAccountTable>();
             this.Carts = new HashSet<CartTable>();
-            this.BillTables = new HashSet<BillTable>();
         }
 
         /// <summary>
@@ -115,11 +114,5 @@ namespace TASysOnlineProject.Table
         ///     many to many
         /// </summary>
         public virtual ICollection<CartTable> Carts { get; set; }
-
-        /// <summary>
-        ///     List for bill table
-        ///     many to many
-        /// </summary>
-        public virtual ICollection<BillTable> BillTables { get; set; }
     }
 }

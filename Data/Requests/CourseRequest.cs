@@ -14,46 +14,55 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for name of course
         /// </summary>
-        public string? Name { get; set; }
+        [Required]
+        public string Name { get; set; }
 
         /// <summary>
         ///     Property for summary of course
         /// </summary>
-        public string? Summary { get; set; }
+        [Required]
+        public string Summary { get; set; }
 
         /// <summary>
         ///     Property for duration of course (unit in minute)
         /// </summary>
+        [Required]
         public int Duration { get; set; }
 
         /// <summary>
         ///     Property for description of course
         /// </summary>
-        public string? Description { get; set; }
+        [Required]
+        public string Description { get; set; }
 
         /// <summary>
         ///     Property for available slot of course
         /// </summary>
+        [Required]
         public int AvailableSlot { get; set; }
 
         /// <summary>
         ///     Property for max slot of course
         /// </summary>
+        [Required]
         public int MaxSlot { get; set; }
 
         /// <summary>
         ///     Property for cost of course
         /// </summary>
+        [Required]
         public decimal Cost { get; set; }
 
         /// <summary>
         ///     Property for subject id
         /// </summary>
+        [Required]
         public Guid SubjectId { get; set; }
 
         /// <summary>
         ///     Property for user id is instructor
         /// </summary>
+        [Required]
         public Guid InstructorId { get; set; }
     }
 }

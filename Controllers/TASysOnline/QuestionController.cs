@@ -43,15 +43,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetQuestionById(Guid id)
-        {
-            var response = await this._QuestionService.GetQuestionById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("search")]
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
@@ -72,7 +63,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.All)]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionRequest QuestionRequest)
         {
@@ -82,7 +72,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.All)]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> UpdateQuestion([FromBody] QuestionRequest QuestionRequest)
         {
@@ -93,7 +82,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.All)]
         [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> DeleteQuestion([FromBody] Guid[] QuestionId)
         {
@@ -103,7 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteAllQuestion()
         {
             var response = await this._QuestionService.DeleteAllQuestion();

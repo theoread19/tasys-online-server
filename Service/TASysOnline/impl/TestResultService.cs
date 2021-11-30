@@ -94,33 +94,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return response;
         }
 
-        public async Task<Response> DeleteAllTestResult()
-        {
-            await this._testResultRepository.DeleteAllAsyn();
-            await this._testResultRepository.SaveAsync();
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete all TestResult successfully!"
-            };
-        }
-
-        public async Task<Response> DeleteTestResult(Guid[] TestResultId)
-        {
-            for (var i = 0; i < TestResultId.Length; i++)
-            {
-                await this._testResultRepository.DeleteAsync(TestResultId[i]);
-            }
-
-            await this._testResultRepository.SaveAsync();
-
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete TestResult successfully!"
-            };
-        }
-
         public async Task<FilterResponse<List<TestResultResponse>>> FilterTestResultBy(Filter filterRequest, string route)
         {
             var validFilter = new Filter(filterRequest.PageNumber, filterRequest.PageSize, filterRequest.SortBy!, filterRequest.Order!, filterRequest.Value!, filterRequest.Property!);
@@ -149,49 +122,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<IEnumerable<TestResultResponse>> GetAllTestResultAsync()
-        {
-            var tables = await this._testResultRepository.GetAllAsync();
-
-            var responses = this._mapper.Map<List<TestResultTable>, List<TestResultResponse>>(tables);
-
-            return responses;
-        }
-
-        public async Task<PageResponse<List<TestResultResponse>>> GetAllTestResultPagingAsync(Pagination paginationFilter, string route)
-        {
-            var validFilter = new Pagination(paginationFilter.PageNumber, paginationFilter.PageSize, paginationFilter.SortBy!, paginationFilter.Order!);
-            var totalData = await this._testResultRepository.CountAsync();
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._testResultRepository.GetAllTestResultTablesEagerLoad();
-
-            var pagedData = PagedUtil.Pagination<TestResultTable>(validFilter, tables);
-
-            var pageData = this._mapper.Map<List<TestResultTable>, List<TestResultResponse>>(pagedData);
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse<TestResultResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
-        }
-
-        public async Task<TestResultResponse> GetTestResultById(Guid id)
-        {
-            var table = await this._testResultRepository.FindTestResultByIdEagerLoad(id);
-
-            if (table == null)
-            {
-                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Test result not found!" };
-            }
-
-            var response = this._mapper.Map<TestResultResponse>(table);
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Find TestResult successfully";
-            return response;
-        }
-
         public async Task<IEnumerable<TestResultResponse>> GetTestResultByTestIdAndUserIdAsync(Guid userId, Guid testId)
         {
             var tables = await this._testResultRepository.GetTestResultByUserIdAndTestId(userId, testId);
@@ -199,31 +129,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             var response = this._mapper.Map<List<TestResultTable>, List<TestResultResponse>>(tables);
 
             return response;
-        }
-
-        public async Task<SearchResponse<List<TestResultResponse>>> SearchTestResultBy(Search searchRequest, string route)
-        {
-            var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
-
-            var totalData = await this._testResultRepository.CountByAsync(validFilter.Property!, validFilter.Value!);
-
-            if (totalData == 0)
-            {
-                var reponse = PaginationHelper.CreatePagedReponse<TestResultResponse>(null, validFilter, totalData, this._uriService, route);
-                reponse.StatusCode = StatusCodes.Status404NotFound;
-                reponse.ResponseMessage = "Not Found!";
-                return reponse;
-            }
-
-            validFilter.PageSize = (totalData < validFilter.PageSize) ? totalData : validFilter.PageSize;
-
-            var tables = await this._testResultRepository.SearchByAsync(validFilter);
-
-            var pageData = this._mapper.Map<List<TestResultTable>, List<TestResultResponse>>(tables);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<TestResultResponse>(pageData, validFilter, totalData, this._uriService, route);
-            pagedReponse.StatusCode = StatusCodes.Status200OK;
-            pagedReponse.ResponseMessage = "Fectching data successfully!";
-            return pagedReponse;
         }
     }
 }

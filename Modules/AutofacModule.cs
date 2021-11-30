@@ -29,7 +29,6 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<CommentRepository>().As<ICommentRepository>().InstancePerLifetimeScope();
             builder.RegisterType<MessageRepository>().As<IMessageRepository>().InstancePerLifetimeScope();
             builder.RegisterType<MediaRepository>().As<IMediaRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<BillRepository>().As<IBillRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TestResultRepository>().As<ITestResultRepository>().InstancePerLifetimeScope();
             builder.RegisterType<PostLikeRepository>().As<IPostLikeRepository>().InstancePerLifetimeScope();
 
@@ -53,10 +52,7 @@ namespace TASysOnlineProject.Modules
             builder.RegisterType<ContainerService>().As<IContainerService>().InstancePerLifetimeScope();
             builder.RegisterType<MediaService>().As<IMediaService>().InstancePerLifetimeScope();
             builder.RegisterType<BlobService>().As<IBlobService>().InstancePerLifetimeScope();
-            builder.RegisterType<BillService>().As<IBillService>().InstancePerLifetimeScope();
             builder.RegisterType<TestResultService>().As<ITestResultService>().InstancePerLifetimeScope();
-            builder.RegisterType<StatisticService>().As<IStatisticService>().InstancePerLifetimeScope();
-            builder.RegisterType<GenerateService>().As<IGenerateService>().InstancePerLifetimeScope();
             builder.RegisterType<PostLikeService>().As<IPostLikeService>().InstancePerLifetimeScope();
         }
     }

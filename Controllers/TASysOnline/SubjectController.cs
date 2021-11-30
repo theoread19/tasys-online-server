@@ -51,7 +51,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("search")]
-        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;     

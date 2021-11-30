@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace TASysOnlineProject.Data.Requests
 {
-    public class DoTestRequest
+    public class AddToCoursesResquest
     {
-        [Required]
-        public Guid TestId { get; set; }
-
         [Required]
         public Guid UserId { get; set; }
 
-        public bool IsPractice { get; set; } = false;
-
-        public List<QuestionRequest>? QuestionRequest { get; set; }
+        [Required]
+        public List<Guid> CourseIds { get; set; }
     }
 }

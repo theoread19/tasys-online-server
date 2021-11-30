@@ -18,7 +18,7 @@ namespace TASysOnlineProject.Modules
             CreateMap<UserInfoRequest, UserInfoTable>();
             CreateMap<UserInfoTable, UserInfoResponse>();
             CreateMap<CourseRequest, CourseTable>();
-            CreateMap<CourseTable, CourseResponse>();
+            CreateMap<CourseTable, CourseResponse>().ReverseMap();
             CreateMap<SubjectRequest, SubjectTable>();
             CreateMap<SubjectTable, SubjectResponse>();
             CreateMap<UserAccountTable, IdentityUserAccount>()
@@ -66,9 +66,6 @@ namespace TASysOnlineProject.Modules
                 .ForMember(m => m.FileContain, op => op.MapFrom(res => res.data))
                 .ForMember(m => m.FileType, op => op.MapFrom(res => res.FileType))
                 .ForMember(m => m.FileDirectory, op => op.MapFrom(res => res.Container));
-            CreateMap<BillRequest, BillTable>();
-            CreateMap<BillTable, BillResponse>()
-                .ForMember(m => m.Courses, op => op.MapFrom(res => res.CourseTables));
             CreateMap<TestResultRequest, TestResultTable>();
             CreateMap<TestResultTable, TestResultResponse>()
                 .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount));

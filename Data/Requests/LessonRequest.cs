@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for name of lesson
         /// </summary>
+        [Required]
         public string? Name { get; set; }
 
         /// <summary>
@@ -32,6 +34,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for course id
         /// </summary>
+        [Required]
         public Guid CourseId { get; set; }
     }
 }

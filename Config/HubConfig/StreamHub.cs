@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Service.TASysOnline;
@@ -16,8 +16,9 @@ namespace TASysOnlineProject.Config.HubConfig
         public static Dictionary<string, List<LessonResponse>> Lessons = new Dictionary<string, List<LessonResponse>>();
         public static Dictionary<string, List<TestResultResponse>> TestResults = new Dictionary<string, List<TestResultResponse>>();
         public static Dictionary<string, OperationFlag> OperationFlags = new Dictionary<string, OperationFlag>();
-        public static Dictionary<string, string> Time = new Dictionary<string, string>();
+        public static Dictionary<string, int> Time = new Dictionary<string, int>();
         public static Dictionary<string, QuestionResponse> Question = new Dictionary<string, QuestionResponse>();
+        public static Dictionary<string, Timer> TimeInterval = new Dictionary<string, Timer>();
 
         private readonly ILessonService _lessonService;
 
@@ -58,8 +59,10 @@ namespace TASysOnlineProject.Config.HubConfig
                 Lessons.Add(roomName, new List<LessonResponse>());
                 TestResults.Add(roomName, new List<TestResultResponse>());
                 OperationFlags.Add(roomName, new OperationFlag());
-                Time.Add(roomName, "00:00");
+                Time.Add(roomName, 0);
                 Question.Add(roomName, new QuestionResponse());
+                TimeInterval.Add(roomName, new Timer(_ => SetTime(roomName), null, 0, 1000));
+                //TimeInterval.Add(roomName, new Timer(_ => Console.WriteLine("hello"), null, 0, 1000));
             }
 
             var user = ConnectedClients[roomName].Where(w => w.Id.Equals(userAccountAuthRequest.Id)).FirstOrDefault();
@@ -109,6 +112,8 @@ namespace TASysOnlineProject.Config.HubConfig
                     OperationFlags.Remove(roomName);
                     Time.Remove(roomName);
                     Question.Remove(roomName);
+                    TimeInterval[roomName].Change(Timeout.Infinite, Timeout.Infinite);
+                    TimeInterval.Remove(roomName);
                     EmitLog("Room " + roomName + " is now empty - resetting its state", roomName);
                 }
             }
@@ -164,6 +169,7 @@ namespace TASysOnlineProject.Config.HubConfig
             }
 
             var question = await this._questionService.GetQuestionById(questionId);
+            Question[roomName] = question;
 
             TestResults[roomName] = new List<TestResultResponse>();
 
@@ -233,26 +239,39 @@ namespace TASysOnlineProject.Config.HubConfig
 
         public async Task GetOperationFlag(string roomName)
         {
-            Object onjectOperation = null;
             var operation = OperationFlags[roomName];
             if (operation.IsShowingLesson)
             {
-                onjectOperation = Lessons[roomName].ToList();
+                await Clients.Group(roomName).SendAsync("lesson", Lessons[roomName].ToList());
             }
-            await Clients.Group(roomName).SendAsync("operationFlag", operation, onjectOperation);
+            else if (operation.IsShowingQuestion)
+            {
+                await Clients.Group(roomName).SendAsync("question", Question[roomName]);
+            }
+            else if (operation.IsShowingResult)
+            {
+
+            }
+            else if (operation.IsShowingAnswer)
+            {
+
+            }
+
+            await Clients.Group(roomName).SendAsync("operationFlag", operation);
         }
 
-        public Task SetTime(string roomName, string time)
+        public void SetTime(string roomName)
         {
-            Time[roomName] = time;
-            return Task.Run(() => { return; });
+            Time[roomName] += 1;
+            Console.WriteLine("{0:D2}:{1:D2}", Time[roomName] / 60, Time[roomName] % 60);
         }
 
-        public async Task GetTime(string roomName)
+        public Task GetTime(string roomName)
         {
             var time = Time[roomName];
+            var timeFormat = string.Format("{0:D2}:{1:D2}", time/60, time%60);
 
-            await Clients.Group(roomName).SendAsync("time", time);
+            return Clients.Group(roomName).SendAsync("time", timeFormat);
         }
 
         private Task EmitJoinRoom(string roomName)

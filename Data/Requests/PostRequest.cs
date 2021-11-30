@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for title post
         /// </summary>
+        [Required]
         public string? Title { get; set; }
 
         /// <summary>
@@ -22,11 +24,13 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for user account id
         /// </summary>
+        [Required]
         public Guid UserAccountId { get; set; }
 
         /// <summary>
         ///     Property for course id
         /// </summary>
+        [Required]
         public Guid CourseId { get; set; }
     }
 }

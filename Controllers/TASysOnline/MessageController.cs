@@ -43,15 +43,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetMessageById(Guid id)
-        {
-            var response = await this._MessageService.GetMessageById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("search")]
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
@@ -100,6 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteAllMessage()
         {
             var response = await this._MessageService.DeleteAllMessage();

@@ -43,15 +43,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> GetPostById(Guid id)
-        {
-            var response = await this._postService.GetPostById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("search")]
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
@@ -75,7 +66,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> CreatePost([FromBody] PostRequest postRequest)
         {
-            //them courseId
             var response = await this._postService.CreatePostAsync(postRequest);
 
             return StatusCode(response.StatusCode, response);
@@ -101,6 +91,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteAllPost()
         {
             var response = await this._postService.DeleteAllPost();

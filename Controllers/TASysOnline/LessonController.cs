@@ -42,14 +42,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetLessonById(Guid id)
-        {
-            var response = await this._LessonService.GetLessonById(id);
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpGet]
         [Route("search")]
         public async Task<IActionResult> SearchLesson([FromQuery] Search searchRequest)
         {
@@ -96,6 +88,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteAllLesson()
         {
             var response = await this._LessonService.DeleteAllLesson();

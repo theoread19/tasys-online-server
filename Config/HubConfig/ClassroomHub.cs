@@ -14,15 +14,12 @@ namespace TASysOnlineProject.Config.HubConfig
     {
         public static Dictionary<string, List<UserAccountAuthRequest>> ConnectedClients = new Dictionary<string, List<UserAccountAuthRequest>>();
 
-        private readonly IStreamSessionService _streamSessionService;
-
         private readonly IPostLikeRepository _postLikeRepository;
 
         private readonly IPostService _postService;
 
-        public ClassroomHub(IStreamSessionService streamSessionService, IPostLikeRepository postLikeRepository, IPostService postService)
+        public ClassroomHub(IPostLikeRepository postLikeRepository, IPostService postService)
         {
-            this._streamSessionService = streamSessionService;
             this._postLikeRepository = postLikeRepository;
             this._postService = postService;
         }
@@ -123,35 +120,6 @@ namespace TASysOnlineProject.Config.HubConfig
             var post = this._postService.GetPostById(commentRequest.PostId);
 
             await Clients.User(commentRequest.UserAccountId.ToString()).SendAsync("post", post, commentRequest);
-        }
-
-        public void Application_Start(object sender, EventArgs e)
-        {
-            var aTimer = new Timer(1000);
-            aTimer.Elapsed += aTimer_Elapsed;
-
-            aTimer.Interval = 1000;
-
-            aTimer.Enabled = true;            
-
-        }
-
-        public void aTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            //var context = GlobalHost.ConnectionManager.GetHubContext<ClassroomHub>();
-
-            var now = DateTime.UtcNow;
-            var streams = this._streamSessionService.GetComingStreamSessionAsync(now).Result;
-            foreach (var stream in streams)
-            {
-                if(stream.StartTime.AddMinutes(5) == now || stream.StartTime.AddMinutes(1) == now || stream.StartTime == now)
-                {
-                    var courseName = stream.CourseTable.Name;
-                    Clients.Group(courseName).SendAsync("notifyStream", stream);
-                    
-                }
-            }
-            //context.Clients.All.addMessage("This message broadcasted on " + DateTime.Now);
         }
 
         private Task EmitJoinClass(string className)

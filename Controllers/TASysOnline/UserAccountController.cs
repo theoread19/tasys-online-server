@@ -40,6 +40,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> GetAllSubject()
         {
             var responses = await this._userAccountService.GetAllUserAccountAsync();
@@ -49,7 +50,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("paging")]
-        public async Task<IActionResult> GetAllCoursePaging([FromQuery] Pagination paginationFilter)
+        public async Task<IActionResult> GetAllUserPaging([FromQuery] Pagination paginationFilter)
         {
             var route = Request.Path.Value;
             var pagedReponse = await this._userAccountService.GetAllUserAccountPagingAsync(paginationFilter, route);
@@ -100,6 +101,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateUserAccount([FromBody] UserAccountRequest userAccountRequest)
         {
             var response = await this._userAccountService.CreateUserAsync(userAccountRequest);
@@ -113,16 +115,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
 
             var response = await this._userAccountService.UpdateUserAccount(userAccountRequest, this.GetAccountAuthorInfo());
-
-            return StatusCode(response.StatusCode, response);
-        }
-
-        [HttpPost]
-        [Route("delete")]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> DeleteUserAccount([FromBody] Guid[] courseId)
-        {
-            var response = await this._userAccountService.DeleteUserAccount(courseId);
 
             return StatusCode(response.StatusCode, response);
         }
@@ -155,7 +147,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{userId}/courses")]
-        [Authorize(Roles = Roles.Learner)]
+        [Authorize(Roles = Roles.Learner + "," + Roles.Admin)]
         public async Task<IActionResult> GetCourseOfLeaner([FromQuery] Search searchRequest, Guid userId)
         {
             var user = this.GetAccountAuthorInfo();
@@ -164,5 +156,13 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPost]
+        [Route("add-to-course")]
+        [Authorize(Roles = Roles.Learner + "," + Roles.Admin)]
+        public async Task<IActionResult> AddUserToCourse([FromBody] AddToCoursesResquest addToCoursesResquest)
+        {
+            var response = await this._userAccountService.AddCourseToLearner(addToCoursesResquest);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

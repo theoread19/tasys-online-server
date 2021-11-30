@@ -124,21 +124,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<MessageResponse> GetMessageById(Guid id)
-        {
-            var table = await this._messageRepository.FindByIdAsync(id);
-
-            if (table == null)
-            {
-                return new MessageResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
-            }
-
-            var response = this._mapper.Map<MessageResponse>(table);
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ResponseMessage = "Find Message successfully";
-            return response;
-        }
-
         public async Task<SearchResponse<List<MessageResponse>>> SearchMessageBy(Search searchRequest, string route)
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);

@@ -16,17 +16,11 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<AuthorUserResponse?> FindByUsernameForAuthorAsync(string username);
 
-        public Task<UserAccountResponse> FindByNameAsync(string username);
-
-        public Task<int> CountByRoleIdAsync(Guid roleId);
-
         public Task<Response> ChangeUserAccountPasswordAsync(Guid userId, ChangePasswordRequest changePasswordRequest);
 
         public Task<UserAccountResponse> FindByIdAsync(Guid id);
 
         public Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo);
-
-        public Task<Response> DeleteUserAccount(Guid[] userAccountId);
 
         public Task<FilterResponse<List<UserAccountResponse>>> FilterUserAccountBy(Filter filterRequest, string route);
 
@@ -42,6 +36,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId);
 
-        public Task<Response> AddCourseToLearner(Guid userId, List<CourseRequest> courseRequests);
+        public Task<Response> AddCourseToLearner(AddToCoursesResquest addToCoursesResquest);
     }
 }

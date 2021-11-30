@@ -33,7 +33,9 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private readonly IIdentityService _identityService;
 
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartService _cartService;
+
+        private readonly ICourseService _courseService;
 
         public UserAccountService(IUserAccountRepository userAccountRepository, 
                                     IRoleService roleService, 
@@ -41,7 +43,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                                     IMapper mapper, 
                                     IUserInfoService userInfoService, 
                                     IIdentityService identityService,
-                                    ICartRepository cartRepository)
+                                    ICartService cartService,
+                                    ICourseService courseService)
         {
             this._identityService = identityService;
             this._roleService = roleService;
@@ -49,7 +52,8 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             this._uriService = uriService;
             this._mapper = mapper;
             this._userInfoService = userInfoService;
-            this._cartRepository = cartRepository;
+            this._cartService = cartService;
+            this._courseService = courseService;
         }
 
         public async Task<Response> CreateUserAsync(UserAccountRequest userAccountRequest)
@@ -81,8 +85,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._userInfoService.CreateUserInfoAsync(new UserInfoRequest().Create(userTable.Id));
 
             // Create cart
-            await this._cartRepository.InsertAsync(new CartTable {Id = Guid.NewGuid(), TotalCourse = 0, UserAccountId = userTable.Id });
-            await this._cartRepository.SaveAsync();
+            await this._cartService.CreateCartAsync(new CartRequest {Id = Guid.NewGuid(), TotalCourse = 0, UserAccountId = userTable.Id });
 
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "User was created!" };
         }
@@ -106,21 +109,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             List<UserAccountResponse> responses = this._mapper.Map<List<UserAccountTable>, List<UserAccountResponse>>(tables);
 
             return responses;
-        }
-
-        public async Task<UserAccountResponse> FindByNameAsync(string username)
-        {
-            var table = await this._userAccountRepository.FindByUsernameAsync(username);
-
-            if (table == null)
-            {
-                return new UserAccountResponse {StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
-            }
-
-            var reponse = this._mapper.Map<UserAccountResponse>(table);
-            reponse.ResponseMessage = "Fetching user successfully!";
-            reponse.StatusCode = StatusCodes.Status200OK;
-            return reponse;
         }
 
         public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo)
@@ -150,22 +138,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._userAccountRepository.SaveAsync();
 
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update user account successfully!" };
-        }
-
-        public async Task<Response> DeleteUserAccount(Guid[] userAccountId)
-        {
-            for (var i = 0; i < userAccountId.Length; i++)
-            {
-                await this._userAccountRepository.DeleteAsync(userAccountId[i]);
-            }
-
-            await this._userAccountRepository.SaveAsync();
-
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete user account successfully!"
-            };
         }
 
         public async Task<FilterResponse<List<UserAccountResponse>>> FilterUserAccountBy(Filter filterRequest, string route)
@@ -353,11 +325,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             };
         }
 
-        public async Task<int> CountByRoleIdAsync(Guid roleId)
-        {
-            return await this._userAccountRepository.CountByRole(roleId);
-        }
-
         public async Task<SearchResponse<List<CourseResponse>>> SearchCourseOfLearnerBy(Search searchRequest, string route, AccountAuthorInfo accountAuthorInfo, Guid userId)
         {
             var validFilter = new Search(searchRequest.PageNumber, searchRequest.PageSize, searchRequest.SortBy!, searchRequest.Order!, searchRequest.Value!, searchRequest.Property!);
@@ -402,25 +369,30 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return pagedReponse;
         }
 
-        public async Task<Response> AddCourseToLearner(Guid userId, List<CourseRequest> courseRequests)
+        public async Task<Response> AddCourseToLearner(AddToCoursesResquest addToCoursesResquest)
         {
-            var user = await this._userAccountRepository.FindByIdAsync(userId);
+            var user = await this._userAccountRepository.FindByIdAsync(addToCoursesResquest.UserId);
 
             if (user == null)
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
             }
 
-            var courses = this._mapper.Map<List<CourseRequest>, List<CourseTable>>(courseRequests);
-            foreach (var course in courses)
+            foreach (var courseId in addToCoursesResquest.CourseIds)
             {
-                await this._userAccountRepository.AddCourseToLeaner(userId, course);
+                var courseResponse = await this._courseService.GetCourseById(courseId);
+                if (courseResponse.StatusCode == StatusCodes.Status200OK)
+                {
+                    var course = this._mapper.Map<CourseTable>(courseResponse);
+                    await this._userAccountRepository.AddCourseToLeaner(user.Id, course);
+                    await this._cartService.RemoveAllCourseFromCart(addToCoursesResquest.UserId, true);
+                }
             }
             
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete all user account successfully!"
+                ResponseMessage = "Add user to courses successfully!"
             };
         }
     }

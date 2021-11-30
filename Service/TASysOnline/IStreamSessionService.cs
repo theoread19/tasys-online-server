@@ -19,8 +19,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<StreamSessionResponse> GetStreamSessionById(Guid id);
 
-        public Task<int> CountAsync();
-
         public Task<Response> UpdateStreamSession(StreamSessionRequest streamSessionRequest);
 
         public Task<Response> DeleteStreamSession(Guid[] streamSessionId);
@@ -31,10 +29,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> DeleteAllStreamSession();
 
-        public Task<IEnumerable<StreamSessionResponse>> GetComingStreamSessionAsync(DateTime now);
-
         public Task<FilterSearchResponse<List<StreamSessionResponse>>> FilterSearchStreamSessionBy(FilterSearch filterSearchRequest, string route);
-
-        public Task<MemoryStream> ExportDBToExcel(List<UserAccountAuthRequest> learner);
     }
 }

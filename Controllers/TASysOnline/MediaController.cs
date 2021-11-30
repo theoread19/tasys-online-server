@@ -26,7 +26,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPost]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> CreateContainer([FromBody] MediaRequest[] mediaRequests)
+        public async Task<IActionResult> CreateMedia([FromBody] MediaRequest[] mediaRequests)
         {
             var response = await this._mediaService.CreateMediasAsync(mediaRequests);
             return StatusCode(response.StatusCode, response);
@@ -37,17 +37,12 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         public async Task<IActionResult> GetAllMediaByContainerAsync(string container)
         {
             var responses = await this._mediaService.FindByContainerNameAsync(container);
-            if (responses != null)
-            {
-                return StatusCode(StatusCodes.Status200OK, responses);
-            }
-
-            return StatusCode(StatusCodes.Status404NotFound, "Container not found!");
+            return StatusCode(StatusCodes.Status200OK, responses);
         }
 
         [HttpPost]
         [Route("delete")]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
         public async Task<IActionResult> DeleteMediaAsync([FromBody] Guid[] mediaId)
         {
             var response = await this._mediaService.DeleteMediaAsync(mediaId);
@@ -56,7 +51,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("move")]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
         public async Task<IActionResult> MoveMediaAsync([FromBody] MediasRequest mediaRequest)
         {
             var response = await this._mediaService.MoveMediasAsync(mediaRequest);
@@ -65,7 +60,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("change-name")]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
         public async Task<IActionResult> ChangeMediaNameAsync([FromBody] MediaRequest mediaRequest)
         {
             var response = await this._mediaService.ChangeMediaNameAsync(mediaRequest);
@@ -74,7 +69,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
         public async Task<IActionResult> UpdateMediaAsync([FromBody] MediaRequest mediaRequest)
         {
             var response = await this._mediaService.UpdateMediaAsync(mediaRequest);
@@ -83,7 +78,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Route("copy")]
-        [Authorize(Roles = Roles.All)]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
         public async Task<IActionResult> CopyMediaAsync([FromBody] MediasRequest mediaRequest)
         {
             var response = await this._mediaService.CopyMediasAsync(mediaRequest);
@@ -103,7 +98,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPost]
         [Route("download/files")]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> DownloadFileZip([FromServices] IMediaService mediaService, [FromBody] Guid[] mediaIds)
+        public async Task<IActionResult> DownloadFileZip([FromBody] Guid[] mediaIds)
         {
             var zip = await this._mediaService.DownloadFileZipAsync(mediaIds);
             return File(zip, "application/octet-stream");
@@ -111,6 +106,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterMedia([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;

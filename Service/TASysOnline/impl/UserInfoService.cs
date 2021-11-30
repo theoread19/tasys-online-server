@@ -39,26 +39,6 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "User information was created!" };
         }
 
-        public async Task<Response> DeleteAllUserInfo()
-        {
-            await this._userInfoRepository.DeleteAllAsyn();
-            await this._userInfoRepository.SaveAsync();
-            return new Response
-            {
-                StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete all user information successfully!"
-            };
-        }
-
-        public async Task<IEnumerable<UserInfoResponse>> GetAllUserInfoAsync()
-        {
-            var tables = await this._userInfoRepository.GetAllAsync();
-
-            var responses = this._mapper.Map<List<UserInfoTable>, List<UserInfoResponse>>(tables);
-
-            return responses;
-        }
-
         public async Task<UserInfoResponse> GetUserInfoById(Guid id)
         {
             var table = await this._userInfoRepository.FindUserInfoByUserAccountId(id);
