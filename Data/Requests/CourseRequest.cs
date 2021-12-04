@@ -21,8 +21,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for summary of course
         /// </summary>
-        [Required]
-        [MinLength(1, ErrorMessage = "Summary must be min 1 character.")]
         public string? Summary { get; set; }
 
         /// <summary>
@@ -34,8 +32,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for description of course
         /// </summary>
-        [Required]
-        [MinLength(1, ErrorMessage = "Description must be min 1 character.")]
         public string? Description { get; set; }
 
         /// <summary>
