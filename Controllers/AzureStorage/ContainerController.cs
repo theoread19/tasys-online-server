@@ -58,7 +58,7 @@ namespace TASysOnlineProject.Controllers.AzureStorage
         [Authorize(Roles = Roles.Instructor + "," + Roles.Admin)]
         public async Task<IActionResult> ChangeContainerNameAsync([FromBody] ContainerUpdateRequest containerUpdateRequest)
         {
-            var response = await this._containerService.ChangeContainerNameAsync(containerUpdateRequest.oldContainerName, containerUpdateRequest.newContainerName);
+            var response = await this._containerService.ChangeContainerNameAsync(containerUpdateRequest.OldContainerName, containerUpdateRequest.NewContainerName);
             return StatusCode(response.StatusCode, response);
         }
     }

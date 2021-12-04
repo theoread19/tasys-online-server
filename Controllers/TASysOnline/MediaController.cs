@@ -61,7 +61,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPut]
         [Route("change-name")]
         [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
-        public async Task<IActionResult> ChangeMediaNameAsync([FromBody] MediaRequest mediaRequest)
+        public async Task<IActionResult> ChangeMediaNameAsync([FromBody] MediaChangeNameRequest mediaRequest)
         {
             var response = await this._mediaService.ChangeMediaNameAsync(mediaRequest);
             return StatusCode(response.StatusCode, response);
@@ -70,7 +70,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPut]
         [Route("update")]
         [Authorize(Roles = Roles.Admin + "," + Roles.Instructor)]
-        public async Task<IActionResult> UpdateMediaAsync([FromBody] MediaRequest mediaRequest)
+        public async Task<IActionResult> UpdateMediaAsync([FromBody] UpdateMediaRequest mediaRequest)
         {
             var response = await this._mediaService.UpdateMediaAsync(mediaRequest);
             return StatusCode(response.StatusCode, response);
@@ -88,7 +88,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpPost]
         [Route("download/file")]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> DownloadFile([FromBody] MediaRequest mediaRequest)
+        public async Task<IActionResult> DownloadFile([FromBody] MediaDownRequest mediaRequest)
         {
             var response = await this._mediaService.FindMediaByIdAsync(mediaRequest.Id);
 

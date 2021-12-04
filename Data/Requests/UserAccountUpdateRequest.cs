@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TASysOnlineProject.Data.Responses
+namespace TASysOnlineProject.Data.Requests
 {
-    public class UserAccountResponse : Response
+    public class UserAccountUpdateRequest
     {
-
         public Guid Id { get; set; }
+
         /// <summary>
         ///     Property for username of authenticate request
         /// </summary>
+        [Required]
         public string? Username { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-
+        [Required]
         public string? DisplayName { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
         /// <summary>
-        ///     Property for role id of user
+        ///     Property for role id of authenticate request
         /// </summary>
+        [Required]
         public Guid RoleId { get; set; }
-
-        public List<CourseResponse>? CourseResponses { get; set; }
     }
 }

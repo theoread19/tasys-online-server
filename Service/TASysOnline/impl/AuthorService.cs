@@ -48,7 +48,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             {
                 return new LoginResponse
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
+                    StatusCode = StatusCodes.Status500InternalServerError,
                     ResponseMessage = "User has been blocked!"
                 };
             }
@@ -97,7 +97,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> RegisterAsync(RegisterRequest registerRequest)
         {
-            var response = await this._userAccountService.CreateUserAsync(new UserAccountRequest {Password = registerRequest.Password, DisplayName = registerRequest.DisplayName,Username = registerRequest.Username, RoleId = registerRequest.RoleId });
+            var role = await this._roleService.FindByNameAsync(Data.Const.Roles.Learner);
+
+            if (role.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = role.StatusCode, ResponseMessage = role.ResponseMessage };
+            }
+
+            var response = await this._userAccountService.CreateUserAsync(new UserAccountRequest {Password = registerRequest.Password, DisplayName = registerRequest.DisplayName,Username = registerRequest.Username, RoleId = role.Id });
 
             return response;
         }

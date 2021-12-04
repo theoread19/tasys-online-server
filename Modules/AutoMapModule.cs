@@ -63,7 +63,7 @@ namespace TASysOnlineProject.Modules
             CreateMap<MediaTable, MediaResponse>();
             CreateMap<MediaRequest, BlobContainerRequest>()
                 .ForMember(m => m.FileName, op => op.MapFrom(res => res.FileName))
-                .ForMember(m => m.FileContain, op => op.MapFrom(res => res.data))
+                .ForMember(m => m.FileContain, op => op.MapFrom(res => res.Data))
                 .ForMember(m => m.FileType, op => op.MapFrom(res => res.FileType))
                 .ForMember(m => m.FileDirectory, op => op.MapFrom(res => res.Container));
             CreateMap<TestResultRequest, TestResultTable>();

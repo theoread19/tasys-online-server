@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace TASysOnlineProject.Data.Requests
 {
-    public class RoleRequest
+    public class MediaChangeNameRequest
     {
+        [Required]
+        public Guid Id { get; set; }
+
         /// <summary>
-        ///     Property for name of role
+        ///      Property for name of media
         /// </summary>
         [Required]
-        public string? Name { get; set; }
+        public string? FileName { get; set; }
     }
 }

@@ -111,7 +111,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpPut]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> UpdateUserAccount([FromBody] UserAccountRequest userAccountRequest)
+        public async Task<IActionResult> UpdateUserAccount([FromBody] UserAccountUpdateRequest userAccountRequest)
         {
 
             var response = await this._userAccountService.UpdateUserAccount(userAccountRequest, this.GetAccountAuthorInfo());

@@ -14,18 +14,17 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for content of comment
         /// </summary>
         [Required]
+        [MinLength(1, ErrorMessage = "Content must be min 1 character.")]
         public string? Content { get; set; }
 
         /// <summary>
         ///     Property for post id
         /// </summary>
-        [Required]
         public Guid PostId { get; set; }
 
         /// <summary>
         ///     Property for user account id
         /// </summary>
-        [Required]
         public Guid UserAccountId { get; set; }
     }
 }

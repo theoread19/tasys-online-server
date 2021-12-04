@@ -22,5 +22,7 @@ namespace TASysOnlineProject.Data.Responses
         /// 
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        public DateTime ModifiedDate { get; set; }
     }
 }

@@ -21,9 +21,9 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<Response> MoveMediasAsync(MediasRequest mediaRequest);
 
-        public Task<Response> ChangeMediaNameAsync(MediaRequest mediaRequest);
+        public Task<Response> ChangeMediaNameAsync(MediaChangeNameRequest mediaRequest);
 
-        public Task<Response> UpdateMediaAsync(MediaRequest mediaRequest);
+        public Task<Response> UpdateMediaAsync(UpdateMediaRequest mediaRequest);
 
         public Task<Response> CopyMediasAsync(MediasRequest mediaRequest);
 

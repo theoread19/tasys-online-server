@@ -27,7 +27,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> CreateAsync(RoleRequest roleRequest)
         {
-            await this._roleRepository.InsertAsync(new RoleTable {Name = roleRequest.Name, CreatedDate = roleRequest.CreatedDate});
+            await this._roleRepository.InsertAsync(new RoleTable {Name = roleRequest.Name});
             _ = this._roleRepository.SaveAsync();
 
             await this._roleManager.CreateAsync(new IdentityRole
@@ -77,6 +77,17 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             }
 
             return respones;
+        }
+
+        public async Task<RoleResponse> FindByNameAsync(string name)
+        {
+            var table = await this._roleRepository.GetRoleByName(name);
+            if (table == null)
+            {
+                return new RoleResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Role not found!" };
+            }
+
+            return new RoleResponse { Id = table.Id, Name = table.Name, CreatedDate = table.CreatedDate, StatusCode = StatusCodes.Status200OK, ResponseMessage = "Find role successfully!" };
         }
     }
 }

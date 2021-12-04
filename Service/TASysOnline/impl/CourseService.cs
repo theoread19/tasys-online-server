@@ -24,17 +24,21 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
+        private IUserAccountRepository _userAccountRepository;
+
         private readonly ISubjectService _subjectService;
 
         public CourseService(ICourseRepository courseRepository, 
                             IUriService uriService, 
                             IMapper mapper,
-                            ISubjectService subjectService)
+                            ISubjectService subjectService,
+                            IUserAccountRepository userAccountRepository)
         {
             this._courseRepository = courseRepository;
             this._uriService = uriService;
             this._mapper = mapper;
             this._subjectService = subjectService;
+            this._userAccountRepository = userAccountRepository;
         }
 
         public async Task<Response> CreateCourseAsync(CourseRequest courseRequest)
@@ -47,11 +51,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Subject not found!" };
             }
 
+            var user = this._userAccountRepository.FindByIdAsync(courseRequest.InstructorId);
+
+            if (user == null)
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             var result = await this._courseRepository.FindByNameAsync(courseRequest.Name);
 
             if (result != null)
             {
-                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course is Exist!" };
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course was Exist!" };
             }
 
             var table = this._mapper.Map<CourseTable>(courseRequest);
@@ -205,6 +216,25 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (accountAuthorInfo.Role == Roles.Admin)
             {
+                if (table.Name != courseRequest.Name)
+                {
+                    var courseToCheck = await this._courseRepository.FindByNameAsync(courseRequest.Name);
+
+                    if (courseToCheck != null)
+                    {
+                        return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Course was Exist!" };
+                    }
+                }
+
+                if (table.InstructorId != courseRequest.InstructorId)
+                {
+                    var userToCheck = this._userAccountRepository.FindByIdAsync(courseRequest.InstructorId);
+
+                    if (userToCheck == null)
+                    {
+                        return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+                    }
+                }
                 table.Duration = courseRequest.Duration;
                 table.InstructorId = courseRequest.InstructorId;
                 table.MaxSlot = courseRequest.MaxSlot;

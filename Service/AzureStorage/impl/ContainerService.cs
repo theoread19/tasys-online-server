@@ -41,7 +41,7 @@ namespace TASysOnlineProject.Service.AzureStorage.impl
             CloudBlobContainer cloudBlobContainer = this._cloudBlobClient.GetContainerReference(containerName);
             if (await cloudBlobContainer.ExistsAsync())
             {
-                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Container are already exist!" };
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Container was exist!" };
             }
 
             await cloudBlobContainer.CreateAsync();
@@ -155,10 +155,15 @@ namespace TASysOnlineProject.Service.AzureStorage.impl
 
             if (!(await oldCloudBlobContainer.ExistsAsync()))
             {
-                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Container are not found!" };
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Container not found!" };
             }
 
             CloudBlobContainer newCloudBlobContainer = this._cloudBlobClient.GetContainerReference(newContainerName);
+
+            if (!(await newCloudBlobContainer.ExistsAsync()))
+            {
+                return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Container was exist!" };
+            }
 
             if (await newCloudBlobContainer.CreateIfNotExistsAsync())
             {

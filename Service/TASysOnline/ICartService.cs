@@ -12,7 +12,7 @@ namespace TASysOnlineProject.Service.TASysOnline
     {
         public Task<Response> CreateCartAsync(CartRequest cartRequest);
 
-        public Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo);
+        public Task<CartResponse> GetCartByUserId(Guid userId);
 
         public Task<Response> AddCourseToCart(Guid userId, Guid courseId);
 

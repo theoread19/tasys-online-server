@@ -39,9 +39,16 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("{userId}")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Learner)]
         public async Task<IActionResult> GetCartByUserId(Guid userId)
         {
-            var response = await this._CartService.GetCartByUserId(userId, this.GetAccountAuthorInfo());
+            var userInfo = this.GetAccountAuthorInfo();
+
+            if (userInfo.Id != userId && userInfo.Role != Roles.Admin)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
+            }
+            var response = await this._CartService.GetCartByUserId(userId);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -52,7 +59,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var userInfo = this.GetAccountAuthorInfo();
 
-            if (userInfo.Id != userId || userInfo.Role != Roles.Admin)
+            if (userInfo.Id != userId && userInfo.Role != Roles.Admin)
             {
                 return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
             }
@@ -67,7 +74,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var userInfo = this.GetAccountAuthorInfo();
 
-            if(userInfo.Id != userId || userInfo.Role != Roles.Admin)
+            if(userInfo.Id != userId && userInfo.Role != Roles.Admin)
             {
                 return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
             }
@@ -83,7 +90,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         {
             var userInfo = this.GetAccountAuthorInfo();
 
-            if (userInfo.Id != userId || userInfo.Role != Roles.Admin)
+            if (userInfo.Id != userId && userInfo.Role != Roles.Admin)
             {
                 return StatusCode(StatusCodes.Status403Forbidden, "Invalid access data!");
             }

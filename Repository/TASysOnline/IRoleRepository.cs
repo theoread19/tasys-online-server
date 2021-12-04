@@ -8,5 +8,6 @@ namespace TASysOnlineProject.Repository.TASysOnline
 {
     public interface IRoleRepository : IRepository<RoleTable>
     {
+        public Task<RoleTable> GetRoleByName(string name);
     }
 }

@@ -59,7 +59,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 TestId = question.TestId});
             }
 
-            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Answer was created!" };
+            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Create an answer successfully!" };
         }
 
         public async Task<Response> DeleteAllAnswer()
@@ -69,7 +69,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response
             {
                 StatusCode = StatusCodes.Status200OK,
-                ResponseMessage = "Delete all Answer successfully!"
+                ResponseMessage = "Delete all answers successfully!"
             };
         }
 
@@ -205,6 +205,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
                 var question = await this._questionService.GetQuestionById(table.QuestionId);
 
+                if (question != null)
+                {
+                    return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Question not found!" };
+                }
+
                 await this._questionService.UpdateQuestion(new QuestionRequest
                 {
                     Id = question.Id,
@@ -218,7 +223,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._answerRepository.UpdateAsync(table);
             await this._answerRepository.SaveAsync();
 
-            return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update Answer successfully!" };
+            return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Update an Answer successfully!" };
         }
     }
 }

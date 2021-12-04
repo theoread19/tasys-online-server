@@ -162,7 +162,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response { StatusCode = StatusCodes.Status200OK, ResponseMessage = "Move media successfully!" };
         }
 
-        public async Task<Response> ChangeMediaNameAsync(MediaRequest mediaRequest)
+        public async Task<Response> ChangeMediaNameAsync(MediaChangeNameRequest mediaRequest)
         {
             var table = await this._mediaRepository.FindByIdAsync(mediaRequest.Id);
 
@@ -263,7 +263,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return zipStream;
         }
 
-        public async Task<Response> UpdateMediaAsync(MediaRequest mediaRequest)
+        public async Task<Response> UpdateMediaAsync(UpdateMediaRequest mediaRequest)
         {
             var table = await this._mediaRepository.FindByIdAsync(mediaRequest.Id);
 

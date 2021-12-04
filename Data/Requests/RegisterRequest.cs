@@ -12,21 +12,26 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for username of authenticate request
         /// </summary>
         [Required]
-        public string Username { get; set; }
+        [MinLength(6, ErrorMessage = "Username must be min 6 character and max 12 character.")]
+        [MaxLength(12, ErrorMessage = "Username must be min 6 character and max 12 character.")]
+        public string? Username { get; set; }
 
         /// <summary>
         ///     Property for password of authenticate request
         /// </summary>
         [Required]
-        public string Password { get; set; }
+        [MinLength(6, ErrorMessage = "Password must be min 6 character and max 16 character.")]
+        [MaxLength(16, ErrorMessage = "Password must be min 6 character and max 16 character.")]
+        public string? Password { get; set; }
 
         [Required]
-        public string DisplayName { get; set; }
+        [MinLength(6, ErrorMessage = "DisplayName must be min 6 character and max 20 character.")]
+        [MaxLength(20, ErrorMessage = "DisplayName must be min 6 character and max 20 character.")]
+        public string? DisplayName { get; set; }
 
         /// <summary>
         ///     Property for role id of authenticate request
         /// </summary>
-        [Required]
         public Guid RoleId { get; set; }
     }
 }

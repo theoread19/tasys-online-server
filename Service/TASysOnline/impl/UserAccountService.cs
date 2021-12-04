@@ -87,7 +87,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             // Create cart
             await this._cartService.CreateCartAsync(new CartRequest {Id = Guid.NewGuid(), TotalCourse = 0, UserAccountId = userTable.Id });
 
-            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "User was created!" };
+            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Create user successfully!" };
         }
 
         public async Task<AuthorUserResponse?> FindByUsernameForAuthorAsync(string username)
@@ -111,7 +111,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return responses;
         }
 
-        public async Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo)
+        public async Task<Response> UpdateUserAccount(UserAccountUpdateRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo)
         {
             var table = await this._userAccountRepository.FindByIdAsync(userAccountRequest.Id);
 

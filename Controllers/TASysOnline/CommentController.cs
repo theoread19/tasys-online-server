@@ -45,7 +45,7 @@ namespace TASysOnlineProject.Controllers.TASysOnline
         [HttpGet]
         [Route("search")]
         [Authorize(Roles = Roles.All)]
-        public async Task<IActionResult> SearchSubject([FromQuery] Search searchRequest)
+        public async Task<IActionResult> SearchComment([FromQuery] Search searchRequest)
         {
             var route = Request.Path.Value;
             var responses = await this._CommentService.SearchCommentBy(searchRequest, route);

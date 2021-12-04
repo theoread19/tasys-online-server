@@ -12,19 +12,16 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for content of Answer
         /// </summary>
-        [Required]
         public string? Content { get; set; }
 
         /// <summary>
         ///     Propert for is correct of Answer
         /// </summary>
-        [Required]
         public bool IsCorrect { get; set; }
 
         /// <summary>
         ///     Property for question id
         /// </summary>
-        [Required]
         public Guid QuestionId { get; set; }
 
     }

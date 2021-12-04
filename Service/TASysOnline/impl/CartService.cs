@@ -104,18 +104,13 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Cart was created!" };
         }
 
-        public async Task<CartResponse> GetCartByUserId(Guid userId, AccountAuthorInfo accountAuthorInfo)
+        public async Task<CartResponse> GetCartByUserId(Guid userId)
         {
             var table = await this._cartRepository.GetCartByUserIdAsync(userId);
 
             if (table == null)
             {
                 return new CartResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
-            }
-
-            if (table.UserAccountId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
-            {
-                return new CartResponse { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
             }
 
             var response = this._mapper.Map<CartResponse>(table);

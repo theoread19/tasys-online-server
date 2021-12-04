@@ -20,7 +20,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for type of media
         /// </summary>
-        [Required]
         public string? Category { get; set; }
 
         /// <summary>
@@ -32,7 +31,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///      Property for title of media
         /// </summary>
-        [Required]
         public string? Title { get; set; }
 
         /// <summary>
@@ -44,7 +42,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///      Property for file size of media
         /// </summary>
-        [Required]
         public ulong FileSize { get; set; }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace TASysOnlineProject.Data.Requests
         public string? FileType { get; set; }
 
         [Required]
-        public string? data { get; set; }
+        public string? Data { get; set; }
 
     }
 }

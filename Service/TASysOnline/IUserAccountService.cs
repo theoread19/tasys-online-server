@@ -20,7 +20,7 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<UserAccountResponse> FindByIdAsync(Guid id);
 
-        public Task<Response> UpdateUserAccount(UserAccountRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo);
+        public Task<Response> UpdateUserAccount(UserAccountUpdateRequest userAccountRequest, AccountAuthorInfo accountAuthorInfo);
 
         public Task<FilterResponse<List<UserAccountResponse>>> FilterUserAccountBy(Filter filterRequest, string route);
 

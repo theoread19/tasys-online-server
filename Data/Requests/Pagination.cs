@@ -14,7 +14,7 @@ namespace TASysOnlineProject.Data
         public Pagination()
         {
             this.PageNumber = 1;
-            this.PageSize = 100;
+            this.PageSize = 10;
             this.SortBy = "CreatedDate";
             this.Order = "desc";
         }

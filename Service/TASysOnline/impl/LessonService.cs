@@ -18,19 +18,28 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     {
         private ILessonRepository _LessonRepository;
 
+        private ICourseService courseService;
+
         private IUriService _uriService;
 
         private IMapper _mapper;
 
-        public LessonService(ILessonRepository LessonRepository, IUriService uriService, IMapper mapper)
+        public LessonService(ILessonRepository LessonRepository, IUriService uriService, IMapper mapper, ICourseService courseService)
         {
             this._LessonRepository = LessonRepository;
+            this.courseService = courseService;
             this._uriService = uriService;
             this._mapper = mapper;
         }
 
         public async Task<Response> CreateLessonAsync(LessonRequest lessonRequest)
         {
+            var course = await this.courseService.GetCourseById(lessonRequest.CourseId);
+
+            if(course.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new Response { StatusCode = course.StatusCode, ResponseMessage = course.ResponseMessage };
+            }
 
             var table = this._mapper.Map<LessonTable>(lessonRequest);
 
