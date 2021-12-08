@@ -24,13 +24,11 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for user account id
         /// </summary>
-        [Required]
         public Guid UserAccountId { get; set; }
 
         /// <summary>
         ///     Property for course id
         /// </summary>
-        [Required]
         public Guid CourseId { get; set; }
     }
 }

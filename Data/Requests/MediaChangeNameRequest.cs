@@ -8,7 +8,6 @@ namespace TASysOnlineProject.Data.Requests
 {
     public class MediaChangeNameRequest
     {
-        [Required]
         public Guid Id { get; set; }
 
         /// <summary>

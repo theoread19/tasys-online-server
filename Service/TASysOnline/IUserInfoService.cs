@@ -14,6 +14,6 @@ namespace TASysOnlineProject.Service.TASysOnline
 
         public Task<UserInfoResponse> GetUserInfoById(Guid id);
 
-        public Task<Response> UpdateUserInfo(UserInfoRequest UserInfoRequest);
+        public Task<Response> UpdateUserInfo(UserInfoRequest UserInfoRequest, AccountAuthorInfo accountAuthorInfo);
     }
 }

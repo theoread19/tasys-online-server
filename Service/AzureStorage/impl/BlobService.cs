@@ -44,11 +44,11 @@ namespace TASysOnlineProject.Service.AzureStorage.impl
             var oldCloudBlockBlob = oldCloudBlobContainer.GetBlockBlobReference(oldFileName);
 
             var newCloudBlockBlob = oldCloudBlobContainer.GetBlockBlobReference(newFileName);
-
+/*
             if (await newCloudBlockBlob.ExistsAsync())
             {
                 return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "file already exist!" };
-            }
+            }*/
 
             await newCloudBlockBlob.StartCopyAsync(oldCloudBlockBlob);
             await oldCloudBlockBlob.DeleteAsync();

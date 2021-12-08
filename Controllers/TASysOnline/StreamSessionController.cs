@@ -18,12 +18,9 @@ namespace TASysOnlineProject.Controllers.TASysOnline
     {
         private IStreamSessionService _StreamSessionService;
 
-        private ICourseService _courseService;
-
-        public StreamSessionController(IStreamSessionService StreamSessionService, ICourseService courseService)
+        public StreamSessionController(IStreamSessionService StreamSessionService)
         {
             this._StreamSessionService = StreamSessionService;
-            this._courseService = courseService;
         }
 
         [HttpGet]

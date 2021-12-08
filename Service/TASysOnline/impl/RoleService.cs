@@ -27,6 +27,17 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> CreateAsync(RoleRequest roleRequest)
         {
+            var roleTocheck = await this._roleRepository.GetRoleByName(roleRequest.Name);
+
+            if (roleTocheck != null)
+            {
+                return new Response
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError,
+                    ResponseMessage = "Role was exist!"
+                };
+            }
+
             await this._roleRepository.InsertAsync(new RoleTable {Name = roleRequest.Name});
             _ = this._roleRepository.SaveAsync();
 

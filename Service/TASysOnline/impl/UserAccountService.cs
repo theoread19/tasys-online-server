@@ -120,14 +120,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
             }
 
-            if (accountAuthorInfo.Role == Roles.Admin)
+            if (accountAuthorInfo.Role == Roles.Admin && table.RoleId != userAccountRequest.RoleId)
             {
                 var identity = this._mapper.Map<IdentityUserAccount>(table);
                 table.RoleId = userAccountRequest.RoleId;
                 var role = await this._roleService.FindByIdAsync(userAccountRequest.RoleId);
+
+                if (role.StatusCode != StatusCodes.Status200OK)
+                {
+                    return new Response { StatusCode = role.StatusCode, ResponseMessage = role.ResponseMessage };
+                }
+
                 await this._identityService.ChangeRoleIdentityUserAccountAsync(identity, role.Name);
             } 
-            else if (accountAuthorInfo.Id != userAccountRequest.Id) 
+            else if (accountAuthorInfo.Id != userAccountRequest.Id && accountAuthorInfo.Role != Roles.Admin) 
             {
                 return new Response { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
             };
@@ -339,13 +345,14 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return reponse;
             }
 
-            if (userId != accountAuthorInfo.Id)
+            if (userId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
             {
                 var reponse = PaginationHelper.CreatePagedReponse<CourseResponse>(null, validFilter, 0, this._uriService, route);
                 reponse.StatusCode = StatusCodes.Status403Forbidden;
                 reponse.ResponseMessage = "Invalid access data!";
                 return reponse;
             }
+
 
             var course = user.CoursesOfLearner.ToList();
 

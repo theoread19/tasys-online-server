@@ -36,7 +36,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new SubjectResponse
                 {
                     StatusCode = StatusCodes.Status500InternalServerError,
-                    ResponseMessage = "Subject is exist!"
+                    ResponseMessage = "Subject was exist!"
                 };
             }
 
@@ -109,6 +109,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             if (table == null)
             {
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Subject not found!" };
+            }
+
+            if (table.Name != subject.Name)
+            {
+                var subjectTocheck = await this._subjectRepository.FindByNameAsync(subject.Name);
+                if (subjectTocheck != null)
+                {
+                    return new Response
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        ResponseMessage = "Subject was exist!"
+                    };
+                }
             }
 
             table.Name = subject.Name;

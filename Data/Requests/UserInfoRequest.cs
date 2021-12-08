@@ -34,7 +34,6 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for date of birth of user information
         /// </summary>
-        [Required]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>
@@ -47,18 +46,17 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for email of user information
         /// </summary>
         [Required]
+        [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter correct email address")]
         public string? Email { get; set; }
 
         /// <summary>
         ///     Property for user account id
         /// </summary>
-        [Required]
         public Guid UserAccountId { get; set; }
 
         /// <summary>
         ///     Property for bio of user information
         /// </summary>
-        [Required]
         public String? Bio { get; set; }
 
 

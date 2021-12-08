@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TASysOnlineProject.Data;
+using TASysOnlineProject.Data.Const;
 using TASysOnlineProject.Data.Requests;
 using TASysOnlineProject.Data.Responses;
 using TASysOnlineProject.Repository.TASysOnline;
@@ -54,13 +55,19 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             return response;
         }
 
-        public async Task<Response> UpdateUserInfo(UserInfoRequest userInfoRequest)
+        public async Task<Response> UpdateUserInfo(UserInfoRequest userInfoRequest, AccountAuthorInfo accountAuthorInfo)
         {
+
             var table = await this._userInfoRepository.FindByIdAsync(userInfoRequest.Id);
 
             if (table == null)
             {
                 return new UserInfoResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User info not found!" };
+            }
+
+            if (userInfoRequest.UserAccountId != accountAuthorInfo.Id && accountAuthorInfo.Role != Roles.Admin)
+            {
+                return new Response { StatusCode = StatusCodes.Status403Forbidden, ResponseMessage = "Invalid access data!" };
             }
 
             table.Address = userInfoRequest.Address;

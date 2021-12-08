@@ -19,19 +19,16 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for score of question
         /// </summary>
-        [Required]
         public float Score { get; set; }
 
         /// <summary>
         ///     Property for total correct answer of question
         /// </summary>
-        [Required]
-        public int? TotalCorrectAnswer { get; set; }
+        public int TotalCorrectAnswer { get; set; }
 
         /// <summary>
         ///     Property for test id
         /// </summary>
-        [Required]
         public Guid TestId { get; set; }
 
         public List<AnswerRequest>? AnswerRequests { get; set; }

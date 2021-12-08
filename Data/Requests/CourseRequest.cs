@@ -15,7 +15,6 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for name of course
         /// </summary>
         [Required]
-        [MinLength(1, ErrorMessage = "Name must be min 1 character.")]
         public string? Name { get; set; }
 
         /// <summary>
@@ -26,7 +25,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for duration of course (unit in minute)
         /// </summary>
-        [Range(1,12)]
+        [Range(1,99999)]
         public int Duration { get; set; }
 
         /// <summary>

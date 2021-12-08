@@ -23,7 +23,6 @@ namespace TASysOnlineProject.Repository.TASysOnline.impl
             {
                 var tables = await this._context.PostTables
                                                 .Include(i => i.PostLikes)
-                                                    .ThenInclude(ti => ti.UserAccount)
                                                 .Include(i => i.UserAccount)
                                                 .ToListAsync();
 

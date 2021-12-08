@@ -20,17 +20,37 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IUriService _uriService;
 
+        private IUserAccountService _userAccountService;
+
+        private ICourseService _courseService;
+
         private IMapper _mapper;
 
-        public PostService(IPostRepository postRepository, IUriService uriService, IMapper mapper)
+        public PostService(IPostRepository postRepository, IUriService uriService, IMapper mapper, IUserAccountService userAccountService, ICourseService courseService)
         {
             this._postRepository = postRepository;
             this._uriService = uriService;
             this._mapper = mapper;
+            this._courseService = courseService;
+            this._userAccountService = userAccountService;
         }
 
         public async Task<Response> CreatePostAsync(PostRequest postRequest)
         {
+
+            var user = await this._userAccountService.FindByIdAsync(postRequest.UserAccountId);
+
+            if (user.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = user.StatusCode, ResponseMessage = user.ResponseMessage };
+            }
+
+            var course = await this._courseService.GetCourseById(postRequest.CourseId);
+
+            if(course.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = course.StatusCode, ResponseMessage = course.ResponseMessage };
+            }
 
             var table = this._mapper.Map<PostTable>(postRequest);
 
@@ -199,6 +219,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdatePost(PostRequest postRequest)
         {
+            var user = await this._userAccountService.FindByIdAsync(postRequest.UserAccountId);
+
+            if (user.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = user.StatusCode, ResponseMessage = user.ResponseMessage };
+            }
+
+            var course = await this._courseService.GetCourseById(postRequest.CourseId);
+
+            if (course.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = course.StatusCode, ResponseMessage = course.ResponseMessage };
+            }
+
             var table = await this._postRepository.FindByIdAsync(postRequest.Id);
 
             if (table == null)

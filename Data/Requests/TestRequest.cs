@@ -24,37 +24,35 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///     Property for allocated time of test
         /// </summary>
-        [Required]
+        [Range(1, 99999)]
         public int AllocatedTime { get; set; }
 
         /// <summary>
         ///     Property for deadline of test
         /// </summary>
-        [Required]
         public DateTime Deadline { get; set; }
 
         /// <summary>
         ///     Property for max questions of test
         /// </summary>
-        [Required]
+        [Range(1, 99999)]
         public int MaxQuestion { get; set; }
 
         /// <summary>
         ///     Property for max score of test
         /// </summary>
-        [Required]
+        [Range(1, 99999)]
         public int MaxScore { get; set; }
 
         /// <summary>
         ///     Property for max attempt for test
         /// </summary>
-        [Required]
+        [Range(1, 99999)]
         public int MaxAttempt { get; set; }
 
         /// <summary>
         ///     Property for course id
         /// </summary>
-        [Required]
         public Guid CourseId { get; set; }
 
     }

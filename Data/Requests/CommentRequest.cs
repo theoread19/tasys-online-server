@@ -14,7 +14,6 @@ namespace TASysOnlineProject.Data.Requests
         ///     Property for content of comment
         /// </summary>
         [Required]
-        [MinLength(1, ErrorMessage = "Content must be min 1 character.")]
         public string? Content { get; set; }
 
         /// <summary>

@@ -28,7 +28,6 @@ namespace TASysOnlineProject.Modules
             CreateMap<PostRequest, PostTable>();
             CreateMap<PostTable, PostResponse>()
                 .ForMember(m => m.UserAccountResponse, op => op.MapFrom(res => res.UserAccount))
-                .ForMember(m => m.postLikeResponses, op => op.MapFrom(res => res.PostLikes))
                 .ForMember(m => m.CountPostLike, op => op.MapFrom(res => res.PostLikes.Count));
             CreateMap<LessonRequest, LessonTable>();
             CreateMap<LessonTable, LessonResponse>();

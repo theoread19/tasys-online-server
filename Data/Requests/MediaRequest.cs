@@ -31,6 +31,7 @@ namespace TASysOnlineProject.Data.Requests
         /// <summary>
         ///      Property for title of media
         /// </summary>
+        [Required]
         public string? Title { get; set; }
 
         /// <summary>

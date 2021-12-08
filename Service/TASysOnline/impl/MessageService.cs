@@ -22,15 +22,34 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         private IMapper _mapper;
 
-        public MessageService(IMessageRepository MessageRepository, IUriService uriService, IMapper mapper)
+        private IUserAccountService _userAccountService;
+
+        private ICourseService _courseService;
+
+        public MessageService(IMessageRepository MessageRepository, IUriService uriService, IMapper mapper, ICourseService courseService, IUserAccountService userAccountService)
         {
             this._messageRepository = MessageRepository;
             this._uriService = uriService;
             this._mapper = mapper;
+            this._courseService = courseService;
+            this._userAccountService = userAccountService;
         }
 
         public async Task<Response> CreateMessageAsync(MessageRequest messageRequest)
         {
+            var user = await this._userAccountService.FindByIdAsync(messageRequest.SenderId);
+
+            if (user.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            var course = await this._courseService.GetCourseById(messageRequest.CourseId);
+
+            if (course.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
+            }
 
             var table = this._mapper.Map<MessageTable>(messageRequest);
             table.CreatedDate = DateTime.UtcNow;
@@ -153,11 +172,26 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdateMessage(MessageRequest messageRequest)
         {
+
+            var user = await this._userAccountService.FindByIdAsync(messageRequest.SenderId);
+
+            if (user.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
+            var course = await this._courseService.GetCourseById(messageRequest.CourseId);
+
+            if (course.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Course not found!" };
+            }
+
             var table = await this._messageRepository.FindByIdAsync(messageRequest.Id);
 
             if (table == null)
             {
-                return new MessageResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Comment not found!" };
+                return new MessageResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Message not found!" };
             }
 
             table.ModifiedDate = DateTime.UtcNow;

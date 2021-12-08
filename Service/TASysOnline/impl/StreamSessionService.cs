@@ -20,19 +20,38 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
     {
         private IStreamSessionRepository _StreamSessionRepository;
 
+        private IUserAccountService _userAccountService;
+
+        private ICourseService _courseService;
+
         private IUriService _uriService;
 
         private IMapper _mapper;
 
-        public StreamSessionService(IStreamSessionRepository streamSessionRepository, IUriService uriService, IMapper mapper)
+        public StreamSessionService(IStreamSessionRepository streamSessionRepository, IUriService uriService, IMapper mapper, ICourseService courseService, IUserAccountService userAccountService)
         {
             this._StreamSessionRepository = streamSessionRepository;
             this._uriService = uriService;
             this._mapper = mapper;
+            this._userAccountService = userAccountService;
+            this._courseService = courseService;
         }
 
         public async Task<Response> CreateStreamSessionAsync(StreamSessionRequest streamSessionRequest)
         {
+            var user = await this._userAccountService.FindByIdAsync(streamSessionRequest.CreatorId);
+
+            if (user.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = user.StatusCode, ResponseMessage = user.ResponseMessage };
+            }
+
+            var course = await this._courseService.GetCourseById(streamSessionRequest.CourseId);
+
+            if (course.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = course.StatusCode, ResponseMessage = course.ResponseMessage };
+            }
 
             var table = this._mapper.Map<StreamSessionTable>(streamSessionRequest);
 
@@ -42,7 +61,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
             await this._StreamSessionRepository.InsertAsync(table);
             await this._StreamSessionRepository.SaveAsync();
 
-            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "StreamSession was created!" };
+            return new Response { StatusCode = StatusCodes.Status201Created, ResponseMessage = "Create streamSession successfully!" };
         }
 
         public async Task<Response> DeleteAllStreamSession()
@@ -201,6 +220,20 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
         public async Task<Response> UpdateStreamSession(StreamSessionRequest streamSessionRequest)
         {
+
+            var user = await this._userAccountService.FindByIdAsync(streamSessionRequest.CreatorId);
+
+            if (user.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = user.StatusCode, ResponseMessage = user.ResponseMessage };
+            }
+
+            var course = await this._courseService.GetCourseById(streamSessionRequest.CourseId);
+
+            if (course.StatusCode != StatusCodes.Status200OK)
+            {
+                return new Response { StatusCode = course.StatusCode, ResponseMessage = course.ResponseMessage };
+            }
 
             var table = await this._StreamSessionRepository.FindByIdAsync(streamSessionRequest.Id);
 

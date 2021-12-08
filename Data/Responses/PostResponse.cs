@@ -35,7 +35,5 @@ namespace TASysOnlineProject.Data.Responses
 
         public int CountPostLike { get; set; }
         public UserAccountResponse UserAccountResponse { get; set; }
-
-        public List<PostLikeResponse>? postLikeResponses { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace TASysOnlineProject.Utils
     {
         public static PageResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, Pagination validFilter, int totalRecords, IUriService uriService, string route)
         {
-            if (pagedData == null)
+            if (pagedData == null || pagedData.Count == 0)
             {
                 return new PageResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize); ;
             }
@@ -40,7 +40,7 @@ namespace TASysOnlineProject.Utils
 
         public static SearchResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, Search validFilter, int totalRecords, IUriService uriService, string route)
         {
-            if (pagedData == null)
+            if (pagedData == null || pagedData.Count == 0)
             {
                 return new SearchResponse<List<T>>(pagedData!, validFilter.PageNumber, validFilter.PageSize, validFilter.Value!, validFilter.Property!); ;
             }
@@ -65,7 +65,7 @@ namespace TASysOnlineProject.Utils
 
         public static FilterResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, Filter validFilter, int totalRecords, IUriService uriService, string route)
         {
-            if (pagedData == null)
+            if (pagedData == null || pagedData.Count == 0)
             {
                 return new FilterResponse<List<T>>(pagedData!, validFilter.PageNumber, validFilter.PageSize, validFilter.Value!, validFilter.Property!); ;
             }
@@ -90,7 +90,7 @@ namespace TASysOnlineProject.Utils
 
         public static FilterSearchResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, FilterSearch validFilter, int totalRecords, IUriService uriService, string route)
         {
-            if (pagedData == null)
+            if (pagedData == null || pagedData.Count == 0)
             {
                 return new FilterSearchResponse<List<T>>(pagedData!, validFilter.PageNumber, validFilter.PageSize, validFilter.FilterValue!, validFilter.FilterProperty!, validFilter.SearchValue!, validFilter.SearchProperty!); ;
             }

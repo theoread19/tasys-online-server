@@ -42,6 +42,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
         {
             var user = await this._userAccountService.FindByIdAsync(doTestRequest.UserId);
 
+            if (user.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return new TestResultResponse { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "User not found!" };
+            }
+
             var test = await this._testService.GetTestById(doTestRequest.TestId);
 
             if (test.StatusCode == StatusCodes.Status404NotFound)
@@ -52,7 +57,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (totalAttempt >= test.MaxAttempt && !doTestRequest.IsPractice)
             {
-                return new TestResultResponse { StatusCode = StatusCodes.Status401Unauthorized, ResponseMessage = "Out of attempt of test" };
+                return new TestResultResponse { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "can't attempt this test" };
             }
 
             var questions = (await this._questionService.FindQuestionByTestId(doTestRequest.TestId)).ToList();
