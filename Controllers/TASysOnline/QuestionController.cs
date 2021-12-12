@@ -90,14 +90,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> DeleteAllQuestion()
-        {
-            var response = await this._QuestionService.DeleteAllQuestion();
-            return StatusCode(response.StatusCode, response);
-        }
-
         [HttpGet]
         [Route("filter-search")]
         [Authorize(Roles = Roles.All)]

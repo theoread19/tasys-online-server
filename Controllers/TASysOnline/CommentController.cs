@@ -89,12 +89,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllComment()
-        {
-            var response = await this._CommentService.DeleteAllComment();
-            return StatusCode(response.StatusCode, response);
-        }
     }
 }

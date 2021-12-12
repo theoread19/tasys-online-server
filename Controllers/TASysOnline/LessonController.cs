@@ -87,14 +87,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> DeleteAllLesson()
-        {
-            var response = await this._LessonService.DeleteAllLesson();
-            return StatusCode(response.StatusCode, response);
-        }
-
         [HttpGet]
         [Route("filter-search")]
         public async Task<IActionResult> FilterSearch([FromQuery] FilterSearch filterSearchRequest)

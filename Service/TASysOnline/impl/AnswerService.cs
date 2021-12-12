@@ -205,7 +205,7 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
                 var question = await this._questionService.GetQuestionById(table.QuestionId);
 
-                if (question != null)
+                if (question == null)
                 {
                     return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Question not found!" };
                 }

@@ -98,12 +98,5 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
             return StatusCode(response.StatusCode, response);
         }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllStreamSession()
-        {
-            var response = await this._StreamSessionService.DeleteAllStreamSession();
-            return StatusCode(response.StatusCode, response);
-        }
     }
 }
