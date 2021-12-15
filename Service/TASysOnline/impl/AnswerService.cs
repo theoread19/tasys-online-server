@@ -41,6 +41,11 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
                 return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Question not found!" };
             }
 
+            if (answerRequest.IsCorrect && question.TotalCorrectAnswer >= 1)
+            {
+                return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Question must have only 1 correct answer" };
+            }
+
             var table = this._mapper.Map<AnswerTable>(answerRequest);
 
             table.CreatedDate = DateTime.UtcNow;
@@ -201,13 +206,18 @@ namespace TASysOnlineProject.Service.TASysOnline.impl
 
             if (table.IsCorrect != answerRequest.IsCorrect)
             {
-                table.IsCorrect = answerRequest.IsCorrect;
-
                 var question = await this._questionService.GetQuestionById(table.QuestionId);
+
+                table.IsCorrect = answerRequest.IsCorrect;
 
                 if (question == null)
                 {
                     return new Response { StatusCode = StatusCodes.Status404NotFound, ResponseMessage = "Question not found!" };
+                }
+
+                if (table.IsCorrect && question.TotalCorrectAnswer >= 1)
+                {
+                    return new Response { StatusCode = StatusCodes.Status500InternalServerError, ResponseMessage = "Question must have only 1 correct answer" };
                 }
 
                 await this._questionService.UpdateQuestion(new QuestionRequest
