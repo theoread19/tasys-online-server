@@ -106,7 +106,6 @@ namespace TASysOnlineProject.Controllers.TASysOnline
 
         [HttpGet]
         [Route("filter")]
-        [Authorize(Roles = Roles.All)]
         public async Task<IActionResult> FilterMedia([FromQuery] Filter filterRequest)
         {
             var route = Request.Path.Value;
